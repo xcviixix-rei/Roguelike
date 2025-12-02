@@ -3,6 +3,8 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
+#region Deal Damage Effect
+
 [Serializable]
 public class DealDamageEffect : CardEffect, IGeneticParameter
 {
@@ -35,11 +37,14 @@ public class DealDamageEffect : CardEffect, IGeneticParameter
         values["!D!"] = damageAmount.ToString();
     }
 
-    public override void Execute(CardData sourceCard, Combatant source, Combatant target)
+    public override void Execute(CardData sourceCard, Combatant source, Combatant target, DeckManager deckManager)
     {
+        target.TakeDamage(damageAmount);
     }
 }
+#endregion
 
+#region Gain Block Effect
 [Serializable]
 public class GainBlockEffect : CardEffect, IGeneticParameter
 {
@@ -72,11 +77,14 @@ public class GainBlockEffect : CardEffect, IGeneticParameter
         values["!B!"] = blockAmount.ToString();
     }
 
-    public override void Execute(CardData sourceCard, Combatant source, Combatant target)
+    public override void Execute(CardData sourceCard, Combatant source, Combatant target, DeckManager deckManager)
     {
+        source.GainBlock(blockAmount);
     }
 }
+#endregion
 
+#region Apply Status Effect
 [Serializable]
 public class ApplyStatusEffect : CardEffect, IGeneticParameter
 {
@@ -112,12 +120,14 @@ public class ApplyStatusEffect : CardEffect, IGeneticParameter
         values["!S!"] = stacksToApply.ToString();
     }
 
-    public override void Execute(CardData sourceCard, Combatant source, Combatant target)
+    public override void Execute(CardData sourceCard, Combatant source, Combatant target, DeckManager deckManager)
     {
+        target.ApplyStatusEffect(statusEffectToApply, stacksToApply);
     }
 }
+#endregion
 
-
+#region Draw Cards Effect
 [Serializable]
 public class DrawCardsEffect : CardEffect, IGeneticParameter
 {
@@ -150,7 +160,9 @@ public class DrawCardsEffect : CardEffect, IGeneticParameter
         values["!C!"] = cardsToDraw.ToString();
     }
 
-    public override void Execute(CardData sourceCard, Combatant source, Combatant target)
+    public override void Execute(CardData sourceCard, Combatant source, Combatant target, DeckManager deckManager)
     {
+        deckManager.DrawCards(cardsToDraw);
     }
 }
+#endregion

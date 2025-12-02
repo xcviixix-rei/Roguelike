@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: 
   characterClassName: Warrior
+  playerPrefab: {fileID: 5754654485813407720, guid: 04152524caeb5e0489135e90a3de2bfd, type: 3}
   startingHP: 80
   startingEnergyPerTurn: 3
   startingGold: 99

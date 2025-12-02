@@ -6,6 +6,7 @@ public class PlayerData : ScriptableObject
 {
     [Title("Character Class")]
     public string characterClassName;
+    public GameObject playerPrefab;
 
     // --- GENETIC ALGORITHM WILL TUNE THESE VALUES ---
     [TitleGroup("Balancing Values (The 'Genes')")]

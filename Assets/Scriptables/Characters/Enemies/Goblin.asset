@@ -14,10 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyID: 001
   enemyName: Goblin
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 7548139898082791852, guid: 6646aaa0302f0412b8483a6da4dd3d1f, type: 3}
   maxHP: 15
   startingStrength: 2
   movePattern:
   - moveType: 0
     intentIcon: {fileID: 0}
     value: 2
+  - moveType: 1
+    intentIcon: {fileID: 0}
+    value: 1

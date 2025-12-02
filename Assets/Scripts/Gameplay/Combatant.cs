@@ -38,6 +38,10 @@ public class Combatant : MonoBehaviour
     public bool IsPlayer { get; private set; }
     public string CharacterName { get; private set; }
 
+    // Enemy-specific fields
+    private EnemyData enemyDataSource;
+    private int movePatternIndex = -1;
+
     #region Initialization
     
     public void Initialize(PlayerData data)
@@ -58,6 +62,7 @@ public class Combatant : MonoBehaviour
     
     public void Initialize(EnemyData data)
     {
+        enemyDataSource = data;
         sourceData = data;
         IsPlayer = false;
         CharacterName = data.enemyName;
@@ -87,7 +92,7 @@ public class Combatant : MonoBehaviour
         {
             currentBlock -= damageAbsorbedByBlock;
             Debug.Log($"{CharacterName} blocked {damageAbsorbedByBlock} damage.");
-            // TODO (Phase 4): Invoke GameEvents.OnBlockChanged(this, currentBlock);
+            GameEvents.InvokeBlockChanged(this, currentBlock);
         }
 
         if (remainingDamage > 0)
@@ -95,7 +100,7 @@ public class Combatant : MonoBehaviour
             currentHP -= remainingDamage;
             Debug.Log($"{CharacterName} took {remainingDamage} damage to health.");
             TickDownStatusEffects(StatusEffectDecayType.OnDamageTaken);
-            // TODO (Phase 4): Invoke GameEvents.OnHealthChanged(this, currentHP);
+            GameEvents.InvokeHealthChanged(this, currentHP);
         }
         
         if (currentHP < 0)
@@ -115,7 +120,7 @@ public class Combatant : MonoBehaviour
 
         currentBlock += blockAmount;
         Debug.Log($"{CharacterName} gained {blockAmount} block. Total: {currentBlock}");
-        // TODO (Phase 4): Invoke GameEvents.OnBlockChanged(this, currentBlock);
+        GameEvents.InvokeBlockChanged(this, currentBlock);
     }
 
     public void Heal(int healAmount)
@@ -129,7 +134,7 @@ public class Combatant : MonoBehaviour
         }
         
         Debug.Log($"{CharacterName} healed for {healAmount}. Current HP: {currentHP}");
-        // TODO (Phase 4): Invoke GameEvents.OnHealthChanged(this, currentHP);
+        GameEvents.InvokeHealthChanged(this, currentHP);
     }
 
     public void ResetBlock()
@@ -138,7 +143,7 @@ public class Combatant : MonoBehaviour
         {
             currentBlock = 0;
             Debug.Log($"{CharacterName}'s block was reset.");
-            // TODO (Phase 4): Invoke GameEvents.OnBlockChanged(this, currentBlock);
+            GameEvents.InvokeBlockChanged(this, currentBlock);
         }
     }
     
@@ -146,6 +151,23 @@ public class Combatant : MonoBehaviour
     {
         Debug.LogWarning($"{CharacterName} has died!");
         // TODO: Add logic for death animations, removing from combat, etc.
+    }
+
+    /// <summary>
+    /// Determines and returns the next move from the enemy's move pattern.
+    /// This method advances the internal move index, looping back to the start if necessary.
+    /// </summary>
+    /// <returns>The EnemyMove data for the current turn.</returns>
+    public EnemyMove GetNextMove()
+    {
+        if (enemyDataSource == null || enemyDataSource.movePattern.Count == 0)
+        {
+            Debug.LogError($"{CharacterName} has no move pattern defined!");
+            return null;
+        }
+
+        movePatternIndex = (movePatternIndex + 1) % enemyDataSource.movePattern.Count;
+        return enemyDataSource.movePattern[movePatternIndex];
     }
 
     #endregion
