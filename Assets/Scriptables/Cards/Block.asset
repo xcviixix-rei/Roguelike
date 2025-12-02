@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb70bc8b4aba4e4f81fc8ca1efc8b10, type: 3}
+  m_Name: Block
+  m_EditorClassIdentifier: 
+  cardArt: {fileID: 0}
+  cardID: 001
+  cardName: Strike
+  cardType: 2
+  cardRarity: 0
+  defaultTarget: 0
+  descriptionTemplate: Gain {B} block
+  energyCost: 1
+  baseDamage: 0
+  baseBlock: 6
+  magicNumber: 0
+  effectsToExecute: []
+  upgradedVersion: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []
