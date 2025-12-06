@@ -100,7 +100,7 @@ InitTestScene*.unity*
 
 # Character Creator 2D 
 /[Aa]ssets/SPUM/
-/[Aa]ssets/Plugins/Sirenix/
+/[Aa]ssets/Plugins/
 
 /[Pp]ackages/
 /[Aa]ssets/Settings

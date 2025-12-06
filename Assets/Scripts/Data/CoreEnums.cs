@@ -1,50 +1,20 @@
-/// <summary>
-/// Defines the primary function of a card.
-/// </summary>
-public enum CardType
+namespace RogueLike.Data
 {
-    Attack,
-    Skill,
-    Power
-}
+    // General
+    public enum Rarity { Common, Uncommon, Rare, Special, Boss }
+    public enum TargetType { Self, SingleEnemy, AllEnemies, RandomEnemy }
 
-/// <summary>
-/// Defines the rarity of a card.
-/// </summary>
-public enum CardRarity
-{
-    Common,
-    Uncommon,
-    Rare,
-    Legendary
-}
+    // Card Specific
+    public enum CardType { Attack, Skill, Power }
+    
+    // Effect & Status Specific
+    public enum EffectType { Damage, Block, Draw, ApplyStatus, GainMana, Heal }
+    public enum StatusEffectType { Vulnerable, Weak, Strength, Poison, Thorns, Regen }
+    public enum StatusDecayType { Temporary, DecaysByTurn, DecaysOnUse, Permanent }
 
-/// <summary>
-/// Defines who or what a card can be targeted at.
-/// </summary>
-public enum TargetType
-{
-    Self,
-    SingleEnemy,
-    AllEnemies,
-    RandomEnemy
-}
-
-/// <summary>
-/// Categorizes a status effect as beneficial or detrimental.
-/// </summary>
-public enum StatusEffectType
-{
-    Buff,
-    Debuff
-}
-
-/// <summary>
-/// Defines the condition under which a status effect's duration decreases or expires.
-/// </summary>
-public enum StatusEffectDecayType
-{
-    OnTurnEnd,      // Effect ticks down at the end of a combatant's turn (e.g., Vulnerable)
-    OnDamageTaken,  // Effect is removed after taking damage (e.g., Temporary Shield)
-    Permanent       // Effect does not decay naturally (e.g., Strength Up)
+    // Map & Room Specific
+    public enum NodeType { Combat, EliteCombat, Rest, Shop, Event, Boss }
+    
+    // Enemy Specific
+    public enum IntentType { Attack, AttackDefend, Defend, Buff, Debuff }
 }
