@@ -1,0 +1,31 @@
+// Roguelike/Data/EnemyData.cs
+
+using System.Collections.Generic;
+
+namespace Roguelike.Data
+{
+    /// <summary>
+    /// Data container for an enemy's template.
+    /// Inherits base properties from CombatantData.
+    /// </summary>
+    public class EnemyData : CombatantData
+    {
+        /// <summary>
+        /// A numerical rating of the enemy's difficulty. Used for encounter generation
+        /// and as a fitness metric for the GA
+        /// </summary>
+        public float Difficulty { get; set; }
+
+        /// <summary>
+        /// This list defines the *proportions* for the enemy's bucket filll
+        /// </summary>
+        public List<WeightedChoice<CombatActionData>> ActionSet { get; set; } = new List<WeightedChoice<CombatActionData>>();
+
+        /// <summary>
+        /// The minimum number of turns that must pass between an enemy using a "special"
+        /// non-Attack/Block action (e.g., applying a powerful buff or debuff). A value of 0 means no cooldown.
+        /// The Core Logic will enforce this rule when building/drawing from the action bucket
+        /// </summary>
+        public int SpecialAbilityCooldown { get; set; } = 1;
+    }
+}
