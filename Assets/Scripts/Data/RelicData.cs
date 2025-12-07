@@ -29,6 +29,11 @@ namespace Roguelike.Data
         public Rarity Rarity { get; set; }
 
         /// <summary>
+        /// Indicates if this relic is a boss relic, which are typically more powerful and only obtained after defeating a boss.
+        /// </summary>
+        public bool IsBossRelic { get; set; } = false;
+
+        /// <summary>
         /// The list of passive effects this relic grants.
         /// For relics, the DecayType on these effects will typically be 'Permanent'.
         /// The logic for when and how these effects trigger (e.g., "at the start of combat")

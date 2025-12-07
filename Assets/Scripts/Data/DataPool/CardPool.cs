@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Roguelike.Data
 {
@@ -27,6 +28,31 @@ namespace Roguelike.Data
         public List<CardData> GetCardsByRarity(Rarity rarity)
         {
             return CardsById.Values.Where(card => card.Rarity == rarity).ToList();
+        }
+
+        /// <summary>
+        /// Retrieves a random card of the specified rarity using the provided random number generator.
+        /// </summary>
+        public CardData GetRandomCardOfRarity(Rarity rarity, Random rng)
+        {
+            var cards = GetCardsByRarity(rarity);
+            if (!cards.Any()) return null;
+            return cards[rng.Next(cards.Count)];
+        }
+
+        /// <summary>
+        /// Retrieves a random card up to the specified maximum rarity using the provided random number generator.
+        /// </summary>
+        public CardData GetRandomCardUpToRarity(Rarity maxRarity, Random rng)
+        {
+            var rarities = new List<Rarity>();
+            if (maxRarity >= Rarity.Common) rarities.Add(Rarity.Common);
+            if (maxRarity >= Rarity.Uncommon) rarities.Add(Rarity.Uncommon);
+            if (maxRarity >= Rarity.Rare) rarities.Add(Rarity.Rare);
+            if (maxRarity >= Rarity.Legendary) rarities.Add(Rarity.Legendary);
+
+            var chosenRarity = rarities[rng.Next(rarities.Count)]; // Simple weighted, could be improved
+            return GetRandomCardOfRarity(chosenRarity, rng);
         }
 
         /// <summary>

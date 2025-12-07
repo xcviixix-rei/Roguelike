@@ -8,7 +8,8 @@ namespace Roguelike.Data
         Common,
         Uncommon,
         Rare,
-        Legendary
+        Legendary,
+        Boss
     }
 
     /// <summary>
@@ -61,6 +62,7 @@ namespace Roguelike.Data
     public enum StatusEffectType
     {
         Vulnerable, // Takes more damage
+        Weakened,  // Deals less damage
         Strength,   // Deals more damage
         Frail,      // Gains less block
         Pierced     // Damage bypasses block

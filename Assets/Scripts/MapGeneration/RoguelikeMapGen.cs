@@ -1,4 +1,4 @@
-// SlayTheSpire_MapGenerator.cs
+// RoguelikeMapGen.cs
 // Pure C# (headless) implementation of the map generation described in the reference.
 // Designed to be copy-paste ready for a Unity project later (no Unity dependencies).
 // Reference used for algorithm outline: KosGames Map Generation Guide. fileciteturn1file0
@@ -15,8 +15,7 @@ namespace RoguelikeMapGen
         Monster,
         Elite,
         Event,
-        Merchant,
-        Treasure,
+        Shop,
         Rest,
         Boss
     }
@@ -47,25 +46,34 @@ namespace RoguelikeMapGen
     {
         // rooms by id
         public Dictionary<int, Room> Rooms { get; } = new Dictionary<int, Room>();
+        
+        // Dimensions for the standard map floors (0-14)
+        public const int Width = 7;
+        public const int Height = 15;
+        
         // quick lookup grid [x,y] -> roomId or -1
-        public int[,] Grid = new int[7, 15];
+        public int[,] Grid = new int[Width, Height];
 
         public MapGraph()
         {
-            for (int x = 0; x < 7; x++)
-                for (int y = 0; y < 15; y++)
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
                     Grid[x, y] = -1;
         }
 
         public void AddRoom(Room r)
         {
             Rooms[r.Id] = r;
-            Grid[r.X, r.Y] = r.Id;
+
+            if (r.X >= 0 && r.X < Width && r.Y >= 0 && r.Y < Height)
+            {
+                Grid[r.X, r.Y] = r.Id;
+            }
         }
 
         public Room GetRoomAt(int x, int y)
         {
-            if (x < 0 || x >= 7 || y < 0 || y >= 15) return null;
+            if (x < 0 || x >= Width || y < 0 || y >= Height) return null;
             int id = Grid[x, y];
             return id == -1 ? null : Rooms[id];
         }
@@ -79,7 +87,13 @@ namespace RoguelikeMapGen
         {
             if (!Rooms.ContainsKey(id)) return;
             var r = Rooms[id];
-            Grid[r.X, r.Y] = -1;
+            
+            // Only try to remove from grid if it was in grid
+            if (r.X >= 0 && r.X < Width && r.Y >= 0 && r.Y < Height)
+            {
+                Grid[r.X, r.Y] = -1;
+            }
+
             // remove connections referencing it
             foreach (var other in Rooms.Values)
             {
@@ -92,64 +106,60 @@ namespace RoguelikeMapGen
 
     public class MapGenerator
     {
-        private readonly bool[,] template = new bool[7, 15];
+        private const int WIDTH = 7;
+        private const int HEIGHT = 15; // 0 to 14
+        
+        private readonly bool[,] template = new bool[WIDTH, HEIGHT];
         private readonly Random rng;
         private int nextRoomId = 1;
         private MapGraph graph;
 
-        // Configurable parameters (weights, counts)
-        public int PathTracks = 7; // number of parallel skeleton paths (the article describes 7)
+        // Configurable parameters
+        public int PathTracks = 7; 
+        
+        // The weights used for random generation.
+        private readonly Dictionary<RoomType, int> _locationWeights;
 
-        // Location weights (these are defaults you can tweak). We supply a simple set; adjust for ascension.
-        // Units are weights for weighted random selection. Monster weight is relatively high by default.
-        public Dictionary<RoomType, int> LocationWeights = new Dictionary<RoomType, int>
+        public MapGenerator(int seed, Dictionary<RoomType, int> weights = null)
         {
-            { RoomType.Monster, 53 },
-            { RoomType.Elite, 8 },
-            { RoomType.Event, 15 },
-            { RoomType.Merchant, 7 },
-            { RoomType.Treasure, 8 },
-            { RoomType.Rest, 9 }
-        };
+            rng = new Random(seed);
+            
+            // If no weights provided, use these defaults adjusted for our new Enums
+            _locationWeights = weights ?? new Dictionary<RoomType, int>
+            {
+                { RoomType.Monster, 45 },
+                { RoomType.Elite, 12 },
+                { RoomType.Event, 22 },
+                { RoomType.Shop, 8 },
+                { RoomType.Rest, 13 }
+            };
 
-        public MapGenerator(int? seed = null)
-        {
-            rng = seed.HasValue ? new Random(seed.Value) : new Random();
             BuildTemplate();
         }
 
         private void BuildTemplate()
         {
-            // We'll use a simple template similar to Slay: many valid positions, some invalid.
-            // The original uses an irregular isometric triangular grid. We emulate it by enabling
-            // positions in a centered pyramid-ish pattern per floor.
+            // Standard centered pyramid-ish pattern mask
+            for (int x = 0; x < WIDTH; x++)
+                for (int y = 0; y < HEIGHT; y++)
+                    template[x, y] = true; 
 
-            // For fidelity you can replace this hard-coded mask with the exact template from the game.
-            for (int x = 0; x < 7; x++)
-                for (int y = 0; y < 15; y++)
-                    template[x, y] = true; // default allow
-
-            // Create some unavailable slots to mimic irregular shape (optional). This is conservative.
-            // (You can modify or remove these lines.)
             template[0, 14] = false;
             template[6, 14] = false;
             template[0, 13] = false;
             template[6, 13] = false;
-            template[0, 0] = true; // ensure some starts
+            template[0, 0] = true; 
         }
 
-        // Public API: Generate map and return a MapGraph
-        public MapGraph Generate(int? seed = null)
+        public MapGraph Generate()
         {
-            if (seed.HasValue) rng = new Random(seed.Value);
-
             nextRoomId = 1;
             graph = new MapGraph();
 
-            // 1) instantiate rooms for every template cell
-            for (int y = 0; y < 15; y++)
+            // 1) Instantiate rooms for every template cell
+            for (int y = 0; y < HEIGHT; y++)
             {
-                for (int x = 0; x < 7; x++)
+                for (int x = 0; x < WIDTH; x++)
                 {
                     if (!template[x, y]) continue;
                     var r = new Room(nextRoomId++, x, y);
@@ -157,19 +167,19 @@ namespace RoguelikeMapGen
                 }
             }
 
-            // 2) Generate skeleton paths (upwards chains) - create PathTracks tracks
+            // 2) Generate skeleton paths
             GenerateSkeletonPaths();
 
-            // 3) prune unconnected rooms
+            // 3) Prune unconnected rooms
             PruneUnconnectedRooms();
 
-            // 4) Assign base locations (floor rules)
+            // 4) Assign base locations (Structural Rules)
             AssignBaseLocations();
 
-            // 5) Assign remaining rooms with weighted random types (and enforce rules)
+            // 5) Assign remaining rooms using weights
             AssignRemainingLocations();
 
-            // 6) Allocate boss room above top
+            // 6) Allocate boss room above top (Floor 15)
             AllocateBossRoom();
 
             return graph;
@@ -177,11 +187,6 @@ namespace RoguelikeMapGen
 
         private void GenerateSkeletonPaths()
         {
-            // We will create PathTracks independent attempts to make chains from floor 0 to floor 14.
-            // Each chain: pick a random start on floor 0, then at each step choose one of the nearest
-            // candidates on next floor (x-1, x, x+1), ensuring no crossing with existing connections.
-
-            // Keep a list of chosen starts to ensure first two are not the same.
             var starts = new List<int>();
             var floor0Rooms = graph.RoomsOnFloor(0).ToList();
             if (floor0Rooms.Count == 0) return;
@@ -199,14 +204,12 @@ namespace RoguelikeMapGen
 
                 starts.Add(start.Id);
 
-                // walk up floors
                 Room current = start;
-                for (int y = 0; y < 14; y++)
+                for (int y = 0; y < HEIGHT - 1; y++)
                 {
                     var candidates = GetCandidateRoomsAbove(current);
                     if (candidates.Count == 0) break;
 
-                    // shuffle candidates and try to pick one that doesn't cause crossing
                     var candidatesShuffled = candidates.OrderBy(_ => rng.Next()).ToList();
                     Room chosen = null;
                     foreach (var cand in candidatesShuffled)
@@ -220,7 +223,6 @@ namespace RoguelikeMapGen
 
                     if (chosen == null)
                     {
-                        // fallback: take first candidate even if crossing would occur
                         chosen = candidatesShuffled.FirstOrDefault();
                         if (chosen == null) break;
                     }
@@ -235,12 +237,12 @@ namespace RoguelikeMapGen
         {
             var list = new List<Room>();
             int y = r.Y + 1;
-            if (y >= 15) return list;
-            // candidate x positions are x-1, x, x+1 (clamped)
+            if (y >= HEIGHT) return list;
+            
             for (int dx = -1; dx <= 1; dx++)
             {
                 int nx = r.X + dx;
-                if (nx < 0 || nx >= 7) continue;
+                if (nx < 0 || nx >= WIDTH) continue;
                 var nr = graph.GetRoomAt(nx, y);
                 if (nr != null) list.Add(nr);
             }
@@ -255,8 +257,6 @@ namespace RoguelikeMapGen
 
         private bool WouldCross(Room a, Room b)
         {
-            // Crossing can only happen between connections that span the same pair of floors.
-            // For all existing connections from floor a.Y -> a.Y+1, check ordering.
             int y = a.Y;
             foreach (var room in graph.RoomsOnFloor(y))
             {
@@ -264,8 +264,6 @@ namespace RoguelikeMapGen
                 {
                     var dest = graph.Rooms[outId];
                     if (dest.Y != y + 1) continue;
-                    // we have an existing connection room -> dest. Check crossing with a->b.
-                    // crossing when (room.X < a.X && dest.X > b.X) || (room.X > a.X && dest.X < b.X)
                     if ((room.X < a.X && dest.X > b.X) || (room.X > a.X && dest.X < b.X))
                         return true;
                 }
@@ -275,32 +273,35 @@ namespace RoguelikeMapGen
 
         private void PruneUnconnectedRooms()
         {
-            // Remove any room that has no incoming and no outgoing (isolated template cells)
-            var isolated = graph.Rooms.Values.Where(r => r.Incoming.Count == 0 && r.Outgoing.Count == 0 && r.Y != 0).Select(r => r.Id).ToList();
-            // note: keep some start rooms on floor 0 even if isolated (though normally they should be connected)
+            var isolated = graph.Rooms.Values
+                .Where(r => r.Incoming.Count == 0 && r.Outgoing.Count == 0 && r.Y != 0)
+                .Select(r => r.Id)
+                .ToList();
+
             foreach (var id in isolated)
                 graph.RemoveRoom(id);
         }
 
         private void AssignBaseLocations()
         {
-            // Floor 1 (Y==0 in zero-index) -> Monsters
+            // Rule: Floor 0 (Bottom) is always Monsters (Start of run)
             foreach (var r in graph.RoomsOnFloor(0))
                 r.Type = RoomType.Monster;
 
-            // Floor 9 -> Treasure (zero-index floor 8)
-            foreach (var r in graph.RoomsOnFloor(8))
-                r.Type = RoomType.Treasure;
-
-            // Floor 15 -> Rest (zero-index floor 14)
-            foreach (var r in graph.RoomsOnFloor(14))
+            // Rule: Floor 14 (Top of Act) is always Rest before Boss
+            foreach (var r in graph.RoomsOnFloor(HEIGHT - 1))
                 r.Type = RoomType.Rest;
+                
+            // Removed fixed Treasure on floor 8. It will now be assigned by weights.
         }
 
         private void AssignRemainingLocations()
         {
-            // For all rooms that are None, assign by weighted random, then apply rules with re-rolls until valid.
-            var roomsToAssign = graph.Rooms.Values.Where(r => r.Type == RoomType.None).ToList();
+            var roomsToAssign = graph.Rooms.Values
+                .Where(r => r.Type == RoomType.None)
+                .OrderBy(r => r.Y) // Assign from bottom up
+                .ThenBy(r => r.X)
+                .ToList();
 
             foreach (var r in roomsToAssign)
             {
@@ -315,30 +316,26 @@ namespace RoguelikeMapGen
             {
                 r.Type = PickWeightedLocation(r);
                 tries++;
-                if (tries > 200) break; // safety
+                if (tries > 200) break;
             } while (!LocationRulesSatisfied(r));
         }
 
         private RoomType PickWeightedLocation(Room r)
         {
-            // special-case: floors with preassigned (already set earlier) should not be overwritten
-            if (r.Y == 0) return RoomType.Monster;
-            if (r.Y == 8) return RoomType.Treasure;
-            if (r.Y == 14) return RoomType.Rest;
-
-            // enforce elites/rest not below floor 6 (zero-index 5)
+            // Filter allowed types based on Floor Height
             var allowed = new List<KeyValuePair<RoomType, int>>();
-            foreach (var kv in LocationWeights)
+            foreach (var kv in _locationWeights)
             {
                 var type = kv.Key;
-                var w = kv.Value;
+                // Rule: Elites and Rest sites don't appear in the first 5 floors (0-4)
                 if ((type == RoomType.Elite || type == RoomType.Rest) && r.Y < 5) continue;
                 allowed.Add(kv);
             }
 
-            // build cumulative
+            // Weighted Random Selection
             int total = allowed.Sum(k => k.Value);
-            if (total <= 0) return RoomType.Event;
+            if (total <= 0) return RoomType.Monster; // Fallback
+            
             int pick = rng.Next(total);
             int acc = 0;
             foreach (var kv in allowed)
@@ -351,39 +348,35 @@ namespace RoguelikeMapGen
 
         private bool LocationRulesSatisfied(Room r)
         {
-            // Rule 1: Elite and Rest cannot be below floor 6 (zero-index < 5) - guaranteed during pick but double-check
+            // Rule 1: Elite and Rest cannot be below floor 5 (Already handled in Pick, but safety check)
             if ((r.Type == RoomType.Elite || r.Type == RoomType.Rest) && r.Y < 5) return false;
 
-            // Rule 2: Elite, Merchant, Rest cannot be consecutive along any path.
-            // For all incoming neighbors: if neighbor.Type is special and equal to this type -> invalid
+            // Rule 2: Special nodes (Elite, Shop, Rest) cannot be consecutive
             foreach (var incId in r.Incoming)
             {
                 var inc = graph.Rooms[incId];
                 if (IsSpecial(inc.Type) && IsSameSpecial(inc.Type, r.Type)) return false;
             }
-            // For outgoing neighbors as well
             foreach (var outId in r.Outgoing)
             {
                 var outR = graph.Rooms[outId];
                 if (IsSpecial(outR.Type) && IsSameSpecial(outR.Type, r.Type)) return false;
             }
 
-            // Rule 3: If this room has 2+ outgoing, destinations must be unique types
+            // Rule 3: If this room has 2+ outgoing paths, destinations must be unique types
+            // (e.g. don't offer two Monster rooms as the only choices)
             if (r.Outgoing.Count >= 2)
             {
                 var types = r.Outgoing.Select(id => graph.Rooms[id].Type).Where(t => t != RoomType.None).ToList();
                 if (types.Count != types.Distinct().Count()) return false;
             }
 
-            // Rule 4: Rest cannot be on floor 14 (zero-index 13)
-            if (r.Type == RoomType.Rest && r.Y == 13) return false;
-
             return true;
         }
 
         private bool IsSpecial(RoomType t)
         {
-            return t == RoomType.Elite || t == RoomType.Merchant || t == RoomType.Rest;
+            return t == RoomType.Elite || t == RoomType.Shop || t == RoomType.Rest;
         }
 
         private bool IsSameSpecial(RoomType a, RoomType b)
@@ -394,32 +387,16 @@ namespace RoguelikeMapGen
 
         private void AllocateBossRoom()
         {
-            // Create a boss room node above floor 14 and connect all floor-14 rooms to it.
-            var topRooms = graph.RoomsOnFloor(14).ToList();
+            var topRooms = graph.RoomsOnFloor(HEIGHT - 1).ToList();
             if (topRooms.Count == 0) return;
 
-            var boss = new Room(nextRoomId++, 3, 15) { Type = RoomType.Boss }; // X=3 is arbitrary; Y=15 is above
+            // Boss is technically at Y=15 (Height), outside the grid array bounds of 0-14
+            var boss = new Room(nextRoomId++, 3, HEIGHT) { Type = RoomType.Boss }; 
             graph.AddRoom(boss);
 
             foreach (var r in topRooms)
             {
                 ConnectRooms(r, boss);
-            }
-        }
-    }
-
-    // Example usage for headless testing
-    public static class Example
-    {
-        public static void Main()
-        {
-            var gen = new MapGenerator(seed: 12345);
-            var map = gen.Generate();
-
-            Console.WriteLine($"Generated rooms: {map.Rooms.Count}");
-            foreach (var r in map.Rooms.Values.OrderBy(rr => rr.Y).ThenBy(rr => rr.X))
-            {
-                Console.WriteLine(r);
             }
         }
     }

@@ -24,20 +24,20 @@ namespace Roguelike.Data
         public string Description { get; set; }
         
         /// <summary>
-        /// The minimum difficulty rating for this room.
+        /// The minimum signature value for this room.
         /// For Combat Rooms (Monster, Elite, Boss): Defines the lower bound for encounter generation.
         /// For Shop Rooms: Can be used as a "shop score" to determine the quality of items for sale.
         /// For other rooms, this may not be used.
         /// </summary>
-        public float MinDifficulty { get; set; }
+        public float MinValue { get; set; }
 
         /// <summary>
-        /// The maximum difficulty rating for this room.
+        /// The minimum signature value for this room.
         /// For Combat Rooms (Monster, Elite, Boss): Defines the upper bound for encounter generation.
         /// For Shop Rooms: Can be used as a "shop score" to determine the quality of items for sale.
         /// For other rooms, this may not be used.
         /// </summary>
-        public float MaxDifficulty { get; set; }
+        public float MaxValue { get; set; }
 
         /// <summary>
         /// Parameterless constructor for serialization.

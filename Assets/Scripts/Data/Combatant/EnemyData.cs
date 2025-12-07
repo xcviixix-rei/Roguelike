@@ -15,6 +15,11 @@ namespace Roguelike.Data
         /// and as a fitness metric for the GA
         /// </summary>
         public float Difficulty { get; set; }
+        
+        /// <summary>
+        /// Indicates if this enemy is a boss-type enemy
+        /// </summary>
+        public bool IsBoss { get; set; } = false;
 
         /// <summary>
         /// This list defines the *proportions* for the enemy's bucket filll

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Roguelike.Data
 {
@@ -26,6 +27,24 @@ namespace Roguelike.Data
         public List<RelicData> GetRelicsByRarity(Rarity rarity)
         {
             return RelicsById.Values.Where(relic => relic.Rarity == rarity).ToList();
+        }
+
+        /// <summary>
+        /// Retrieves a random relic of the specified rarity using the provided random number generator.
+        /// </summary>
+        public RelicData GetRandomRelicOfRarity(Rarity rarity, Random rng)
+        {
+            var relics = GetRelicsByRarity(rarity);
+            if (!relics.Any()) return null;
+            return relics[rng.Next(relics.Count)];
+        }
+
+        /// <summary>
+        /// Retrieves all boss relics.
+        /// </summary>
+        public List<RelicData> GetBossRelics()
+        {
+            return RelicsById.Values.Where(r => r.IsBossRelic).ToList();
         }
 
         /// <summary>
