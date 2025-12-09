@@ -1,0 +1,14 @@
+E:\Unity_Projects\RoguelikeTest\bin\Debug\net9.0\RoguelikeTest.exe
+E:\Unity_Projects\RoguelikeTest\bin\Debug\net9.0\RoguelikeTest.deps.json
+E:\Unity_Projects\RoguelikeTest\bin\Debug\net9.0\RoguelikeTest.runtimeconfig.json
+E:\Unity_Projects\RoguelikeTest\bin\Debug\net9.0\RoguelikeTest.dll
+E:\Unity_Projects\RoguelikeTest\bin\Debug\net9.0\RoguelikeTest.pdb
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\RoguelikeTest.GeneratedMSBuildEditorConfig.editorconfig
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\RoguelikeTest.AssemblyInfoInputs.cache
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\RoguelikeTest.AssemblyInfo.cs
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\RoguelikeTest.csproj.CoreCompileInputs.cache
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\RoguelikeTest.dll
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\refint\RoguelikeTest.dll
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\RoguelikeTest.pdb
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\RoguelikeTest.genruntimeconfig.cache
+E:\Unity_Projects\RoguelikeTest\obj\Debug\net9.0\ref\RoguelikeTest.dll

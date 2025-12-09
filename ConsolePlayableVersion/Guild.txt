@@ -1,0 +1,2 @@
+Oen terminal for this folder and run:
+				dotnet run
