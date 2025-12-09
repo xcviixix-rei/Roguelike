@@ -7,8 +7,8 @@ namespace Roguelike.Logic.Handlers
     {
         public void Execute(GameRun run, Room room)
         {
-            var roomConfig = run.RoomConfigs[room.Type];
-            int healAmount = (int)Math.Floor(run.Rng.Next((int)roomConfig.MinValue, (int)roomConfig.MaxValue) * run.TheHero.MaxHealth / 100f);
+            float healPercentage = 0.30f; 
+            int healAmount = (int)Math.Floor(run.TheHero.MaxHealth * healPercentage);
             run.TheHero.Heal(healAmount);
         }
     }

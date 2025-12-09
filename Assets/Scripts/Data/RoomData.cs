@@ -24,20 +24,12 @@ namespace Roguelike.Data
         public string Description { get; set; }
         
         /// <summary>
-        /// The minimum signature value for this room.
-        /// For Combat Rooms (Monster, Elite, Boss): Defines the lower bound for encounter generation.
-        /// For Shop Rooms: Can be used as a "shop score" to determine the quality of items for sale.
-        /// For other rooms, this may not be used.
+        /// The default star rating for this room type.
+        /// Monster rooms will typically range 1-2.
+        /// Elite rooms will typically range 3-4.
+        /// Boss rooms will be 5.
         /// </summary>
-        public float MinValue { get; set; }
-
-        /// <summary>
-        /// The minimum signature value for this room.
-        /// For Combat Rooms (Monster, Elite, Boss): Defines the upper bound for encounter generation.
-        /// For Shop Rooms: Can be used as a "shop score" to determine the quality of items for sale.
-        /// For other rooms, this may not be used.
-        /// </summary>
-        public float MaxValue { get; set; }
+        public int StarRating { get; set; }
 
         /// <summary>
         /// Parameterless constructor for serialization.

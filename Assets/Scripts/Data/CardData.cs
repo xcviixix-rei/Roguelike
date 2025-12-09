@@ -33,9 +33,9 @@ namespace Roguelike.Data
         public int ManaCost { get; set; }
 
         /// <summary>
-        /// The rarity of the card, which affects its appearance rate and cost in shops.
+        /// The power level of the card, from 1 to 5.
         /// </summary>
-        public Rarity Rarity { get; set; }
+        public int StarRating { get; set; }
 
         /// <summary>
         /// The classification of the card

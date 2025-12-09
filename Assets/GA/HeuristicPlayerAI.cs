@@ -1,5 +1,3 @@
-// Roguelike/Agents/HeuristicPlayerAI.cs
-
 using Roguelike.Data;
 using Roguelike.Logic;
 using RoguelikeMapGen;
@@ -37,8 +35,12 @@ namespace Roguelike.Agents
             double hpPercent = (double)run.TheHero.CurrentHealth / run.TheHero.MaxHealth;
             switch (room.Type)
             {
-                case RoomType.Rest: return hpPercent < 0.5 ? 50.0 : 10.0;
-                case RoomType.Elite: return hpPercent > 0.7 ? 40.0 : -100.0;
+                case RoomType.Elite:
+                case RoomType.Monster:
+                    double starValue = room.StarRating * 10.0;
+                    if (hpPercent > 0.7) return starValue; 
+                    if (hpPercent < 0.5) return -starValue;
+                    return starValue * 0.5;
                 case RoomType.Shop: return run.TheHero.CurrentGold > 150 ? 35.0 : 5.0;
                 case RoomType.Event: return 15.0;
                 case RoomType.Monster: return 10.0;
@@ -80,10 +82,8 @@ namespace Roguelike.Agents
                 var damageAction = card.Actions.FirstOrDefault(a => a.Type == ActionType.DealDamage);
                 if (damageAction != null)
                 {
-                    // Check against all enemies
                     for (int e = 0; e < enemies.Count; e++)
                     {
-                        // Calculate exact damage this card would deal to this enemy
                         int predictedDamage = PredictDamage(damageAction.Value, hero, enemies[e]);
                         if (enemies[e].CurrentHealth <= predictedDamage)
                         {
@@ -325,7 +325,6 @@ namespace Roguelike.Agents
         #region SHOPPING
         public ShopDecision GetShopDecision(GameRun run)
         {
-            // (Same implementation as before)
             var shop = run.CurrentShop;
             int currentGold = run.TheHero.CurrentGold;
 
@@ -333,17 +332,29 @@ namespace Roguelike.Agents
             {
                 var item = shop.RelicsForSale[i];
                 if (!item.IsSold && item.Price <= currentGold)
-                    if (item.Item.Rarity == Rarity.Rare || item.Item.Rarity == Rarity.Legendary)
-                        return ShopDecision.BuyRelic(i);
+                {
+                    if (item.Item.StarRating >= 4) return ShopDecision.BuyRelic(i);
+                }
             }
 
             for (int i = 0; i < shop.CardsForSale.Count; i++)
             {
                 var item = shop.CardsForSale[i];
                 if (!item.IsSold && item.Price <= currentGold)
-                    if (item.Item.Rarity == Rarity.Rare || item.Item.Rarity == Rarity.Uncommon)
-                        return ShopDecision.BuyCard(i);
+                {
+                    if (item.Item.StarRating >= 4) return ShopDecision.BuyCard(i);
+                }
             }
+
+            if (currentGold > 200)
+            {
+                for (int i = 0; i < shop.RelicsForSale.Count; i++)
+                {
+                    if (!shop.RelicsForSale[i].IsSold && shop.RelicsForSale[i].Price <= currentGold && shop.RelicsForSale[i].Item.StarRating >= 3)
+                        return ShopDecision.BuyRelic(i);
+                }
+            }
+
             return ShopDecision.Leave();
         }
         #endregion
@@ -418,12 +429,13 @@ namespace Roguelike.Agents
 
         public int ChooseCardReward(GameRun run)
         {
-            // (Same Skip logic as before)
             var choices = run.CardRewardChoices;
-            bool allCommon = choices.All(c => c.Rarity == Rarity.Common);
-            if (run.TheHero.Deck.MasterDeck.Count > 20 && allCommon) return -1;
+            if (choices.Count == 0) return -1;
+
+            bool allLowStar = choices.All(c => c.StarRating <= 2);
+            if (run.TheHero.Deck.MasterDeck.Count > 20 && allLowStar) return -1;
             
-            var bestCard = choices.OrderByDescending(c => c.Rarity).First();
+            var bestCard = choices.OrderByDescending(c => c.StarRating).First();
             return choices.IndexOf(bestCard);
         }
         #endregion

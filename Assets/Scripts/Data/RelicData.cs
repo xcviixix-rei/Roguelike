@@ -24,9 +24,9 @@ namespace Roguelike.Data
         public string Description { get; set; }
 
         /// <summary>
-        /// The rarity of the relic, which affects its appearance rate
+        /// The power level of the relic, from 1 to 5 (or higher for Boss relics).
         /// </summary>
-        public Rarity Rarity { get; set; }
+        public int StarRating { get; set; }
 
         /// <summary>
         /// Indicates if this relic is a boss relic, which are typically more powerful and only obtained after defeating a boss.

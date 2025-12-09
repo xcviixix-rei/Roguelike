@@ -1,18 +1,6 @@
 namespace Roguelike.Data
 {
     /// <summary>
-    /// Defines the rarity of cards, relics, etc.
-    /// </summary>
-    public enum Rarity
-    {
-        Common,
-        Uncommon,
-        Rare,
-        Legendary,
-        Boss
-    }
-
-    /// <summary>
     /// Specifies the target of an action or effect
     /// </summary>
     public enum TargetType

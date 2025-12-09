@@ -111,20 +111,11 @@ namespace Roguelike.Logic
             return true;
         }
 
-        private void CheckCombatResult()
+         private void CheckCombatResult()
         {
             if (CurrentRun.CurrentCombat.State == CombatState.Victory)
             {
-                var roomType = CurrentRun.TheMap.GetCurrentRoom().Type;
-                
-                if (roomType == RoomType.Boss)
-                {
-                    BossRoomHandler.GenerateBossRewards(CurrentRun);
-                }
-                else
-                {
-                    CombatRoomHandler.GenerateVictoryRewards(CurrentRun);
-                }
+                CombatRoomHandler.GenerateVictoryRewards(CurrentRun);
             }
             else if (CurrentRun.CurrentCombat.State == CombatState.Defeat)
             {

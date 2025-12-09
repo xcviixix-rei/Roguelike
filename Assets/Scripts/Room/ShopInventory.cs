@@ -1,13 +1,9 @@
 using Roguelike.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Roguelike.Logic
 {
-    /// <summary>
-    /// Represents the generated inventory for a single shop visit.
-    /// </summary>
     public class ShopInventory
     {
         public List<ShopItem<CardData>> CardsForSale { get; } = new List<ShopItem<CardData>>();
@@ -15,23 +11,23 @@ namespace Roguelike.Logic
 
         public ShopInventory(CardPool cardPool, RelicPool relicPool, Random rng)
         {
-            foreach (Rarity rarity in Enum.GetValues(typeof(Rarity)))
+            for (int star = 1; star <= 5; star++)
             {
-                if (rarity == Rarity.Boss) continue;
-
-                // Generate Card
-                var card = cardPool.GetRandomCardOfRarity(rarity, rng);
-                if (card != null && cardPool.CostRangesByRarity.TryGetValue(rarity, out var costRange))
+                var card = cardPool.GetRandomCardOfStar(star, rng);
+                if (card != null)
                 {
-                    int price = rng.Next(costRange.MinCost, costRange.MaxCost + 1);
+                    int basePrice = 40 * star; 
+                    int price = rng.Next(basePrice, basePrice + 30);
+                    // TODO: Adjust price formula
                     CardsForSale.Add(new ShopItem<CardData>(card, price));
                 }
-                
-                // Generate Relic
-                var relic = relicPool.GetRandomRelicOfRarity(rarity, rng);
-                if (relic != null && relicPool.CostRangesByRarity.TryGetValue(rarity, out var costRangeRelic))
+
+                var relic = relicPool.GetRandomRelicOfStar(star, rng);
+                if (relic != null)
                 {
-                    int price = rng.Next(costRangeRelic.MinCost, costRangeRelic.MaxCost + 1);
+                    int basePrice = 60 * star;
+                    int price = rng.Next(basePrice, basePrice + 50);
+                    // TODO: Adjust price formula
                     RelicsForSale.Add(new ShopItem<RelicData>(relic, price));
                 }
             }

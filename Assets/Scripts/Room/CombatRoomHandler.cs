@@ -1,5 +1,3 @@
-// Roguelike/Logic/Handlers/CombatRoomHandler.cs
-
 using Roguelike.Data;
 using RoguelikeMapGen;
 using System;
@@ -10,13 +8,9 @@ namespace Roguelike.Logic.Handlers
 {
     public class CombatRoomHandler : IRoomHandler
     {
-        /// <summary>
-        /// Sets up a combat encounter and transitions the game state.
-        /// </summary>
         public void Execute(GameRun run, Room room)
         {
-            var roomConfig = run.RoomConfigs[room.Type];
-            var enemyTemplates = GenerateEncounter(run, roomConfig);
+            var enemyTemplates = GenerateEncounter(run, room.StarRating);
 
             if (!enemyTemplates.Any())
             {
@@ -25,84 +19,68 @@ namespace Roguelike.Logic.Handlers
 
             run.CurrentCombat = new CombatManager(run.TheHero, enemyTemplates, run.Rng, run.EffectPool.GetEffect);
             run.CurrentCombat.StartCombat();
-            
             run.CurrentState = GameState.InCombat;
         }
 
-        /// <summary>
-        /// Generates a list of enemies for an encounter, trying to match a target difficulty.
-        /// </summary>
-        private List<EnemyData> GenerateEncounter(GameRun run, RoomData config)
+        private List<EnemyData> GenerateEncounter(GameRun run, int starRating)
         {
             var encounter = new List<EnemyData>();
-            float targetDifficulty = (config.MinValue + config.MaxValue) / 2.0f;
-            float remainingDifficulty = targetDifficulty;
-            const int MAX_ENEMIES = 4;
+            
+            int enemyCount = 6 - starRating; // Pyramid enemy count
 
-            var allPossibleEnemies = run.EnemyPool.EnemiesById.Values.ToList();
-
-            while (encounter.Count < MAX_ENEMIES && remainingDifficulty > 0)
+            var leader = run.EnemyPool.GetRandomEnemyOfStar(starRating, run.Rng);
+            if (leader != null)
             {
-                var validCandidates = allPossibleEnemies.Where(e => e.Difficulty <= remainingDifficulty).ToList();
+                encounter.Add(leader);
+            }
+            else
+            {
+                var fallback = run.EnemyPool.GetRandomEnemyBelowStar(starRating + 1, run.Rng);
+                if (fallback != null) encounter.Add(fallback);
+            }
 
-                if (!validCandidates.Any())
+            int minionStarLimit = (starRating == 1) ? 2 : starRating;
+
+            while (encounter.Count < enemyCount)
+            {
+                var minion = run.EnemyPool.GetRandomEnemyBelowStar(minionStarLimit, run.Rng);
+                if (minion != null)
+                {
+                    encounter.Add(minion);
+                }
+                else
                 {
                     break;
                 }
-
-                var chosenEnemy = validCandidates[run.Rng.Next(validCandidates.Count)];
-                encounter.Add(chosenEnemy);
-                remainingDifficulty -= chosenEnemy.Difficulty;
             }
+
             return encounter;
         }
 
-        /// <summary>
-        /// Generates gold, card, and relic rewards after a victory.
-        /// This method is called by the GameController after combat is won.
-        /// </summary>
         public static void GenerateVictoryRewards(GameRun run)
         {
-            float totalDifficulty = run.CurrentCombat.Enemies.Sum(e => e.SourceEnemyData.Difficulty);
+            var room = run.TheMap.GetCurrentRoom();
+            int n = room.StarRating;
 
-            int goldReward = (int)Math.Floor(200.0 / (6.0 - totalDifficulty));
+            // Gold Formula: e^(3 + k*n) + 10 with 0 < k < 1
+            double goldCalc = Math.Exp(3 + (0.5 * n)) + 10;
+            int goldReward = (int)Math.Floor(goldCalc);
             run.TheHero.CurrentGold += goldReward;
 
             run.CardRewardChoices.Clear();
-            int difficultyTier = (int)Math.Round(totalDifficulty);
-            switch (difficultyTier)
+            
+            run.CardRewardChoices.Add(run.CardPool.GetRandomCardOfStar(n, run.Rng));
+
+            int lowerStarLimit = (n == 1) ? 1 : n; 
+            for (int i = 0; i < 2; i++)
             {
-                case 1:
-                    for (int i=0; i<3; i++) run.CardRewardChoices.Add(run.CardPool.GetRandomCardOfRarity(Rarity.Common, run.Rng));
-                    break;
-                case 2:
-                    run.CardRewardChoices.Add(run.CardPool.GetRandomCardOfRarity(Rarity.Uncommon, run.Rng));
-                    for (int i=0; i<2; i++) run.CardRewardChoices.Add(run.CardPool.GetRandomCardOfRarity(Rarity.Common, run.Rng));
-                    break;
-                case 3:
-                    run.CardRewardChoices.Add(run.CardPool.GetRandomCardOfRarity(Rarity.Rare, run.Rng));
-                    for (int i=0; i<2; i++) run.CardRewardChoices.Add(run.CardPool.GetRandomCardUpToRarity(Rarity.Uncommon, run.Rng));
-                    break;
-                case 4:
-                    run.CardRewardChoices.Add(run.CardPool.GetRandomCardOfRarity(Rarity.Legendary, run.Rng));
-                    for (int i=0; i<2; i++) run.CardRewardChoices.Add(run.CardPool.GetRandomCardUpToRarity(Rarity.Rare, run.Rng));
-                    break;
-                default: // Difficulty 5+
-                    for (int i=0; i<2; i++) run.CardRewardChoices.Add(run.CardPool.GetRandomCardOfRarity(Rarity.Legendary, run.Rng));
-                    run.CardRewardChoices.Add(run.CardPool.GetRandomCardUpToRarity(Rarity.Rare, run.Rng));
-                    break;
+                int limit = (n == 1) ? 1 : n - 1;
+                run.CardRewardChoices.Add(run.CardPool.GetRandomCardUpToStar(limit, run.Rng));
             }
+            
             run.CardRewardChoices.RemoveAll(c => c == null);
 
-            Rarity relicRarity = Rarity.Common;
-            switch (difficultyTier)
-            {
-                case 2: if (run.Rng.Next(3) == 0) relicRarity = Rarity.Uncommon; break;
-                case 3: relicRarity = (run.Rng.Next(3) == 0) ? Rarity.Rare : Rarity.Uncommon; break;
-                case 4: relicRarity = (run.Rng.Next(3) == 0) ? Rarity.Legendary : Rarity.Rare; break;
-                case 5: relicRarity = Rarity.Legendary; break;
-            }
-            run.RelicRewardChoice = run.RelicPool.GetRandomRelicOfRarity(relicRarity, run.Rng);
+            run.RelicRewardChoice = run.RelicPool.GetRandomRelicOfStar(n, run.Rng);
 
             run.CurrentState = GameState.AwaitingReward;
             run.CurrentCombat = null;

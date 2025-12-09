@@ -16,35 +16,33 @@ namespace Roguelike.Data
         public Dictionary<string, RelicData> RelicsById { get; set; } = new Dictionary<string, RelicData>();
         
         /// <summary>
-        /// Defines the gold cost range for relics of a specific rarity when they appear in a shop.
-        /// The tuple represents (minimum cost, maximum cost)
+        /// A secondary index grouping relics by their star rating for quick access.
         /// </summary>
-        public Dictionary<Rarity, (int MinCost, int MaxCost)> CostRangesByRarity { get; set; } = new Dictionary<Rarity, (int, int)>();
+        public Dictionary<int, List<RelicData>> RelicsByStar { get; set; } = new Dictionary<int, List<RelicData>>();
 
         /// <summary>
-        /// Gets a list of all relics matching a specific rarity.
+        /// Defines the min and max gold cost ranges for relics at each star rating.
         /// </summary>
-        public List<RelicData> GetRelicsByRarity(Rarity rarity)
-        {
-            return RelicsById.Values.Where(relic => relic.Rarity == rarity).ToList();
-        }
+        public Dictionary<int, (int MinCost, int MaxCost)> CostRangesByStar { get; set; } = new Dictionary<int, (int, int)>();
 
         /// <summary>
-        /// Retrieves a random relic of the specified rarity using the provided random number generator.
+        /// Initializes the RelicPool
         /// </summary>
-        public RelicData GetRandomRelicOfRarity(Rarity rarity, Random rng)
+        public void Initialize(IEnumerable<RelicData> allRelics)
         {
-            var relics = GetRelicsByRarity(rarity);
-            if (!relics.Any()) return null;
-            return relics[rng.Next(relics.Count)];
-        }
+            RelicsById.Clear();
+            RelicsByStar.Clear();
 
-        /// <summary>
-        /// Retrieves all boss relics.
-        /// </summary>
-        public List<RelicData> GetBossRelics()
-        {
-            return RelicsById.Values.Where(r => r.IsBossRelic).ToList();
+            foreach(var relic in allRelics)
+            {
+                RelicsById[relic.Id] = relic;
+                
+                if (!RelicsByStar.ContainsKey(relic.StarRating))
+                {
+                    RelicsByStar[relic.StarRating] = new List<RelicData>();
+                }
+                RelicsByStar[relic.StarRating].Add(relic);
+            }
         }
 
         /// <summary>
@@ -54,6 +52,18 @@ namespace Roguelike.Data
         {
             RelicsById.TryGetValue(id, out var relic);
             return relic;
+        }
+
+        /// <summary>
+        /// Retrieves a random relic of the specified star rating.
+        /// </summary>
+        public RelicData GetRandomRelicOfStar(int star, System.Random rng)
+        {
+            if (RelicsByStar.TryGetValue(star, out var list) && list.Any())
+            {
+                return list[rng.Next(list.Count)];
+            }
+            return null;
         }
     }
 }

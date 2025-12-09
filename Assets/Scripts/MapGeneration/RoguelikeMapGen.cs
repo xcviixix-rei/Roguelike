@@ -28,6 +28,7 @@ namespace RoguelikeMapGen
         public List<int> Outgoing { get; } = new List<int>();
         public List<int> Incoming { get; } = new List<int>();
         public RoomType Type { get; set; } = RoomType.None;
+        public int StarRating { get; set; } = 1; 
 
         public Room(int id, int x, int y)
         {
@@ -38,20 +39,15 @@ namespace RoguelikeMapGen
 
         public override string ToString()
         {
-            return $"Room(Id={Id}, x={X}, y={Y}, type={Type}, out={Outgoing.Count})";
+            return $"Room(Id={Id}, x={X}, y={Y}, type={Type}, stars={StarRating})";
         }
     }
 
     public class MapGraph
     {
-        // rooms by id
         public Dictionary<int, Room> Rooms { get; } = new Dictionary<int, Room>();
-        
-        // Dimensions for the standard map floors (0-14)
         public const int Width = 7;
         public const int Height = 15;
-        
-        // quick lookup grid [x,y] -> roomId or -1
         public int[,] Grid = new int[Width, Height];
 
         public MapGraph()
@@ -88,13 +84,11 @@ namespace RoguelikeMapGen
             if (!Rooms.ContainsKey(id)) return;
             var r = Rooms[id];
             
-            // Only try to remove from grid if it was in grid
             if (r.X >= 0 && r.X < Width && r.Y >= 0 && r.Y < Height)
             {
                 Grid[r.X, r.Y] = -1;
             }
 
-            // remove connections referencing it
             foreach (var other in Rooms.Values)
             {
                 other.Outgoing.RemoveAll(o => o == id);
@@ -107,22 +101,27 @@ namespace RoguelikeMapGen
     public class MapGenerator
     {
         private const int WIDTH = 7;
-        private const int HEIGHT = 15; // 0 to 14
+        private const int HEIGHT = 15;
         
         private readonly bool[,] template = new bool[WIDTH, HEIGHT];
         private readonly Random rng;
         private int nextRoomId = 1;
         private MapGraph graph;
 
-        // Configurable parameters
         public int PathTracks = 7; 
         
         // The weights used for random generation.
         private readonly Dictionary<RoomType, int> _locationWeights;
 
-        public MapGenerator(int seed, Dictionary<RoomType, int> weights = null)
+        private readonly float _monsterRatio; // Split between 1-Star and 2-Star
+        private readonly float _eliteRatio;   // Split between 3-Star and 4-Star
+
+        public MapGenerator(int seed, Dictionary<RoomType, int> weights = null, float monsterRatio = 0.5f, float eliteRatio = 0.5f)
         {
             rng = new Random(seed);
+
+            _monsterRatio = monsterRatio;
+            _eliteRatio = eliteRatio;
             
             // If no weights provided, use these defaults adjusted for our new Enums
             _locationWeights = weights ?? new Dictionary<RoomType, int>
@@ -181,6 +180,8 @@ namespace RoguelikeMapGen
 
             // 6) Allocate boss room above top (Floor 15)
             AllocateBossRoom();
+
+            AssignStarRatings();
 
             return graph;
         }
@@ -397,6 +398,45 @@ namespace RoguelikeMapGen
             foreach (var r in topRooms)
             {
                 ConnectRooms(r, boss);
+            }
+        }
+
+        private void AssignStarRatings()
+        {
+            var monsters = graph.Rooms.Values
+                .Where(r => r.Type == RoomType.Monster)
+                .OrderBy(r => r.Y)
+                .ThenBy(r => r.X)
+                .ToList();
+
+            if (monsters.Count > 0)
+            {
+                int splitIndex = (int)(monsters.Count * _monsterRatio);
+                for (int i = 0; i < monsters.Count; i++)
+                {
+                    monsters[i].StarRating = (i < splitIndex) ? 1 : 2;
+                }
+            }
+
+            var elites = graph.Rooms.Values
+                .Where(r => r.Type == RoomType.Elite)
+                .OrderBy(r => r.Y)
+                .ThenBy(r => r.X)
+                .ToList();
+
+            if (elites.Count > 0)
+            {
+                int splitIndex = (int)(elites.Count * _eliteRatio);
+                for (int i = 0; i < elites.Count; i++)
+                {
+                    elites[i].StarRating = (i < splitIndex) ? 3 : 4;
+                }
+            }
+
+            var boss = graph.Rooms.Values.FirstOrDefault(r => r.Type == RoomType.Boss);
+            if (boss != null)
+            {
+                boss.StarRating = 5;
             }
         }
     }

@@ -11,10 +11,10 @@ namespace Roguelike.Data
     public class EnemyData : CombatantData
     {
         /// <summary>
-        /// A numerical rating of the enemy's difficulty. Used for encounter generation
-        /// and as a fitness metric for the GA
+        /// A numerical rating of the enemy's power level, from 1 to 5.
+        /// This is used for encounter generation and reward calculation.
         /// </summary>
-        public float Difficulty { get; set; }
+        public int StarRating { get; set; }
         
         /// <summary>
         /// Indicates if this enemy is a boss-type enemy

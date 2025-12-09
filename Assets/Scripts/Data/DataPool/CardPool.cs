@@ -16,43 +16,33 @@ namespace Roguelike.Data
         public Dictionary<string, CardData> CardsById { get; set; } = new Dictionary<string, CardData>();
 
         /// <summary>
-        /// Defines the gold cost range for cards of a specific rarity when they appear in a shop.
-        /// The tuple represents (minimum cost, maximum cost).
+        /// A secondary index grouping cards by their star rating for quick access.
         /// </summary>
-        public Dictionary<Rarity, (int MinCost, int MaxCost)> CostRangesByRarity { get; set; } = new Dictionary<Rarity, (int, int)>();
-
+        public Dictionary<int, List<CardData>> CardsByStar { get; set; } = new Dictionary<int, List<CardData>>();
 
         /// <summary>
-        /// Gets a list of all cards matching a specific rarity.
+        /// Defines the min and max mana cost ranges for cards at each star rating.
         /// </summary>
-        public List<CardData> GetCardsByRarity(Rarity rarity)
-        {
-            return CardsById.Values.Where(card => card.Rarity == rarity).ToList();
-        }
+        public Dictionary<int, (int MinCost, int MaxCost)> CostRangesByStar { get; set; } = new Dictionary<int, (int, int)>();
 
         /// <summary>
-        /// Retrieves a random card of the specified rarity using the provided random number generator.
+        /// Initializes the CardPool
         /// </summary>
-        public CardData GetRandomCardOfRarity(Rarity rarity, Random rng)
+        public void Initialize(IEnumerable<CardData> allCards)
         {
-            var cards = GetCardsByRarity(rarity);
-            if (!cards.Any()) return null;
-            return cards[rng.Next(cards.Count)];
-        }
-
-        /// <summary>
-        /// Retrieves a random card up to the specified maximum rarity using the provided random number generator.
-        /// </summary>
-        public CardData GetRandomCardUpToRarity(Rarity maxRarity, Random rng)
-        {
-            var rarities = new List<Rarity>();
-            if (maxRarity >= Rarity.Common) rarities.Add(Rarity.Common);
-            if (maxRarity >= Rarity.Uncommon) rarities.Add(Rarity.Uncommon);
-            if (maxRarity >= Rarity.Rare) rarities.Add(Rarity.Rare);
-            if (maxRarity >= Rarity.Legendary) rarities.Add(Rarity.Legendary);
-
-            var chosenRarity = rarities[rng.Next(rarities.Count)]; // Simple weighted, could be improved
-            return GetRandomCardOfRarity(chosenRarity, rng);
+            CardsById.Clear();
+            CardsByStar.Clear();
+            
+            foreach(var card in allCards)
+            {
+                CardsById[card.Id] = card;
+                
+                if (!CardsByStar.ContainsKey(card.StarRating))
+                {
+                    CardsByStar[card.StarRating] = new List<CardData>();
+                }
+                CardsByStar[card.StarRating].Add(card);
+            }
         }
 
         /// <summary>
@@ -62,6 +52,30 @@ namespace Roguelike.Data
         {
             CardsById.TryGetValue(id, out var card);
             return card;
+        }
+
+        /// <summary>
+        /// Retrieves a random card of the specified star rating.
+        /// </summary>
+        public CardData GetRandomCardOfStar(int star, System.Random rng)
+        {
+            if (CardsByStar.TryGetValue(star, out var list) && list.Any())
+            {
+                return list[rng.Next(list.Count)];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a random card with a rating less than or equal to maxStar.
+        /// </summary>
+        public CardData GetRandomCardUpToStar(int maxStar, System.Random rng)
+        {
+            var validStars = CardsByStar.Keys.Where(k => k <= maxStar).ToList();
+            if (!validStars.Any()) return null;
+
+            int chosenStar = validStars[rng.Next(validStars.Count)];
+            return GetRandomCardOfStar(chosenStar, rng);
         }
     }
 }
