@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GA Results Visualizer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f9; }
+        h1, h2 { color: #333; }
+        .chart-container { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+        .controls { margin-bottom: 20px; }
+        select, input { padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+    <h1>Genetic Algorithm Results Visualizer</h1>
+    <div class="controls">
+        <label for="folderInput">Select GA_Results Folder:</label>
+        <input type="file" id="folderInput" webkitdirectory directory multiple />
+    </div>
+
+    <div class="chart-container">
+        <h2>Overall Performance Metrics</h2>
+        <canvas id="fitnessChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Win Rate vs. Avg HP on Victory</h2>
+        <canvas id="winRateHpChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <h2>Card Viability Matrix (Last Generation)</h2>
+        <p>A classic view of game balance. Top-right is overpowered, bottom-left is underpowered.</p>
+        <canvas id="cardViabilityChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Card Metric Trends</h2>
+        <div class="controls">
+            <label for="cardSelector">Select a Card to Track:</label>
+            <select id="cardSelector"></select>
+        </div>
+        <canvas id="cardTrendChart"></canvas>
+    </div>
+
+    <script src="visualizer.js"></script>
+</body>
+</html>
