@@ -1,0 +1,965 @@
+{
+  "StatusEffects": [
+    {
+      "Id": "vulnerable_low",
+      "Name": "Vulnerable",
+      "Description": "Takes 25% more damage from attacks.",
+      "Value": 125,
+      "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Vulnerable",
+      "Target": "Self"
+    },
+    {
+      "Id": "vulnerable_moderate",
+      "Name": "Vulnerable",
+      "Description": "Takes 50% more damage from attacks.",
+      "Value": 150,
+      "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Vulnerable",
+      "Target": "Self"
+    },
+    {
+      "Id": "weakened_low",
+      "Name": "Weak",
+      "Description": "Deals 25% less damage.",
+      "Value": 75,
+      "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Weakened",
+      "Target": "Self"
+    },
+    {
+      "Id": "weakened_moderate",
+      "Name": "Weak",
+      "Description": "Deals 50% less damage.",
+      "Value": 50,
+      "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Weakened",
+      "Target": "Self"
+    },
+    {
+      "Id": "strength_low",
+      "Name": "Strength",
+      "Description": "Deals +1 additional damage per stack.",
+      "Value": 1,
+      "ApplyType": "RightAway",
+      "Decay": "Permanent",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "strength_moderate",
+      "Name": "Strength",
+      "Description": "Deals +3 additional damage per stack.",
+      "Value": 3,
+      "ApplyType": "RightAway",
+      "Decay": "Permanent",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "frail_low",
+      "Name": "Frail",
+      "Description": "Gains 25% less Block.",
+      "Value": 75,
+      "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Frail",
+      "Target": "Self"
+    },
+    {
+      "Id": "frail_moderate",
+      "Name": "Frail",
+      "Description": "Gains 50% less Block.",
+      "Value": 50,
+      "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Frail",
+      "Target": "Self"
+    },
+    {
+      "Id": "pierced_low",
+      "Name": "Pierced",
+      "Description": "Damage bypasses Block.",
+      "Value": 1,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "Pierced",
+      "Target": "Self"
+    },
+    {
+      "Id": "pierced_moderate",
+      "Name": "Pierced",
+      "Description": "Damage bypasses Block.",
+      "Value": 1,
+      "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Pierced",
+      "Target": "Self"
+    },
+    {
+      "Id": "philosophical_low",
+      "Name": "Clarity",
+      "Description": "Gain 1 Mana at the start of your turn.",
+      "Value": 1,
+      "ApplyType": "StartOfTurn",
+      "Decay": "Permanent",
+      "EffectType": "Philosophical",
+      "Target": "Self"
+    },
+    {
+      "Id": "philosophical_moderate",
+      "Name": "Enlightened",
+      "Description": "Gain 2 Mana at the start of your turn.",
+      "Value": 2,
+      "ApplyType": "StartOfTurn",
+      "Decay": "Permanent",
+      "EffectType": "Philosophical",
+      "Target": "Self"
+    },
+    {
+      "Id": "combat_strength_low",
+      "Name": "Combat Strength",
+      "Description": "Gain 1 Strength at start of combat.",
+      "Value": 1,
+      "ApplyType": "StartOfCombat",
+      "Decay": "Permanent",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "combat_block_iron_plate",
+      "Name": "Iron Defense",
+      "Description": "Gain 5 Block at start of combat.",
+      "Value": 5,
+      "ApplyType": "StartOfCombat",
+      "Decay": "Permanent",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "combat_vulnerable_all",
+      "Name": "Opening Strike",
+      "Description": "Apply 1 Vulnerable to all enemies at start of combat.",
+      "Value": 1,
+      "ApplyType": "StartOfCombat",
+      "Decay": "Permanent",
+      "EffectType": "Vulnerable",
+      "Target": "AllOpponents"
+    }
+  ],
+  "DeckEffects": [
+    {
+      "Id": "draw_low",
+      "Name": "Draw",
+      "Description": "Draw 1 card.",
+      "Value": 1,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "DrawCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "draw_moderate",
+      "Name": "Draw",
+      "Description": "Draw 2 cards.",
+      "Value": 2,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "DrawCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "discard_low",
+      "Name": "Discard",
+      "Description": "Discard 1 card.",
+      "Value": 1,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "DiscardCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "discard_moderate",
+      "Name": "Discard",
+      "Description": "Discard 2 cards.",
+      "Value": 2,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "DiscardCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "freeze_low",
+      "Name": "Freeze",
+      "Description": "Freeze 1 card.",
+      "Value": 1,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "FreezeCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "freeze_moderate",
+      "Name": "Freeze",
+      "Description": "Freeze 2 cards.",
+      "Value": 2,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "FreezeCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "duplicate_low",
+      "Name": "Duplicate",
+      "Description": "Duplicate 1 card.",
+      "Value": 1,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "DuplicateCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "duplicate_moderate",
+      "Name": "Duplicate",
+      "Description": "Duplicate 2 cards.",
+      "Value": 2,
+      "ApplyType": "RightAway",
+      "Decay": "EndOfTurn",
+      "EffectType": "DuplicateCard",
+      "Target": "Self"
+    }
+  ],
+  "Cards": [
+    {
+      "Id": "strike",
+      "Name": "Strike",
+      "Description": "Deal 6 damage.",
+      "ManaCost": 1,
+      "StarRating": 1,
+      "Type": "Attack",
+      "Actions": [
+        { "Type": "DealDamage", "Value": 6, "Target": "SingleOpponent" }
+      ]
+    },
+    {
+      "Id": "defend",
+      "Name": "Defend",
+      "Description": "Gain 5 Block.",
+      "ManaCost": 1,
+      "StarRating": 1,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "GainBlock", "Value": 5, "Target": "Self" }
+      ]
+    },
+    {
+      "Id": "quick_jab",
+      "Name": "Quick Jab",
+      "Description": "Deal 3 damage.",
+      "ManaCost": 0,
+      "StarRating": 1,
+      "Type": "Attack",
+      "Actions": [
+        { "Type": "DealDamage", "Value": 3, "Target": "SingleOpponent" }
+      ]
+    },
+    {
+      "Id": "cycle",
+      "Name": "Cycle",
+      "Description": "Draw 1 card.",
+      "ManaCost": 0,
+      "StarRating": 1,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "ApplyDeckEffect", "Value": 1, "Target": "Self", "EffectId": "draw_low" }
+      ]
+    },
+    {
+      "Id": "heavy_blow",
+      "Name": "Heavy Blow",
+      "Description": "Deal 14 damage.",
+      "ManaCost": 3,
+      "StarRating": 2,
+      "Type": "Attack",
+      "Actions": [
+        { "Type": "DealDamage", "Value": 14, "Target": "SingleOpponent" }
+      ]
+    },
+    {
+      "Id": "double_tap",
+      "Name": "Double Tap",
+      "Description": "Deal 5 damage twice.",
+      "ManaCost": 1,
+      "StarRating": 2,
+      "Type": "Attack",
+      "Actions": [
+        { "Type": "DealDamage", "Value": 5, "Target": "SingleOpponent" },
+        { "Type": "DealDamage", "Value": 5, "Target": "SingleOpponent" }
+      ]
+    },
+    {
+      "Id": "shield_bash",
+      "Name": "Shield Bash",
+      "Description": "Gain 6 Block. Apply 1 Weak.",
+      "ManaCost": 1,
+      "StarRating": 2,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "GainBlock", "Value": 6, "Target": "Self" },
+        { "Type": "ApplyStatusEffect", "Value": 1, "Target": "SingleOpponent", "EffectId": "weakened_low" }
+      ]
+    },
+    {
+      "Id": "scrounge",
+      "Name": "Scrounge",
+      "Description": "Draw 2 cards.",
+      "ManaCost": 1,
+      "StarRating": 2,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "ApplyDeckEffect", "Value": 2, "Target": "Self", "EffectId": "draw_moderate" }
+      ]
+    },
+    {
+      "Id": "power_up",
+      "Name": "Power Up",
+      "Description": "Gain 2 Strength.",
+      "ManaCost": 1,
+      "StarRating": 3,
+      "Type": "Power",
+      "Actions": [
+        { "Type": "ApplyStatusEffect", "Value": 2, "Target": "Self", "EffectId": "strength_low" }
+      ]
+    },
+    {
+      "Id": "cleave",
+      "Name": "Cleave",
+      "Description": "Deal 10 damage to ALL enemies.",
+      "ManaCost": 2,
+      "StarRating": 3,
+      "Type": "Attack",
+      "Actions": [
+        { "Type": "DealDamage", "Value": 10, "Target": "AllOpponents" }
+      ]
+    },
+    {
+      "Id": "bunker_down",
+      "Name": "Bunker Down",
+      "Description": "Gain 20 Block.",
+      "ManaCost": 2,
+      "StarRating": 3,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "GainBlock", "Value": 20, "Target": "Self" }
+      ]
+    },
+    {
+      "Id": "expose_weakness",
+      "Name": "Expose Weakness",
+      "Description": "Apply 2 Vulnerable.",
+      "ManaCost": 1,
+      "StarRating": 3,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "ApplyStatusEffect", "Value": 2, "Target": "SingleOpponent", "EffectId": "vulnerable_moderate" }
+      ]
+    },
+    {
+      "Id": "piercing_shot",
+      "Name": "Piercing Shot",
+      "Description": "Apply Pierced. Deal 12 damage.",
+      "ManaCost": 2,
+      "StarRating": 4,
+      "Type": "Attack",
+      "Actions": [
+        { "Type": "ApplyStatusEffect", "Value": 1, "Target": "SingleOpponent", "EffectId": "pierced_low" },
+        { "Type": "DealDamage", "Value": 12, "Target": "SingleOpponent" }
+      ]
+    },
+    {
+      "Id": "catalyst",
+      "Name": "Catalyst",
+      "Description": "Gain 1 Clarity.",
+      "ManaCost": 0,
+      "StarRating": 4,
+      "Type": "Power",
+      "Actions": [
+        { "Type": "ApplyStatusEffect", "Value": 1, "Target": "Self", "EffectId": "philosophical_low" }
+      ]
+    },
+    {
+      "Id": "barricade",
+      "Name": "Barricade",
+      "Description": "Gain 30 Block.",
+      "ManaCost": 3,
+      "StarRating": 4,
+      "Type": "Power",
+      "Actions": [
+        { "Type": "GainBlock", "Value": 30, "Target": "Self" }
+      ]
+    },
+    {
+      "Id": "battle_trance",
+      "Name": "Battle Trance",
+      "Description": "Draw 3 cards.",
+      "ManaCost": 1,
+      "StarRating": 4,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "ApplyDeckEffect", "Value": 3, "Target": "Self", "EffectId": "draw_low" }
+      ]
+    },
+    {
+      "Id": "demon_form",
+      "Name": "Demon Form",
+      "Description": "Gain 6 Strength.",
+      "ManaCost": 4,
+      "StarRating": 5,
+      "Type": "Power",
+      "Actions": [
+        { "Type": "ApplyStatusEffect", "Value": 2, "Target": "Self", "EffectId": "strength_moderate" }
+      ]
+    },
+    {
+      "Id": "annihilate",
+      "Name": "Annihilate",
+      "Description": "Deal 50 damage.",
+      "ManaCost": 4,
+      "StarRating": 5,
+      "Type": "Attack",
+      "Actions": [
+        { "Type": "DealDamage", "Value": 50, "Target": "SingleOpponent" }
+      ]
+    },
+    {
+      "Id": "adrenaline",
+      "Name": "Adrenaline",
+      "Description": "Gain 1 Clarity. Draw 2 cards.",
+      "ManaCost": 2,
+      "StarRating": 5,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "ApplyStatusEffect", "Value": 1, "Target": "Self", "EffectId": "philosophical_low" },
+        { "Type": "ApplyDeckEffect", "Value": 2, "Target": "Self", "EffectId": "draw_moderate" }
+      ]
+    },
+    {
+      "Id": "ethereal_form",
+      "Name": "Ethereal Form",
+      "Description": "Gain 99 Block.",
+      "ManaCost": 3,
+      "StarRating": 5,
+      "Type": "Skill",
+      "Actions": [
+        { "Type": "GainBlock", "Value": 99, "Target": "Self" }
+      ]
+    }
+  ],
+  "Enemies": [
+    {
+      "Id": "goblin",
+      "Name": "Goblin",
+      "StarRating": 1,
+      "StartingHealth": 22,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 3, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 4, "Target": "Self" }}
+      ]
+    },
+    {
+      "Id": "slime",
+      "Name": "Slime",
+      "StarRating": 1,
+      "StartingHealth": 15,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 4, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 3, "Target": "Self" }}
+      ]
+    },
+    {
+      "Id": "kobold",
+      "Name": "Kobold",
+      "StarRating": 1,
+      "StartingHealth": 18,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 6, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "SingleOpponent", "EffectId": "vulnerable_low" }}
+      ]
+    },
+    {
+      "Id": "gremlin",
+      "Name": "Gremlin",
+      "StarRating": 1,
+      "StartingHealth": 12,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 4, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "SingleOpponent", "EffectId": "weakened_low" }}
+      ]
+    },
+    {
+      "Id": "brute",
+      "Name": "Brute",
+      "StarRating": 2,
+      "StartingHealth": 60,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 10, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 5, "Target": "Self" }}
+      ]
+    },
+    {
+      "Id": "cultist",
+      "Name": "Cultist",
+      "StarRating": 2,
+      "StartingHealth": 36,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "Self", "EffectId": "strength_low" }},
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 7, "Target": "SingleOpponent" }}
+      ]
+    },
+    {
+      "Id": "assassin",
+      "Name": "Assassin",
+      "StarRating": 2,
+      "StartingHealth": 30,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 6, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "SingleOpponent", "EffectId": "vulnerable_low" }}
+      ]
+    },
+    {
+      "Id": "guardian_orb",
+      "Name": "Guardian Orb",
+      "StarRating": 2,
+      "StartingHealth": 45,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 10, "Target": "Self" }},
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 8, "Target": "SingleOpponent" }}
+      ]
+    },
+    {
+      "Id": "slaver",
+      "Name": "Slaver",
+      "StarRating": 3,
+      "StartingHealth": 75,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 15, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 10, "Target": "Self" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 2, "Target": "SingleOpponent", "EffectId": "weakened_low" }}
+      ]
+    },
+    {
+      "Id": "ogre",
+      "Name": "Ogre",
+      "StarRating": 3,
+      "StartingHealth": 100,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 18, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 10, "Target": "Self" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "SingleOpponent", "EffectId": "frail_low" }}
+      ]
+    },
+    {
+      "Id": "sentinel",
+      "Name": "Sentinel",
+      "StarRating": 3,
+      "StartingHealth": 65,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 10, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 20, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 8, "Target": "Self" }}
+      ]
+    },
+    {
+      "Id": "gremlin_leader",
+      "Name": "Gremlin Leader",
+      "StarRating": 3,
+      "StartingHealth": 90,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 6, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 8, "Target": "Self" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "Self", "EffectId": "strength_moderate" }}
+      ]
+    },
+    {
+      "Id": "book_of_stabbing",
+      "Name": "Book of Stabbing",
+      "StarRating": 4,
+      "StartingHealth": 120,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 3, "Action": { "Type": "DealDamage", "Value": 5, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 10, "Target": "Self" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "SingleOpponent", "EffectId": "pierced_low" }}
+      ]
+    },
+    {
+      "Id": "giant_head",
+      "Name": "Giant Head",
+      "StarRating": 4,
+      "StartingHealth": 150,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 2, "Target": "SingleOpponent", "EffectId": "weakened_moderate" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 10, "Target": "Self" }},
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 25, "Target": "SingleOpponent" }}
+      ]
+    },
+    {
+      "Id": "nemesis",
+      "Name": "Nemesis",
+      "StarRating": 4,
+      "StartingHealth": 135,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 20, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 10, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 15, "Target": "Self" }}
+      ]
+    },
+    {
+      "Id": "reptomancer",
+      "Name": "Reptomancer",
+      "StarRating": 4,
+      "StartingHealth": 105,
+      "IsBoss": false,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "AllOpponents", "EffectId": "vulnerable_low" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 10, "Target": "Self" }},
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 10, "Target": "SingleOpponent" }}
+      ]
+    },
+    {
+      "Id": "dragon",
+      "Name": "Dragon",
+      "StarRating": 5,
+      "StartingHealth": 350,
+      "IsBoss": true,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 20, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 8, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 10, "Target": "Self" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 2, "Target": "SingleOpponent", "EffectId": "frail_moderate" }}
+      ]
+    },
+    {
+      "Id": "time_eater",
+      "Name": "Time Eater",
+      "StarRating": 5,
+      "StartingHealth": 450,
+      "IsBoss": true,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "ApplyStatusEffect", "Value": 2, "Target": "SingleOpponent", "EffectId": "frail_moderate" }},
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 15, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 20, "Target": "Self" }}
+      ]
+    },
+    {
+      "Id": "bronze_automaton",
+      "Name": "Bronze Automaton",
+      "StarRating": 5,
+      "StartingHealth": 450,
+      "IsBoss": true,
+      "ActionSet": [
+        { "Weight": 1, "Action": { "Type": "GainBlock", "Value": 30, "Target": "Self" }},
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 10, "Target": "AllOpponents" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 1, "Target": "Self", "EffectId": "strength_moderate" }}
+      ]
+    },
+    {
+      "Id": "lich_king",
+      "Name": "Lich King",
+      "StarRating": 5,
+      "StartingHealth": 330,
+      "IsBoss": true,
+      "ActionSet": [
+        { "Weight": 2, "Action": { "Type": "DealDamage", "Value": 22, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "DealDamage", "Value": 10, "Target": "SingleOpponent" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 2, "Target": "SingleOpponent", "EffectId": "vulnerable_moderate" }},
+        { "Weight": 1, "Action": { "Type": "ApplyStatusEffect", "Value": 2, "Target": "AllOpponents", "EffectId": "weakened_low" }}
+      ]
+    }
+  ],
+  "Relics": [
+    {
+      "Id": "base_relic",
+      "Name": "Base Relic",
+      "Description": "A simple starting relic.",
+      "StarRating": 1,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "iron_plate",
+      "Name": "Iron Plate",
+      "Description": "Gain 5 Block at the start of each combat.",
+      "StarRating": 1,
+      "IsBossRelic": false,
+      "EffectIds": ["combat_block_iron_plate"]
+    },
+    {
+      "Id": "old_coin",
+      "Name": "Old Coin",
+      "Description": "Gain 50 additional Gold at the start of a run.",
+      "StarRating": 1,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "tough_bandages",
+      "Name": "Tough Bandages",
+      "Description": "Increase Max HP by 7.",
+      "StarRating": 1,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "whetstone",
+      "Name": "Whetstone",
+      "Description": "Gain 1 Strength at the start of each combat.",
+      "StarRating": 2,
+      "IsBossRelic": false,
+      "EffectIds": ["combat_strength_low"]
+    },
+    {
+      "Id": "blood_vial",
+      "Name": "Blood Vial",
+      "Description": "Heal 2 HP at the end of each combat.",
+      "StarRating": 2,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "lantern",
+      "Name": "Lantern",
+      "Description": "Gain 1 Mana on the first turn of each combat.",
+      "StarRating": 2,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "bag_of_marbles",
+      "Name": "Bag of Marbles",
+      "Description": "Apply 1 Vulnerable to all enemies at the start of combat.",
+      "StarRating": 2,
+      "IsBossRelic": false,
+      "EffectIds": ["combat_vulnerable_all"]
+    },
+    {
+      "Id": "prayer_wheel",
+      "Name": "Prayer Wheel",
+      "Description": "Card rewards contain an additional card choice.",
+      "StarRating": 3,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "the_boot",
+      "Name": "The Boot",
+      "Description": "Whenever you would deal 4 or less unblocked attack damage, deal 5 damage instead.",
+      "StarRating": 3,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "hand_drill",
+      "Name": "Hand Drill",
+      "Description": "The first attack you play each turn is free.",
+      "StarRating": 3,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "ink_bottle",
+      "Name": "Ink Bottle",
+      "Description": "Whenever you play 5 cards, draw 1 card.",
+      "StarRating": 3,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "cursed_key",
+      "Name": "Cursed Key",
+      "Description": "Gain 1 Mana at the start of each turn. Chests are cursed.",
+      "StarRating": 4,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "shuriken",
+      "Name": "Shuriken",
+      "Description": "Every time you play 3 Attacks in a single turn, gain 1 Strength.",
+      "StarRating": 4,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "mummified_hand",
+      "Name": "Mummified Hand",
+      "Description": "Whenever you play a Power card, a random card in your hand costs 0 this turn.",
+      "StarRating": 4,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "dead_branch",
+      "Name": "Dead Branch",
+      "Description": "Whenever you Exhaust a card, add a random card to your hand.",
+      "StarRating": 4,
+      "IsBossRelic": false,
+      "EffectIds": []
+    },
+    {
+      "Id": "sozu",
+      "Name": "Sozu",
+      "Description": "Gain 1 Mana at the start of each turn. You can no longer obtain potions.",
+      "StarRating": 5,
+      "IsBossRelic": true,
+      "EffectIds": []
+    },
+    {
+      "Id": "fusion_hammer",
+      "Name": "Fusion Hammer",
+      "Description": "Gain 1 Mana at the start of each turn. You can no longer rest at campfires.",
+      "StarRating": 5,
+      "IsBossRelic": true,
+      "EffectIds": []
+    },
+    {
+      "Id": "busted_crown",
+      "Name": "Busted Crown",
+      "Description": "Gain 1 Mana at the start of each turn. Card rewards have only 1 card choice.",
+      "StarRating": 5,
+      "IsBossRelic": true,
+      "EffectIds": []
+    },
+    {
+      "Id": "black_star",
+      "Name": "Black Star",
+      "Description": "Elites drop an additional Relic.",
+      "StarRating": 5,
+      "IsBossRelic": true,
+      "EffectIds": []
+    }
+  ],
+  "Hero": {
+    "Id": "player",
+    "Name": "The Player",
+    "StartingHealth": 60,
+    "StartingMana": 3,
+    "StartingGold": 100,
+    "StartingHandSize": 5,
+    "StartingDeckCardIds": [
+      "strike", "strike", "strike", "strike",
+      "defend", "defend", "defend", "defend",
+      "quick_jab", "cycle"
+    ],
+    "StartingRelicId": "base_relic"
+  },
+  "Events": [
+    {
+      "Id": "golden_idol",
+      "EventTitle": "Golden Idol",
+      "EventDescription": "You find a golden idol on a pedestal.",
+      "Choices": [
+        {
+          "ChoiceText": "Take it (Lose 10 HP)",
+          "Effects": [
+            { "Type": "LoseHP", "Value": 10 },
+            { "Type": "GainGold", "Value": 70 }
+          ]
+        },
+        {
+          "ChoiceText": "Pry it loose (Lose 20 HP)",
+          "Effects": [
+            { "Type": "LoseHP", "Value": 20 },
+            { "Type": "GainGold", "Value": 150 }
+          ]
+        },
+        {
+          "ChoiceText": "Leave",
+          "Effects": [{ "Type": "Quit" }]
+        }
+      ]
+    },
+    {
+      "Id": "shady_deal",
+      "EventTitle": "Shady Deal",
+      "EventDescription": "A mysterious figure offers you a deal.",
+      "Choices": [
+        {
+          "ChoiceText": "Pay with blood (Lose 15 HP)",
+          "Effects": [{ "Type": "LoseHP", "Value": 15 }]
+        },
+        {
+          "ChoiceText": "Pay with coin (Lose 100 Gold)",
+          "Effects": [{ "Type": "LoseGold", "Value": 100 }]
+        }
+      ]
+    },
+    {
+      "Id": "bonfire_spirits",
+      "EventTitle": "Bonfire Spirits",
+      "EventDescription": "Spirits dance around a bonfire, beckoning you to give something up.",
+      "Choices": [
+        {
+          "ChoiceText": "Offer a memory (Remove a card)",
+          "Effects": [{ "Type": "RemoveCard" }]
+        }
+      ]
+    }
+  ],
+  "RoomConfigs": {
+    "Monster": {
+      "Type": "Monster",
+      "DisplayName": "Monster",
+      "Description": "A standard combat encounter.",
+      "StarRating": 1
+    },
+    "Elite": {
+      "Type": "Elite",
+      "DisplayName": "Elite",
+      "Description": "A difficult combat with a better reward.",
+      "StarRating": 3
+    },
+    "Boss": {
+      "Type": "Boss",
+      "DisplayName": "Boss",
+      "Description": "The ultimate challenge of the floor.",
+      "StarRating": 5
+    },
+    "Event": {
+      "Type": "Event",
+      "DisplayName": "Event",
+      "Description": "A strange occurrence. A choice awaits.",
+      "StarRating": 0
+    },
+    "Shop": {
+      "Type": "Shop",
+      "DisplayName": "Shop",
+      "Description": "Purchase new cards and relics.",
+      "StarRating": 0
+    },
+    "Rest": {
+      "Type": "Rest",
+      "DisplayName": "Rest Site",
+      "Description": "Rest to recover health.",
+      "StarRating": 0
+    }
+  }
+}
