@@ -104,3 +104,9 @@ InitTestScene*.unity*
 
 /[Pp]ackages/
 /[Aa]ssets/Settings
+
+#Metric table
+/metrics-guide.md
+
+#Reports
+/[Gg]A_Results
