@@ -2,9 +2,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Attach to Unity",
-            "type": "vstuc",
-            "request": "attach"
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/net9.0/RoguelikeGASimulator.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false
         }
-     ]
+    ]
 }
