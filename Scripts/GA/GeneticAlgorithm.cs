@@ -135,15 +135,50 @@ namespace Roguelike.GA
 
         private BalanceGenome TournamentSelect(List<BalanceGenome> rankedPopulation)
         {
-            int tournamentSize = 5;
-            BalanceGenome best = null;
+            int tournamentSize = Math.Min(5, rankedPopulation.Count);
+            
+            var tournament = new List<BalanceGenome>();
+            var selectedIndices = new HashSet<int>();
+            
             lock (_rngLock)
             {
-                // This is a simplified tournament selection, for a ranked list just picking a random one from the top half is effective
-                int index = _rng.Next(rankedPopulation.Count / 2);
-                best = rankedPopulation[index];
+                while (tournament.Count < tournamentSize)
+                {
+                    int index = _rng.Next(rankedPopulation.Count);
+                    if (selectedIndices.Add(index))
+                    {
+                        tournament.Add(rankedPopulation[index]);
+                    }
+                }
             }
-            return best;
+            
+            return tournament.OrderBy(genome => rankedPopulation.IndexOf(genome)).First();
+        }
+
+        private BalanceGenome TournamentSelectWithFitness(List<BalanceGenome> rankedPopulation, List<float> fitnessScores)
+        {
+            int tournamentSize = Math.Min(5, rankedPopulation.Count);
+            
+            BalanceGenome bestGenome = null;
+            float bestFitness = float.MinValue;
+            
+            lock (_rngLock)
+            {
+                for (int i = 0; i < tournamentSize; i++)
+                {
+                    int index = _rng.Next(rankedPopulation.Count);
+                    var genome = rankedPopulation[index];
+                    var fitness = fitnessScores[index];
+                    
+                    if (fitness > bestFitness)
+                    {
+                        bestFitness = fitness;
+                        bestGenome = genome;
+                    }
+                }
+            }
+            
+            return bestGenome;
         }
 
         private BalanceGenome Crossover(BalanceGenome parent1, BalanceGenome parent2)
@@ -233,14 +268,14 @@ namespace Roguelike.GA
 
                 // Hero stats
                 if (_rng.NextDouble() < MutationRate)
-                    genome.HeroHealthScalar += (float)(_rng.NextDouble() * 0.2 - 0.1);
-                genome.HeroHealthScalar = Math.Clamp(genome.HeroHealthScalar, 0.7f, 1.5f);
+                    genome.HeroHealthScalar += (float)(_rng.NextDouble() * 0.1 - 0.05);
+                genome.HeroHealthScalar = Math.Clamp(genome.HeroHealthScalar, 0.8f, 1.2f);
 
                 if (_rng.NextDouble() < MutationRate)
                     genome.HeroStartGoldScalar += (float)(_rng.NextDouble() * 0.2 - 0.1);
                 genome.HeroStartGoldScalar = Math.Clamp(genome.HeroStartGoldScalar, 0.7f, 1.5f);
 
-                if (_rng.NextDouble() < MutationRate)
+                if (_rng.NextDouble() < (MutationRate * 0.1))
                     genome.HeroManaOffset += _rng.Next(3) - 1; // -1, 0, +1
                 genome.HeroManaOffset = Math.Clamp(genome.HeroManaOffset, -1, 1); // +/- 1 mana
 
@@ -248,8 +283,12 @@ namespace Roguelike.GA
                 foreach (var key in genome.CardCostModifiers.Keys.ToList())
                 {
                     if (_rng.NextDouble() < MutationRate)
+                    {
+                        int originalCost = _baseCards.GetCard(key).ManaCost;
                         genome.CardCostModifiers[key] += _rng.Next(3) - 1;
-                    genome.CardCostModifiers[key] = Math.Clamp(genome.CardCostModifiers[key], -1, 1);
+                        int minCostMod = originalCost > 0 ? -(originalCost - 1) : 0;
+                        genome.CardCostModifiers[key] = Math.Clamp(genome.CardCostModifiers[key], minCostMod, 1);
+                    }
                 }
                 foreach (var key in genome.CardActionScalars.Keys.ToList())
                 {

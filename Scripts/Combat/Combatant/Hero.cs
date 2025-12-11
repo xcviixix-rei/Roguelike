@@ -1,11 +1,12 @@
 using Roguelike.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Roguelike.Logic
 {
     /// <summary>
-    /// Represents the player's character, holding all their run-time state.
+    /// Represents the player's character, holding all their run-time state
     /// </summary>
     public class Hero : Combatant
     {
@@ -30,7 +31,9 @@ namespace Roguelike.Logic
             Block = 0;
             CurrentMana = MaxMana;
 
-            var philosophicalEffect = ActiveEffects.FirstOrDefault(e => e.SourceData is StatusEffectData s && s.EffectType == StatusEffectType.Philosophical);
+            var philosophicalEffect = ActiveEffects.FirstOrDefault(e => 
+                e.SourceData is StatusEffectData s && s.EffectType == StatusEffectType.Philosophical);
+            
             if (philosophicalEffect != null)
             {
                 CurrentMana += (philosophicalEffect.SourceData.Value * philosophicalEffect.Stacks);

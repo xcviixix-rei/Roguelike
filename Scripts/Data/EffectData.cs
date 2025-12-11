@@ -30,7 +30,12 @@ namespace Roguelike.Data
         public int Value { get; set; }
 
         /// <summary>
-        /// How long the effect lasts.
+        /// When the effect is applied
+        /// </summary>
+        public ApplyType ApplyType { get; set; }
+
+        /// <summary>
+        /// How long the effect lasts
         /// </summary>
         public DecayType Decay { get; set; }
 

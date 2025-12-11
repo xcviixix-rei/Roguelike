@@ -46,25 +46,7 @@ namespace Roguelike.Logic
             TheHero.ResetForNewCombat();
             TheHero.Deck.StartCombat();
             
-            if (TheHero.Relics.Any(r => r.Id == "iron_plate"))
-            {
-                TheHero.GainBlock(5);
-            }
-            if (TheHero.Relics.Any(r => r.Id == "whetstone"))
-            {
-                TheHero.ApplyEffect(getEffectById("strength_low"), 1);
-            }
-            if (TheHero.Relics.Any(r => r.Id == "bag_of_marbles"))
-            {
-                var vulnerableEffect = getEffectById("vulnerable_low");
-                if (vulnerableEffect != null)
-                {
-                    foreach (var enemy in Enemies)
-                    {
-                        enemy.ApplyEffect(vulnerableEffect, 1);
-                    }
-                }
-            }
+            ApplyRelicEffects(TheHero, ApplyType.StartOfCombat);
             
             BeginPlayerTurn();
         }
@@ -152,6 +134,8 @@ namespace Roguelike.Logic
 
             TheHero.StartTurn();
 
+            ApplyRelicEffects(TheHero, ApplyType.StartOfTurn);
+            
             if (TurnNumber == 1 && TheHero.Relics.Any(r => r.Id == "lantern"))
             {
                 TheHero.CurrentMana += 1;
@@ -234,6 +218,32 @@ namespace Roguelike.Logic
                     return new[] { TheHero };
             }
             return Enumerable.Empty<Combatant>();
+        }
+
+        /// <summary>
+        /// Applies relic effects of a specific ApplyType
+        /// </summary>
+        private void ApplyRelicEffects(Hero hero, ApplyType applyType)
+        {
+            foreach (var relic in hero.Relics)
+            {
+                foreach (var effect in relic.Effects.Where(e => e.ApplyType == applyType))
+                {
+                    if (effect is StatusEffectData statusEffect)
+                    {
+                        hero.ApplyEffect(statusEffect, effect.Value);
+                    }
+                    else if (effect is DeckEffectData deckEffect)
+                    {
+                        ActionResolver.Resolve(
+                            new CombatActionData(ActionType.ApplyDeckEffect, effect.Value, TargetType.Self, effect.Id),
+                            hero,
+                            hero,
+                            getEffectById
+                        );
+                    }
+                }
+            }
         }
     }
 }

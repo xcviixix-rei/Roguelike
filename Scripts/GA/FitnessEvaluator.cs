@@ -8,14 +8,14 @@ namespace Roguelike.GA
     {
         // Outcome Weights
         public float TargetWinRate = 0.45f;
-        public float WinRateWeight = 30.0f;
+        public float WinRateWeight = 100.0f;
 
         // Quality / Player Experience Weights
         public float TargetVictoryHpPercent = 0.30f;
-        public float VictoryHpWeight = 15.0f;
+        public float VictoryHpWeight = 20.0f;
 
         // Pacing Weights
-        public float FloorOfDeathWeight = 10.0f;
+        // public float FloorOfDeathWeight = 10.0f;
 
         // Diversity Weights
         public float CardViabilityWeight = 5.0f;
@@ -30,15 +30,21 @@ namespace Roguelike.GA
         {
             if (results == null || results.Count == 0) return 0f;
 
-            float winRateScore = CalculateWinRateScore(results);
+            // float winRateScore = CalculateWinRateScore(results);
+            float winRatePenalty = CalculateWinRatePenalty(results);
+            if (winRatePenalty < 0.1f)
+            {
+                return winRatePenalty * WinRateWeight;
+            }
+
             float victoryHpScore = CalculateVictoryHpScore(results);
             float floorOfDeathScore = CalculateFloorOfDeathScore(results);
             float cardViabilityScore = CalculateCardViabilityScore(results);
 
             float totalFitness =
-                (winRateScore * WinRateWeight) +
+                (winRatePenalty * WinRateWeight) +
                 (victoryHpScore * VictoryHpWeight) +
-                (floorOfDeathScore * FloorOfDeathWeight) +
+                // (floorOfDeathScore * FloorOfDeathWeight) +
                 (cardViabilityScore * CardViabilityWeight);
 
             return totalFitness;
@@ -52,6 +58,16 @@ namespace Roguelike.GA
             float diff = Math.Abs(actualWinRate - TargetWinRate);
 
             return (float)Math.Exp(-(diff * diff) / (2 * winRateSigma * winRateSigma));
+        }
+
+        private float CalculateWinRatePenalty(List<SimulationStats> results)
+        {
+            float actualWinRate = (float)results.Count(r => r.IsVictory) / results.Count;
+
+            float diff = actualWinRate - TargetWinRate;
+            float penalty = 1.0f - (diff * diff * 4.0f);
+
+            return Math.Max(0, penalty);
         }
 
         private float CalculateVictoryHpScore(List<SimulationStats> results)

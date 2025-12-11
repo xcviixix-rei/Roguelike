@@ -12,6 +12,16 @@ namespace Roguelike.Data
     }
 
     /// <summary>
+    /// Determines when an effect is applied
+    /// </summary>
+    public enum ApplyType
+    {
+        RightAway,      // Applied immediately
+        StartOfCombat,  // Applied at the start of combat
+        StartOfTurn     // Applied at the start of each turn
+    }
+
+    /// <summary>
     /// Determines how long an effect lasts
     /// </summary>
     public enum DecayType
