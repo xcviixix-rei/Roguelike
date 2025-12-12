@@ -105,8 +105,13 @@ InitTestScene*.unity*
 /[Pp]ackages/
 /[Aa]ssets/Settings
 
-#Metric table
+#Tuning guide
 /metrics-guide.md
+/fitness_tuning_guide.md
 
 #Reports
 /[Gg]A_Results
+/[Gg]A_Logs
+
+#Docs
+/Document.md

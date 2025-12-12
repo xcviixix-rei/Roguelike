@@ -6,68 +6,152 @@ namespace Roguelike.GA
 {
     public class FitnessEvaluator
     {
-        // Outcome Weights
+        // TARGET METRICS
         public float TargetWinRate = 0.45f;
-        public float WinRateWeight = 100.0f;
-
-        // Quality / Player Experience Weights
+        public float MinAcceptableWinRate = 0.25f;
+        public float MaxAcceptableWinRate = 0.65f;
+        
         public float TargetVictoryHpPercent = 0.30f;
-        public float VictoryHpWeight = 20.0f;
-
-        // Pacing Weights
-        // public float FloorOfDeathWeight = 10.0f;
-
-        // Diversity Weights
-        public float CardViabilityWeight = 5.0f;
-
+        public float MinAcceptableVictoryHp = 0.10f;
+        public float MaxAcceptableVictoryHp = 0.50f;
+        
+        public float TargetAvgFloorOnDeath = 10.0f;
+        
+        // WEIGHTS
+        public float WinRateWeight = 40.0f;
+        public float VictoryHpWeight = 15.0f;
+        public float GameLengthWeight = 10.0f;
+        public float CardViabilityWeight = 20.0f;
+        public float ElitePerformanceWeight = 10.0f;
+        public float ConsistencyWeight = 5.0f;
+        
+        // STARTING CARDS (Exclude from diversity metrics)
+        private static readonly HashSet<string> StartingCards = new HashSet<string>
+        {
+            "strike", "defend", "quick_jab", "cycle"
+        };
 
         /// <summary>
-        /// Calculates the final fitness score for a genome based on a batch of simulation results.
+        /// Calculates fitness and returns detailed breakdown for logging
         /// </summary>
-        /// <param name="results">A list of SimulationStats, one for each run with this genome.</param>
-        /// <returns>A single float representing the genome's fitness. Higher is better.</returns>
-        public float CalculateFitness(List<SimulationStats> results)
+        public FitnessBreakdown CalculateFitnessWithBreakdown(List<SimulationStats> results)
         {
-            if (results == null || results.Count == 0) return 0f;
-
-            // float winRateScore = CalculateWinRateScore(results);
-            float winRatePenalty = CalculateWinRatePenalty(results);
-            if (winRatePenalty < 0.1f)
+            var breakdown = new FitnessBreakdown();
+            
+            if (results == null || results.Count == 0)
             {
-                return winRatePenalty * WinRateWeight;
+                return breakdown;
             }
 
-            float victoryHpScore = CalculateVictoryHpScore(results);
-            float floorOfDeathScore = CalculateFloorOfDeathScore(results);
-            float cardViabilityScore = CalculateCardViabilityScore(results);
+            // Calculate individual scores
+            breakdown.WinRateScore = CalculateWinRateScore(results);
+            breakdown.VictoryHpScore = CalculateVictoryHpScore(results);
+            breakdown.GameLengthScore = CalculateGameLengthScore(results);
+            breakdown.CardViabilityScore = CalculateCardViabilityScore(results);
+            breakdown.EliteScore = CalculateElitePerformanceScore(results);
+            breakdown.ConsistencyScore = CalculateConsistencyScore(results);
 
-            float totalFitness =
-                (winRatePenalty * WinRateWeight) +
-                (victoryHpScore * VictoryHpWeight) +
-                // (floorOfDeathScore * FloorOfDeathWeight) +
-                (cardViabilityScore * CardViabilityWeight);
+            // Calculate raw metrics for reporting
+            breakdown.WinRate = (float)results.Count(r => r.IsVictory) / results.Count;
+            
+            var winningRuns = results.Where(r => r.IsVictory).ToList();
+            breakdown.AvgVictoryHp = winningRuns.Any() 
+                ? winningRuns.Average(r => r.FinalHPPercent) 
+                : 0f;
 
-            return totalFitness;
+            var losingRuns = results.Where(r => !r.IsVictory).ToList();
+            breakdown.AvgFloorOnDeath = losingRuns.Any()
+                ? (float)losingRuns.Average(r => r.FinalFloorReached)
+                : 15f;
+
+            // Count viable cards and trap cards
+            var pickCounts = new Dictionary<string, int>();
+            var pickWins = new Dictionary<string, int>();
+            
+            foreach (var run in results)
+            {
+                var pickedCards = new HashSet<string>(
+                    run.MasterDeckIds.Where(id => !StartingCards.Contains(id))
+                );
+                
+                foreach (var cardId in pickedCards)
+                {
+                    if (!pickCounts.ContainsKey(cardId))
+                    {
+                        pickCounts[cardId] = 0;
+                        pickWins[cardId] = 0;
+                    }
+                    pickCounts[cardId]++;
+                    if (run.IsVictory) pickWins[cardId]++;
+                }
+            }
+
+            breakdown.ViableCards = pickCounts.Count(kv => (float)kv.Value / results.Count >= 0.10f);
+            
+            breakdown.TrapCards = 0;
+            foreach (var cardId in pickCounts.Keys)
+            {
+                float pickRate = (float)pickCounts[cardId] / results.Count;
+                float winRate = (float)pickWins[cardId] / pickCounts[cardId];
+                if (pickRate > 0.10f && winRate < 0.30f)
+                {
+                    breakdown.TrapCards++;
+                }
+            }
+
+            // Elite metrics
+            var runsWithElites = results.Where(r => r.ElitesEncountered > 0).ToList();
+            if (runsWithElites.Any())
+            {
+                float avgElitesDefeated = (float)runsWithElites.Average(r => r.ElitesDefeated);
+                float avgElitesEncountered = (float)runsWithElites.Average(r => r.ElitesEncountered);
+                breakdown.EliteKillRate = avgElitesDefeated / avgElitesEncountered;
+            }
+
+            // Check hard constraints
+            if (breakdown.WinRate < MinAcceptableWinRate)
+            {
+                breakdown.TotalFitness = breakdown.WinRateScore * WinRateWeight * 0.1f;
+                breakdown.IsCriticalFailure = true;
+                return breakdown;
+            }
+
+            if (breakdown.WinRate > MaxAcceptableWinRate)
+            {
+                breakdown.TotalFitness = breakdown.WinRateScore * WinRateWeight * 0.5f;
+                breakdown.IsCriticalFailure = true;
+                return breakdown;
+            }
+
+            // Normal calculation
+            breakdown.TotalFitness =
+                (breakdown.WinRateScore * WinRateWeight) +
+                (breakdown.VictoryHpScore * VictoryHpWeight) +
+                (breakdown.GameLengthScore * GameLengthWeight) +
+                (breakdown.CardViabilityScore * CardViabilityWeight) +
+                (breakdown.EliteScore * ElitePerformanceWeight) +
+                (breakdown.ConsistencyScore * ConsistencyWeight);
+
+            return breakdown;
+        }
+
+        /// <summary>
+        /// Standard fitness calculation (backwards compatible)
+        /// </summary>
+        public float CalculateFitness(List<SimulationStats> results)
+        {
+            return CalculateFitnessWithBreakdown(results).TotalFitness;
         }
 
         private float CalculateWinRateScore(List<SimulationStats> results)
         {
             float actualWinRate = (float)results.Count(r => r.IsVictory) / results.Count;
-
-            float winRateSigma = 0.08f;
-            float diff = Math.Abs(actualWinRate - TargetWinRate);
-
-            return (float)Math.Exp(-(diff * diff) / (2 * winRateSigma * winRateSigma));
-        }
-
-        private float CalculateWinRatePenalty(List<SimulationStats> results)
-        {
-            float actualWinRate = (float)results.Count(r => r.IsVictory) / results.Count;
-
             float diff = actualWinRate - TargetWinRate;
-            float penalty = 1.0f - (diff * diff * 4.0f);
-
-            return Math.Max(0, penalty);
+            
+            float k = 20.0f;
+            float score = 1.0f / (1.0f + k * diff * diff);
+            
+            return score;
         }
 
         private float CalculateVictoryHpScore(List<SimulationStats> results)
@@ -75,53 +159,72 @@ namespace Roguelike.GA
             var winningRuns = results.Where(r => r.IsVictory).ToList();
             if (!winningRuns.Any()) return 0f;
 
-            float averageVictoryHp = winningRuns.Average(r => r.FinalHPPercent);
+            float avgVictoryHp = winningRuns.Average(r => r.FinalHPPercent);
             
-            float HpSigma = 0.08f;
-            float diff = Math.Abs(averageVictoryHp - TargetVictoryHpPercent);
-            return (float)Math.Exp(-(diff * diff) / (2 * HpSigma * HpSigma));
+            if (avgVictoryHp < TargetVictoryHpPercent)
+            {
+                float ratio = avgVictoryHp / TargetVictoryHpPercent;
+                return ratio * ratio;
+            }
+            else
+            {
+                float diff = avgVictoryHp - TargetVictoryHpPercent;
+                return Math.Max(0.5f, 1.0f - diff);
+            }
         }
 
-        private float CalculateFloorOfDeathScore(List<SimulationStats> results)
+        private float CalculateGameLengthScore(List<SimulationStats> results)
         {
             var losingRuns = results.Where(r => !r.IsVictory).ToList();
-            if (!losingRuns.Any()) return 1.0f;
+            if (!losingRuns.Any()) 
+            {
+                var avgFloor = results.Average(r => r.FinalFloorReached);
+                return avgFloor >= 13 ? 1.0f : 0.8f;
+            }
 
-            float averageDeathFloor = (float)losingRuns.Average(r => r.FinalFloorReached);
-            return averageDeathFloor / 15.0f;
+            float avgDeathFloor = (float)losingRuns.Average(r => r.FinalFloorReached);
+            
+            float diff = Math.Abs(avgDeathFloor - TargetAvgFloorOnDeath);
+            return 1.0f / (1.0f + diff * diff * 0.1f);
         }
 
         private float CalculateCardViabilityScore(List<SimulationStats> results)
         {
-            // Build pick rate distribution
             var pickCounts = new Dictionary<string, int>();
+            var pickWins = new Dictionary<string, int>();
+            
             foreach (var run in results)
             {
-                // Count each card only once per deck
-                foreach (var cardId in new HashSet<string>(run.MasterDeckIds))
+                var pickedCards = new HashSet<string>(
+                    run.MasterDeckIds.Where(id => !StartingCards.Contains(id))
+                );
+                
+                foreach (var cardId in pickedCards)
                 {
-                    if (!pickCounts.ContainsKey(cardId)) pickCounts[cardId] = 0;
+                    if (!pickCounts.ContainsKey(cardId))
+                    {
+                        pickCounts[cardId] = 0;
+                        pickWins[cardId] = 0;
+                    }
                     pickCounts[cardId]++;
+                    if (run.IsVictory) pickWins[cardId]++;
                 }
             }
 
             if (pickCounts.Count < 2) return 0f;
 
-            // Calculate three complementary metrics
-            float entropyScore = CalculateShannonEntropy(pickCounts, results.Count);
-            float giniScore = CalculateGiniCoefficient(pickCounts);
-            float trapCardPenalty = CalculateTrapCardPenalty(results, pickCounts);
+            float diversityScore = CalculatePickDiversity(pickCounts);
+            float balanceScore = CalculateWinRateBalance(pickCounts, pickWins);
+            float noTrapsScore = CalculateNoTrapsScore(pickCounts, pickWins, results.Count);
+            float varietyScore = CalculateBuildVariety(results);
 
-            // Combine metrics (weighted average)
-            return (entropyScore * 0.5f) + (giniScore * 0.3f) + (trapCardPenalty * 0.2f);
+            return (diversityScore * 0.3f) + 
+                   (balanceScore * 0.3f) + 
+                   (noTrapsScore * 0.2f) + 
+                   (varietyScore * 0.2f);
         }
 
-        /// <summary>
-        /// Shannon Entropy measures the diversity of card picks.
-        /// Higher entropy = more uniform distribution = better diversity.
-        /// Returns a normalized score between 0 (all cards picked equally) and 1 (perfect diversity).
-        /// </summary>
-        private float CalculateShannonEntropy(Dictionary<string, int> pickCounts, int totalRuns)
+        private float CalculatePickDiversity(Dictionary<string, int> pickCounts)
         {
             if (pickCounts.Count == 0) return 0f;
 
@@ -135,100 +238,153 @@ namespace Roguelike.GA
                 entropy -= probability * Math.Log(probability, 2);
             }
 
-            // Normalize: max entropy is log2(n) where n = number of unique cards
             double maxEntropy = Math.Log(pickCounts.Count, 2);
             if (maxEntropy == 0) return 0f;
 
             return (float)(entropy / maxEntropy);
         }
 
-        /// <summary>
-        /// Gini Coefficient measures inequality in card pick distribution.
-        /// Lower Gini = more equal distribution = better diversity.
-        /// </summary>
-        /// <returns>A normalized score where 1 = perfect equality, 0 = maximum inequality</returns>
-        private float CalculateGiniCoefficient(Dictionary<string, int> pickCounts)
+        private float CalculateWinRateBalance(Dictionary<string, int> pickCounts, Dictionary<string, int> pickWins)
         {
-            var counts = pickCounts.Values.OrderBy(x => x).ToList();
-            if (counts.Count == 0) return 0f;
-
-            int n = counts.Count;
-            double sum = 0.0;
-            double totalPicks = counts.Sum();
-
-            if (totalPicks == 0) return 0f;
-
-            for (int i = 0; i < n; i++)
-            {
-                sum += (2.0 * (i + 1) - n - 1) * counts[i];
-            }
-
-            double gini = sum / (n * totalPicks);
-
-            return 1.0f - (float)Math.Abs(gini);
-        }
-
-        /// <summary>
-        /// Identifies and penalizes "trap cards" - cards that are frequently picked but lead to losses
-        /// </summary>
-        /// <returns>A  score between 0 and 1, where 1 = no trap cards detected</returns>
-        private float CalculateTrapCardPenalty(List<SimulationStats> results, Dictionary<string, int> pickCounts)
-        {
-            if (results.Count == 0) return 1f;
-
-            var cardWinRates = new Dictionary<string, float>();
+            var winRates = new List<float>();
             
             foreach (var cardId in pickCounts.Keys)
             {
-                var runsWithCard = results.Where(r => r.MasterDeckIds.Contains(cardId)).ToList();
-                if (!runsWithCard.Any()) continue;
+                if (pickCounts[cardId] < 5) continue;
+                float winRate = (float)pickWins[cardId] / pickCounts[cardId];
+                winRates.Add(winRate);
+            }
 
-                float winRate = (float)runsWithCard.Count(r => r.IsVictory) / runsWithCard.Count;
-                float pickRate = (float)pickCounts[cardId] / results.Count;
+            if (winRates.Count < 2) return 1f;
 
-                cardWinRates[cardId] = winRate;
+            float avgWinRate = winRates.Average();
+            float variance = winRates.Select(wr => (wr - avgWinRate) * (wr - avgWinRate)).Average();
+            float stdDev = (float)Math.Sqrt(variance);
 
-                // A trap card is picked frequently (>15%) but has poor win rate (<35%)
-                bool isTrapCard = pickRate > 0.15f && winRate < 0.35f;
-                if (isTrapCard)
+            return Math.Max(0f, 1.0f - (stdDev / 0.3f));
+        }
+
+        private float CalculateNoTrapsScore(Dictionary<string, int> pickCounts, Dictionary<string, int> pickWins, int totalRuns)
+        {
+            float totalPenalty = 0f;
+            int cardsEvaluated = 0;
+
+            foreach (var cardId in pickCounts.Keys)
+            {
+                int picks = pickCounts[cardId];
+                int wins = pickWins[cardId];
+                
+                float pickRate = (float)picks / totalRuns;
+                float winRate = (float)wins / picks;
+                
+                if (pickRate < 0.10f) continue;
+                
+                cardsEvaluated++;
+                
+                if (winRate < 0.30f)
                 {
-                    return 0f;
+                    float trapSeverity = (0.30f - winRate) / 0.30f;
+                    totalPenalty += trapSeverity * pickRate;
                 }
             }
 
-            if (cardWinRates.Count < 2) return 1f;
+            if (cardsEvaluated == 0) return 1f;
 
-            float avgWinRate = cardWinRates.Values.Average();
-            float variance = cardWinRates.Values.Select(wr => (wr - avgWinRate) * (wr - avgWinRate)).Average();
-            float stdDev = (float)Math.Sqrt(variance);
-
-            // Lower variance = cards perform more consistently = better
-            // Normalize to 0-1 range (assume stdDev rarely exceeds 0.3)
-            float consistencyScore = Math.Max(0f, 1f - (stdDev / 0.3f));
-
-            return consistencyScore;
+            return Math.Max(0f, 1.0f - totalPenalty * 3.0f);
         }
 
-        /// <summary>
-        /// Calculates the effective number of cards
-        /// This represents how many cards are "actually viable" in the meta
-        /// </summary>
-        private float CalculateEffectiveNumberOfCards(Dictionary<string, int> pickCounts)
+        private float CalculateBuildVariety(List<SimulationStats> results)
         {
-            if (pickCounts.Count == 0) return 0f;
+            var winningRuns = results.Where(r => r.IsVictory).ToList();
+            if (winningRuns.Count < 2) return 0f;
 
-            int totalPicks = pickCounts.Values.Sum();
-            if (totalPicks == 0) return 0f;
+            float totalSimilarity = 0f;
+            int comparisons = 0;
 
-            double entropy = 0.0;
-            foreach (var count in pickCounts.Values)
+            for (int i = 0; i < winningRuns.Count - 1; i++)
             {
-                if (count == 0) continue;
-                double probability = (double)count / totalPicks;
-                entropy -= probability * Math.Log(probability, 2);
+                for (int j = i + 1; j < winningRuns.Count; j++)
+                {
+                    var deck1 = new HashSet<string>(
+                        winningRuns[i].MasterDeckIds.Where(id => !StartingCards.Contains(id))
+                    );
+                    var deck2 = new HashSet<string>(
+                        winningRuns[j].MasterDeckIds.Where(id => !StartingCards.Contains(id))
+                    );
+
+                    if (deck1.Count == 0 || deck2.Count == 0) continue;
+
+                    int intersection = deck1.Intersect(deck2).Count();
+                    int union = deck1.Union(deck2).Count();
+                    
+                    float jaccard = (float)intersection / union;
+                    totalSimilarity += jaccard;
+                    comparisons++;
+                    
+                    if (comparisons > 100) break;
+                }
+                if (comparisons > 100) break;
             }
 
-            return (float)Math.Pow(2, entropy);
+            if (comparisons == 0) return 0.5f;
+
+            float avgSimilarity = totalSimilarity / comparisons;
+            return 1.0f - avgSimilarity;
+        }
+
+        private float CalculateElitePerformanceScore(List<SimulationStats> results)
+        {
+            var runsWithElites = results.Where(r => r.ElitesEncountered > 0).ToList();
+            if (!runsWithElites.Any()) return 0.5f;
+
+            float avgElitesDefeated = (float)runsWithElites.Average(r => r.ElitesDefeated);
+            float avgElitesEncountered = (float)runsWithElites.Average(r => r.ElitesEncountered);
+            float eliteKillRate = avgElitesDefeated / avgElitesEncountered;
+
+            var eliteWins = runsWithElites.Where(r => r.ElitesDefeated > 0).ToList();
+            float avgDamagePerElite = eliteWins.Any() 
+                ? (float)eliteWins.Average(r => r.TotalDamageTakenAtElites / Math.Max(1, r.ElitesDefeated))
+                : 50f;
+
+            float damageScore = 1.0f - Math.Max(0f, Math.Min(1f, (avgDamagePerElite - 20f) / 30f));
+
+            return (eliteKillRate * 0.7f) + (damageScore * 0.3f);
+        }
+
+        private float CalculateConsistencyScore(List<SimulationStats> results)
+        {
+            if (results.Count < 10) return 0.5f;
+
+            var floors = results.Select(r => r.FinalFloorReached).ToList();
+            float avgFloor = (float)floors.Average();
+            float floorVariance = floors.Select(f => (f - avgFloor) * (f - avgFloor)).Average();
+            float floorStdDev = (float)Math.Sqrt(floorVariance);
+
+            float floorConsistency = Math.Max(0f, 1.0f - (floorStdDev / 5.0f));
+
+            int chunkSize = Math.Max(20, results.Count / 5);
+            var winRateChunks = new List<float>();
+            
+            for (int i = 0; i < results.Count; i += chunkSize)
+            {
+                var chunk = results.Skip(i).Take(chunkSize).ToList();
+                if (chunk.Count < 10) continue;
+                
+                float chunkWinRate = (float)chunk.Count(r => r.IsVictory) / chunk.Count;
+                winRateChunks.Add(chunkWinRate);
+            }
+
+            float winRateConsistency = 0.5f;
+            if (winRateChunks.Count >= 2)
+            {
+                float avgChunkWinRate = winRateChunks.Average();
+                float wrVariance = winRateChunks.Select(wr => (wr - avgChunkWinRate) * (wr - avgChunkWinRate)).Average();
+                float wrStdDev = (float)Math.Sqrt(wrVariance);
+                
+                winRateConsistency = Math.Max(0f, 1.0f - (wrStdDev / 0.2f));
+            }
+
+            return (floorConsistency * 0.6f) + (winRateConsistency * 0.4f);
         }
     }
 }

@@ -35,11 +35,11 @@ namespace RoguelikeGASimulator
             var agent = new HeuristicPlayerAI();
             var runner = new SimulationRunner(agent, hero, cards, relics, enemies, effects, events, rooms);
             var evaluator = new FitnessEvaluator();
-            var ga = new GeneticAlgorithm(runner, evaluator, cards, enemies);
+            var ga = new GeneticAlgorithm(runner, evaluator, cards, enemies, effects);
 
-            ga.PopulationSize = 200;
-            ga.Generations = 100;
-            ga.RunsPerGenome = 400;
+            ga.PopulationSize = 100;
+            ga.Generations = 30;
+            ga.RunsPerGenome = 200;
 
             Console.WriteLine("Setup complete. Starting Genetic Algorithm...");
             Console.WriteLine("=============================================");

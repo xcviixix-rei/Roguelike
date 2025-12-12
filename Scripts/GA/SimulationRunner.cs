@@ -39,10 +39,11 @@ namespace Roguelike.GA
             var simCards = DeepCloneAndInitCardPool(_baseCards);
             var simRelics = DeepCloneAndInitRelicPool(_baseRelics);
             var simEnemies = DeepCloneAndInitEnemyPool(_baseEnemies);
+            var simEffects = DeepCloneEffectPool(_baseEffects);
             
-            GenomeApplicator.Apply(genome, simEnemies, simCards, simRelics, simHero);
+            GenomeApplicator.Apply(genome, simEnemies, simCards, simRelics, simEffects, simHero);
 
-            var controller = new GameController(simCards, simRelics, simEnemies, _baseEffects, _baseEvents, _baseRoomConfigs);
+            var controller = new GameController(simCards, simRelics, simEnemies, simEffects, _baseEvents, _baseRoomConfigs);
             controller.StartNewRun(seed, simHero);
 
             var runState = controller.CurrentRun;
@@ -188,6 +189,11 @@ namespace Roguelike.GA
         }
 
         private RelicPool DeepCloneAndInitRelicPool(RelicPool original)
+        {
+            return DeepClone(original);
+        }
+
+        private EffectPool DeepCloneEffectPool(EffectPool original)
         {
             return DeepClone(original);
         }

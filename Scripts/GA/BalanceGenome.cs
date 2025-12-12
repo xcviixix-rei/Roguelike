@@ -24,6 +24,9 @@ namespace Roguelike.GA
         public Dictionary<string, List<float>> EnemyActionWeightScalars { get; set; } = new Dictionary<string, List<float>>();
         public Dictionary<string, List<float>> EnemyActionValueScalars { get; set; } = new Dictionary<string, List<float>>();
 
+        // Effect Value Scalars
+        public Dictionary<string, float> EffectValueScalars { get; set; } = new Dictionary<string, float>();
+
         public BalanceGenome()
         {
             for (int i = 1; i <= 5; i++) ShopPriceScalars[i] = 1.0f;
@@ -45,7 +48,9 @@ namespace Roguelike.GA
                 
                 CardActionScalars = new Dictionary<string, List<float>>(),
                 EnemyActionWeightScalars = new Dictionary<string, List<float>>(),
-                EnemyActionValueScalars = new Dictionary<string, List<float>>()
+                EnemyActionValueScalars = new Dictionary<string, List<float>>(),
+                
+                EffectValueScalars = new Dictionary<string, float>(this.EffectValueScalars)
             };
 
             foreach (var kv in CardActionScalars) clone.CardActionScalars[kv.Key] = new List<float>(kv.Value);
@@ -58,7 +63,7 @@ namespace Roguelike.GA
         /// <summary>
         /// Randomizes the genome. 
         /// </summary>
-        public void Randomize(CardPool cards, EnemyPool enemies, Random rng)
+        public void Randomize(CardPool cards, EnemyPool enemies, EffectPool effects, Random rng)
         {
             GoldDropMultiplier = (float)(0.3 + rng.NextDouble() * 0.4); 
             for (int i = 1; i <= 5; i++) ShopPriceScalars[i] = (float)(0.8 + rng.NextDouble() * 0.4);
@@ -103,6 +108,12 @@ namespace Roguelike.GA
                 }
                 EnemyActionWeightScalars[enemy.Id] = weights;
                 EnemyActionValueScalars[enemy.Id] = values;
+            }
+
+            // Effects
+            foreach (var effect in effects.EffectsById.Values)
+            {
+                EffectValueScalars[effect.Id] = (float)(0.7 + rng.NextDouble() * 0.6); // 0.7x to 1.3x
             }
         }
     }

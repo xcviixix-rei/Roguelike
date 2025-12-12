@@ -6,10 +6,11 @@ namespace Roguelike.GA
 {
     public static class GenomeApplicator
     {
-        public static void Apply(BalanceGenome genome, EnemyPool enemyPool, CardPool cardPool, RelicPool relicPool, HeroData hero)
+        public static void Apply(BalanceGenome genome, EnemyPool enemyPool, CardPool cardPool, RelicPool relicPool, EffectPool effectPool, HeroData hero)
         {
             ApplyGlobalEconomy(genome, cardPool, relicPool);
             ApplyHeroStats(genome, hero);
+            ApplyToEffects(genome, effectPool);
             ApplyToCards(genome, cardPool);
             ApplyToEnemies(genome, enemyPool);
         }
@@ -35,6 +36,18 @@ namespace Roguelike.GA
             
             hero.StartingMana += genome.HeroManaOffset;
             if (hero.StartingMana < 1) hero.StartingMana = 1;
+        }
+
+        private static void ApplyToEffects(BalanceGenome genome, EffectPool pool)
+        {
+            foreach (var effect in pool.EffectsById.Values)
+            {
+                if (genome.EffectValueScalars.TryGetValue(effect.Id, out float scalar))
+                {
+                    effect.Value = (int)Math.Round(effect.Value * scalar);
+                    if (effect.Value < 1) effect.Value = 1;
+                }
+            }
         }
 
         private static void ApplyToCards(BalanceGenome genome, CardPool pool)
