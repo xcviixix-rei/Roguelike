@@ -1,0 +1,122 @@
+\clearpage
+\phantomsection
+\chapter{TỔNG QUAN VÀ CƠ SỞ LÝ THUYẾT}
+
+\section{Giới thiệu về Roguelike Deckbuilder}
+
+\subsection{Roguelike}
+
+Roguelike là một thể loại game có nguồn gốc từ trò chơi Rogue (1980), được đặc trưng bởi yếu tố procedural generation - mỗi lần chơi, bản đồ, kẻ địch, và các vật phẩm đều được sinh ngẫu nhiên, tạo ra trải nghiệm độc đáo \cite{dormans2011level}. Điểm nổi bật của thể loại này là cơ chế permadeath, nơi khi nhân vật chính chết, người chơi phải bắt đầu lại từ đầu mà không có điểm lưu. Trò chơi thường diễn ra theo lượt (turn-based gameplay), cho người chơi thời gian suy nghĩ trước mỗi hành động và quản lý cẩn thận các tài nguyên như HP, mana, và các vật phẩm khác.
+
+\subsection{Deckbuilder}
+
+Deckbuilder là một cơ chế game nơi người chơi dần dần xây dựng và cải thiện bộ bài của mình trong quá trình chơi. Khác với các game bài truyền thống nơi bộ bài được cố định từ đầu, trong deckbuilder người chơi bắt đầu với một bộ bài cơ bản nhỏ và sau mỗi trận chiến có thể thêm thẻ mới vào bộ bài. Việc chọn lựa thẻ nào để thêm vào là quyết định chiến lược quan trọng, với mục tiêu tạo ra một bộ bài có synergy tốt và hiệu quả cao.
+
+\subsection{Roguelike Deckbuilder}
+
+Roguelike Deckbuilder kết hợp hai thể loại trên, tạo ra một trải nghiệm game độc đáo trong đó mỗi lần chơi là một run mới với bản đồ và kẻ địch ngẫu nhiên, người chơi xây dựng bộ bài qua từng trận chiến, và khi thua phải mất toàn bộ tiến độ để bắt đầu lại. Thành công trong thể loại này phụ thuộc vào cả kỹ năng lẫn may mắn của người chơi. Các game nổi tiếng thuộc thể loại này bao gồm \textit{Slay the Spire} \cite{slaythespire}, \textit{Monster Train}, \textit{Inscryption}, và \textit{Griftlands}.
+
+\section{Thuật toán Di truyền (Genetic Algorithm)}
+
+Thuật toán di truyền (Genetic Algorithm - GA) là một kỹ thuật tối ưu hóa lấy cảm hứng từ quá trình tiến hóa tự nhiên của Charles Darwin \cite{holland1992adaptation}. GA mô phỏng quá trình chọn lọc tự nhiên, nơi các cá thể có gen tốt hơn sẽ có khả năng sống sót và sinh sản cao hơn. Thuật toán hoạt động trên một quần thể các giải pháp ứng viên (genomes), mỗi genome đại diện cho một cấu hình tham số của bài toán. Qua nhiều thế hệ, quần thể dần tiến hóa về phía các giải pháp tốt hơn thông qua các toán tử di truyền như selection, crossover, và mutation.
+
+\subsection{Các thành phần chính}
+
+Genome (nhiễm sắc thể) là đại diện cho một giải pháp của bài toán, thường được mã hóa dưới dạng mảng các giá trị số thực hoặc nhị phân. Mỗi genome chứa các gene, tức là các tham số cần tối ưu. Trong bối cảnh game balancing, một genome có thể chứa các multipliers cho damage, cost, HP của các game entities.
+
+Fitness Function là hàm đánh giá chất lượng của một genome. Hàm này nhận đầu vào là một genome và trả về một giá trị số thể hiện mức độ tốt của giải pháp đó:
+\begin{equation}
+f: G \rightarrow \mathbb{R}
+\end{equation}
+Trong nghiên cứu này, fitness function kết hợp nhiều metrics như win rate, average HP on victory, và floor reached on death để đánh giá chất lượng cân bằng game.
+
+Selection (chọn lọc) là quá trình chọn ra các genome tốt nhất từ quần thể để làm cha mẹ cho thế hệ tiếp theo. Các phương pháp selection phổ biến gồm tournament selection (chọn ngẫu nhiên k cá thể và lấy cá thể tốt nhất), roulette wheel selection với xác suất chọn tỷ lệ thuận với fitness:
+\begin{equation}
+P(i) = \frac{f(i)}{\sum_{j=1}^{N} f(j)}
+\end{equation}
+và rank selection (chọn dựa trên thứ hạng).
+
+Crossover (lai ghép) là toán tử tạo ra các genome con từ hai genome cha mẹ bằng cách kết hợp các gene của chúng. Ví dụ, single-point crossover chọn ngẫu nhiên một điểm cắt $c$ và tạo genome con:
+\begin{equation}
+\text{child} = \text{parent}_1[1:c] \oplus \text{parent}_2[c+1:n]
+\end{equation}
+Các phương pháp khác bao gồm two-point crossover (chọn hai điểm cắt), và uniform crossover (mỗi gene được chọn ngẫu nhiên từ một trong hai cha mẹ).
+
+Mutation (đột biến) là toán tử thay đổi ngẫu nhiên một số gene trong genome để duy trì đa dạng di truyền và tránh hội tụ sớm về local optima. Với tỷ lệ đột biến $p_m$, mỗi gene được thay đổi theo:
+\begin{equation}
+g'_i = \begin{cases}
+g_i + \mathcal{N}(0, \sigma) & \text{với xác suất } p_m \\
+g_i & \text{với phần còn lại}
+\end{cases}
+\end{equation}
+Tỷ lệ đột biến (mutation rate) thường là 1-5\%, quá cao sẽ làm mất thông tin tốt, quá thấp sẽ làm giảm đa dạng.
+
+\subsection{Quy trình hoạt động}
+
+Thuật toán di truyền bắt đầu với việc khởi tạo một quần thể ban đầu gồm N genome ngẫu nhiên. Sau đó, với mỗi thế hệ, các bước sau được thực hiện lặp lại: đánh giá fitness của tất cả các genome trong quần thể, chọn lọc các genome tốt nhất làm cha mẹ dựa trên fitness, áp dụng crossover để tạo ra các genome con từ các cặp cha mẹ, áp dụng mutation để thay đổi ngẫu nhiên một số gene trong các genome con, và thay thế quần thể cũ bằng quần thể mới (hoặc kết hợp cả hai). Quá trình lặp lại cho đến khi đạt một trong các điều kiện dừng như đạt số thế hệ tối đa, đạt fitness mong muốn, hoặc quần thể hội tụ (không cải thiện đáng kể qua nhiều thế hệ).
+
+\section{NSGA-II - Multi-Objective Optimization}
+
+\subsection{Bài toán tối ưu đa mục tiêu}
+
+Trong nhiều bài toán thực tế, chúng ta cần tối ưu hóa đồng thời nhiều mục tiêu có thể mâu thuẫn nhau \cite{zitzler2000comparison}. Bài toán tối ưu đa mục tiêu được định nghĩa là:
+\begin{equation}
+\text{maximize } F(x) = (f_1(x), f_2(x), \ldots, f_m(x))
+\end{equation}
+trong đó $x$ là giải pháp (genome) và $f_i$ là các hàm điểm số (score functions) cần tối đa hóa. Ví dụ, trong game balancing, chúng ta muốn game vừa cân bằng (Balance Score cao), vừa hấp dẫn (Engagement Score cao), vừa nhất quán (Coherence Score cao). Cải thiện một mục tiêu có thể làm giảm mục tiêu khác, dẫn đến không có một giải pháp duy nhất tối ưu cho tất cả các mục tiêu.
+
+Khái niệm Pareto optimality được sử dụng để giải quyết vấn đề này. Một giải pháp $x_1$ được gọi là Pareto dominant so với giải pháp $x_2$ (ký hiệu $x_1 \prec x_2$) nếu:
+\begin{equation}
+\forall i: f_i(x_1) \geq f_i(x_2) \quad \text{và} \quad \exists j: f_j(x_1) > f_j(x_2)
+\end{equation}
+Nghĩa là $x_1$ không tệ hơn $x_2$ ở bất kỳ mục tiêu nào (tất cả điểm số $\geq$), và tốt hơn thực sự ở ít nhất một mục tiêu (có điểm số $>$). Một giải pháp được gọi là Pareto optimal nếu không có giải pháp nào khác dominant nó. Tập hợp tất cả các giải pháp Pareto optimal tạo thành Pareto front, cung cấp cho người thiết kế nhiều lựa chọn cân bằng khác nhau.
+
+\subsection{Thuật toán NSGA-II}
+
+NSGA-II (Non-dominated Sorting Genetic Algorithm II) được Deb và cộng sự đề xuất năm 2002 \cite{deb2002fast} là một trong những thuật toán multi-objective evolutionary phổ biến nhất. NSGA-II cải thiện so với NSGA gốc về mặt complexity và performance, đồng thời duy trì diversity tốt trong Pareto front.
+
+Thuật toán sử dụng cơ chế non-dominated sorting để phân chia quần thể thành các fronts. Front 1 chứa tất cả các giải pháp không bị dominated bởi bất kỳ giải pháp nào khác. Front 2 chứa các giải pháp chỉ bị dominated bởi các giải pháp trong Front 1, và cứ tiếp tục như vậy. 
+
+Trong mỗi front, crowding distance được tính toán để đo lường mức độ "đông đúc" xung quanh mỗi giải pháp trong không gian objective. Crowding distance của giải pháp $i$ được tính bằng:
+\begin{equation}
+d_i = \sum_{k=1}^{m} \frac{f_k(i+1) - f_k(i-1)}{f_k^{\max} - f_k^{\min}}
+\end{equation}
+trong đó $m$ là số lượng mục tiêu, $f_k(i+1)$ và $f_k(i-1)$ là giá trị của mục tiêu $k$ tại các giải pháp lân cận, và $f_k^{\max}$, $f_k^{\min}$ là giá trị lớn nhất và nhỏ nhất của mục tiêu $k$ trong front. Các giải pháp có crowding distance lớn hơn (ít đông đúc hơn) sẽ được ưu tiên để duy trì diversity.
+
+Quá trình selection trong NSGA-II sử dụng hai tiêu chí: ưu tiên các giải pháp ở front thấp hơn (front 1 tốt hơn front 2), và trong cùng front, ưu tiên crowding distance lớn hơn. Điều này được biểu diễn qua quan hệ thứ tự:
+\begin{equation}
+x_1 \prec_n x_2 \iff \text{rank}(x_1) < \text{rank}(x_2) \text{ hoặc } (\text{rank}(x_1) = \text{rank}(x_2) \text{ và } d_1 > d_2)
+\end{equation}
+Điều này giúp algorithm vừa hội tụ về Pareto front vừa duy trì sự đa dạng của các giải pháp.
+
+\section{Game Balancing - Cân bằng trò chơi}
+
+\subsection{Tầm quan trọng của Game Balancing}
+
+Game balancing là quá trình điều chỉnh các tham số của game để đạt được trải nghiệm chơi mong muốn \cite{schell2019art}. Một game được cân bằng tốt sẽ vừa đủ thách thức để người chơi cảm thấy hứng thú và có động lực tiếp tục, nhưng không quá khó đến mức gây frustration. Trong các game multiplayer, balancing còn đảm bảo không có chiến thuật hay nhân vật nào quá mạnh (overpowered) dẫn đến gameplay monotonous.
+
+Với Roguelike Deckbuilder, việc cân bằng đặc biệt phức tạp do sự tương tác giữa hàng trăm thẻ bài, di vật, và kẻ địch. Một thẻ bài có thể cân bằng khi đứng một mình, nhưng trở nên quá mạnh khi kết hợp với các thẻ khác (synergy). Procedural generation cũng tạo ra thêm độ phức tạp khi cần đảm bảo game cân bằng với mọi configuration ngẫu nhiên có thể xảy ra.
+
+\subsection{Các phương pháp cân bằng truyền thống}
+
+Phương pháp thủ công (manual tuning) là cách tiếp cận truyền thống nhất, trong đó game designers dựa vào kinh nghiệm và intuition để điều chỉnh tham số, sau đó test và iterate dựa trên feedback. Tuy nhiên, phương pháp này tốn rất nhiều thời gian khi số lượng tham số lớn và khó đảm bảo tìm được cấu hình tối ưu toàn cục.
+
+Playtesting với người chơi thực là phương pháp quan trọng nhưng cũng tốn kém. Việc thu thập đủ số lượng playtest data để có ý nghĩa thống kê đòi hỏi nhiều người chơi và thời gian dài. Hơn nữa, feedback từ người chơi thường mang tính chủ quan và có thể mâu thuẫn nhau.
+
+Simulation-based testing sử dụng AI agents để tự động chơi game hàng nghìn lần và thu thập metrics \cite{jaffe2012optimizing}. Tuy nhiên, phương pháp này vẫn cần manual tuning dựa trên kết quả simulation. Evolutionary algorithms kết hợp với simulation giúp tự động hóa toàn bộ quy trình, tìm kiếm các cấu hình tham số tối ưu mà không cần can thiệp thủ công liên tục.
+
+\subsection{Thách thức trong automated game balancing}
+
+Việc tự động hóa game balancing gặp phải nhiều thách thức. Thứ nhất, định nghĩa hàm fitness phù hợp là khó khăn vì "fun" và "balanced" là các khái niệm chủ quan khó đo lường khách quan \cite{nelson2016towards}. Thứ hai, search space rất lớn khi có hàng trăm tham số cần tối ưu, dẫn đến curse of dimensionality. Thứ ba, evaluation cost cao vì mỗi genome cần chạy nhiều simulation để có kết quả có ý nghĩa thống kê. Cuối cùng, cần AI agent để tự động chơi game, nhưng agent phải đủ tốt để đại diện cho human players mà không quá tốt đến mức hoàn hảo.
+
+\section{Các nghiên cứu liên quan}
+
+\subsection{Procedural Content Generation}
+
+Togelius và cộng sự \cite{togelius2011search} đã khảo sát các kỹ thuật search-based procedural content generation, trong đó evolutionary algorithms được sử dụng để sinh automatic game content như levels, maps, và rules. Preuss và cộng sự \cite{preuss2012multiobjective} áp dụng multi-objective optimization để cân bằng giữa multiple design objectives trong PCG. Các nghiên cứu này cho thấy tiềm năng của evolutionary approaches trong game development nhưng chủ yếu tập trung vào content generation hơn là parameter tuning.
+
+\subsection{Automated Game Balancing}
+
+Jaffe và cộng sự \cite{jaffe2012optimizing} sử dụng simulation-based optimization để tối ưu parameters của board game, đạt được kết quả tốt hơn manual tuning. Nelson và Mateas \cite{nelson2016towards} nghiên cứu về automated game design, đề xuất framework để tự động sinh và đánh giá game rules. Tuy nhiên, các nghiên cứu này chủ yếu tập trung vào simple games với parameter space nhỏ.
+
+Đề tài này khác biệt bằng cách áp dụng cho Roguelike Deckbuilder - một thể loại phức tạp hơn với hàng trăm parameters tương tác, và so sánh hai cách tiếp cận: GA đơn mục tiêu và NSGA-II đa mục tiêu để tìm ra phương pháp hiệu quả nhất.

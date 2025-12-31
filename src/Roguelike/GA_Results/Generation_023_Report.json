@@ -1,0 +1,618 @@
+{
+  "Generation": 23,
+  "Fitness": 32.737797,
+  "FitnessComponents": {
+    "WinRate": {
+      "Score": 10.198274,
+      "MaxScore": 35.0,
+      "Percentage": 0.68965507,
+      "Actual": 0.439,
+      "Target": 0.45
+    },
+    "VictoryHP": {
+      "Score": 7.255348,
+      "MaxScore": 20.0,
+      "Percentage": 0.8586211,
+      "Actual": 0.4380342,
+      "Target": 0.3
+    },
+    "GameLength": {
+      "Score": 3.608981,
+      "MaxScore": 10.0,
+      "Percentage": 0.85419685,
+      "Actual": 11.025,
+      "Target": 10.0
+    },
+    "CardViability": {
+      "Score": 7.004031,
+      "MaxScore": 20.0,
+      "Percentage": 0.82887936,
+      "ViableCards": 12,
+      "TrapCards": 0
+    },
+    "ElitePerformance": {
+      "Score": 3.475211,
+      "MaxScore": 10.0,
+      "Percentage": 0.8225352,
+      "KillRate": 0.74647886
+    },
+    "Consistency": {
+      "Score": 1.195953,
+      "MaxScore": 5.0,
+      "Percentage": 0.56613183
+    }
+  },
+  "RoomDistribution": {
+    "Weights": {
+      "Monster": 51.394722,
+      "Elite": 21.481964,
+      "Event": 22.128696,
+      "Shop": 11.41188,
+      "Rest": 16.440035,
+      "Total": 122.8573
+    },
+    "Percentages": {
+      "Monster": 0.41832858,
+      "Elite": 0.17485297,
+      "Event": 0.18011707,
+      "Shop": 0.092887275,
+      "Rest": 0.13381407,
+      "Combat": 0.59318155,
+      "Recovery": 0.22670133
+    },
+    "StarRatings": {
+      "MonsterRatio": 0.568573,
+      "EliteRatio": 0.65609545,
+      "MonsterAvgStar": 1.568573,
+      "EliteAvgStar": 3.6560955,
+      "OverallCombatDifficulty": 2.1839151
+    },
+    "RestHealingScalar": 1.0818523
+  },
+  "IsCriticalFailure": false,
+  "Genome": {
+    "GoldDropMultiplier": 0.7014059,
+    "ShopPriceScalars": [
+      0.0,
+      1.0142096,
+      1.1554568,
+      1.0088797,
+      1.1946875,
+      1.0642234
+    ],
+    "HeroHealthScalar": 1.3016922,
+    "HeroStartGoldScalar": 1.208835,
+    "HeroManaOffset": 1,
+    "RoomTypeWeights": {
+      "Monster": 51.394722,
+      "Elite": 21.481964,
+      "Event": 22.128696,
+      "Shop": 11.41188,
+      "Rest": 16.440035
+    },
+    "MonsterStarRatio": 0.568573,
+    "EliteStarRatio": 0.65609545,
+    "RestHealingScalar": 1.0818523,
+    "CardCostModifiers": {
+      "strike": 0,
+      "defend": 0,
+      "quick_jab": 1,
+      "cycle": 0,
+      "heavy_blow": 1,
+      "double_tap": 0,
+      "shield_bash": 1,
+      "scrounge": 1,
+      "power_up": 0,
+      "cleave": -1,
+      "bunker_down": -1,
+      "expose_weakness": 0,
+      "piercing_shot": 0,
+      "catalyst": 0,
+      "barricade": -1,
+      "battle_trance": 0,
+      "demon_form": 0,
+      "annihilate": -1,
+      "adrenaline": -1,
+      "ethereal_form": 0
+    },
+    "CardActionScalars": {
+      "strike": [
+        1.2785112
+      ],
+      "defend": [
+        0.9682886
+      ],
+      "quick_jab": [
+        1.0537232
+      ],
+      "cycle": [
+        1.2273188
+      ],
+      "heavy_blow": [
+        0.94082856
+      ],
+      "double_tap": [
+        0.8900158,
+        0.55633605
+      ],
+      "shield_bash": [
+        0.69682777,
+        1.4111141
+      ],
+      "scrounge": [
+        0.7205536
+      ],
+      "power_up": [
+        0.5408444
+      ],
+      "cleave": [
+        0.58302355
+      ],
+      "bunker_down": [
+        1.0657687
+      ],
+      "expose_weakness": [
+        0.5565464
+      ],
+      "piercing_shot": [
+        0.8987239,
+        0.823295
+      ],
+      "catalyst": [
+        1.4157637
+      ],
+      "barricade": [
+        0.57569367
+      ],
+      "battle_trance": [
+        1.0983881
+      ],
+      "demon_form": [
+        1.3088816
+      ],
+      "annihilate": [
+        1.3518895
+      ],
+      "adrenaline": [
+        1.1587156,
+        1.1603805
+      ],
+      "ethereal_form": [
+        0.72044384
+      ]
+    },
+    "EnemyHealthScalars": {
+      "goblin": 1.2651781,
+      "slime": 0.41034323,
+      "kobold": 0.52682287,
+      "gremlin": 1.7288873,
+      "brute": 0.61841124,
+      "cultist": 0.6090815,
+      "assassin": 0.49806115,
+      "guardian_orb": 1.6079636,
+      "slaver": 1.1555055,
+      "ogre": 1.7962564,
+      "sentinel": 1.4897037,
+      "gremlin_leader": 1.1843809,
+      "book_of_stabbing": 1.4818783,
+      "giant_head": 0.8226874,
+      "nemesis": 0.5810518,
+      "reptomancer": 1.4144305,
+      "dragon": 0.8684757,
+      "time_eater": 0.9359829,
+      "bronze_automaton": 0.9083659,
+      "lich_king": 1.2828388
+    },
+    "EnemyActionWeightScalars": {
+      "goblin": [
+        1.6489981,
+        1.0232403
+      ],
+      "slime": [
+        1.5026805,
+        1.2668536
+      ],
+      "kobold": [
+        1.2617835,
+        0.94255847
+      ],
+      "gremlin": [
+        0.853623,
+        1.1413466
+      ],
+      "brute": [
+        0.52629215,
+        1.1639187
+      ],
+      "cultist": [
+        0.8314548,
+        0.8056772
+      ],
+      "assassin": [
+        0.7986545,
+        0.8236317
+      ],
+      "guardian_orb": [
+        1.3016381,
+        1.4164575
+      ],
+      "slaver": [
+        1.1525507,
+        0.65964836,
+        0.46588302
+      ],
+      "ogre": [
+        0.9995057,
+        0.49757296,
+        1.1225812
+      ],
+      "sentinel": [
+        1.2829037,
+        0.62237114,
+        0.99317837
+      ],
+      "gremlin_leader": [
+        0.5146697,
+        0.9186581,
+        1.1745539
+      ],
+      "book_of_stabbing": [
+        0.93384117,
+        1.3744829,
+        0.72075284
+      ],
+      "giant_head": [
+        1.4963962,
+        1.2794988,
+        0.78238827
+      ],
+      "nemesis": [
+        1.2624253,
+        1.2755141,
+        0.7735287
+      ],
+      "reptomancer": [
+        1.1354592,
+        0.43918496,
+        1.3858273
+      ],
+      "dragon": [
+        0.666954,
+        1.1095546,
+        1.0839688,
+        1.0292684
+      ],
+      "time_eater": [
+        1.096808,
+        0.9209129,
+        0.6081972
+      ],
+      "bronze_automaton": [
+        1.2947556,
+        1.3432622,
+        0.74309206
+      ],
+      "lich_king": [
+        1.1420321,
+        0.86848307,
+        1.1039643,
+        0.6946722
+      ]
+    },
+    "EnemyActionValueScalars": {
+      "goblin": [
+        0.695933,
+        1.1723669
+      ],
+      "slime": [
+        1.2278769,
+        1.4305271
+      ],
+      "kobold": [
+        1.7907263,
+        1.4217165
+      ],
+      "gremlin": [
+        0.5557314,
+        0.5
+      ],
+      "brute": [
+        0.5782245,
+        1.4740268
+      ],
+      "cultist": [
+        0.5,
+        1.3973756
+      ],
+      "assassin": [
+        0.5637561,
+        1.3615379
+      ],
+      "guardian_orb": [
+        0.6170408,
+        1.1388295
+      ],
+      "slaver": [
+        0.6071062,
+        0.7088661,
+        0.77790236
+      ],
+      "ogre": [
+        1.1246978,
+        1.2021284,
+        0.5174757
+      ],
+      "sentinel": [
+        1.2226197,
+        0.5135581,
+        1.3710052
+      ],
+      "gremlin_leader": [
+        1.0509158,
+        1.1936733,
+        0.5
+      ],
+      "book_of_stabbing": [
+        0.5851362,
+        0.5,
+        1.3567325
+      ],
+      "giant_head": [
+        0.8167893,
+        1.1341488,
+        0.98293704
+      ],
+      "nemesis": [
+        1.2250595,
+        0.6715312,
+        0.8922142
+      ],
+      "reptomancer": [
+        0.64955693,
+        0.7179485,
+        0.9676935
+      ],
+      "dragon": [
+        1.1482316,
+        0.6665849,
+        1.299738,
+        0.90628666
+      ],
+      "time_eater": [
+        0.9492241,
+        0.5853044,
+        1.3399308
+      ],
+      "bronze_automaton": [
+        1.491135,
+        0.86289036,
+        1.3027824
+      ],
+      "lich_king": [
+        0.58090246,
+        0.7639655,
+        0.6400141,
+        1.0480614
+      ]
+    },
+    "EffectValueScalars": {
+      "card_shield_bash_weakened": 0.76865923,
+      "card_power_up_strength": 1.0775574,
+      "card_expose_weakness_vulnerable": 1.2579117,
+      "card_piercing_shot_pierced": 1.3105663,
+      "card_catalyst_philosophical": 1.1451404,
+      "card_demon_form_strength": 0.68177307,
+      "card_adrenaline_philosophical": 0.76654875,
+      "enemy_kobold_vulnerable": 0.93458545,
+      "enemy_gremlin_weakened": 1.2863202,
+      "enemy_cultist_strength": 1.4229887,
+      "enemy_assassin_vulnerable": 0.6948429,
+      "enemy_slaver_weakened": 0.5762523,
+      "enemy_ogre_frail": 0.5827914,
+      "enemy_gremlin_leader_strength": 0.8828708,
+      "enemy_book_of_stabbing_pierced": 0.8120612,
+      "enemy_giant_head_weakened": 0.9759298,
+      "enemy_reptomancer_vulnerable": 0.5018053,
+      "enemy_dragon_frail": 1.0866601,
+      "enemy_time_eater_frail": 0.8701873,
+      "enemy_bronze_automaton_strength": 0.9648811,
+      "enemy_lich_king_vulnerable": 0.71926963,
+      "enemy_lich_king_weakened": 0.95257497,
+      "relic_iron_plate_plate": 1.3992137,
+      "relic_whetstone_combat_strength": 1.3308713,
+      "relic_bag_of_marbles_all": 0.7991998,
+      "relic_warriors_emblem_strength": 0.8306684,
+      "relic_warriors_emblem_block": 1.390677,
+      "relic_tactical_advantage_vulnerable": 0.8842967,
+      "relic_tactical_advantage_strength": 0.85739434,
+      "card_cycle_draw": 0.76407456,
+      "card_scrounge_draw": 1.4924537,
+      "card_battle_trance_draw": 0.8334151,
+      "card_adrenaline_draw": 1.0462509
+    }
+  },
+  "Report": {
+    "TotalRuns": 1000,
+    "OverallFitness": 32.737797,
+    "WinRate": 0.439,
+    "AvgHpOnVictory": 0.45739874,
+    "FloorOfDeathHistogram": {
+      "15": 98,
+      "11": 52,
+      "9": 44,
+      "12": 37,
+      "13": 18,
+      "5": 26,
+      "7": 27,
+      "10": 27,
+      "8": 32,
+      "6": 32
+    },
+    "AvgFloorOnDeath": 10.5674305,
+    "AvgElitesDefeated": 0.86767167,
+    "AvgElitesEncountered": 1.2428811,
+    "EliteKillRate": 0.6981132,
+    "AvgDamagePerElite": 13.950355,
+    "AvgGoldCollected": 0.0,
+    "AvgGoldSpent": 232.855,
+    "AvgGoldEfficiency": "Infinity",
+    "CardViability": [
+      {
+        "CardId": "heavy_blow",
+        "PickRate": 0.585,
+        "WinRateWhenPicked": 0.72991455,
+        "AvgPlayCount": 1.6102564,
+        "IsTrapCard": false,
+        "IsMustPick": true,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "double_tap",
+        "PickRate": 0.578,
+        "WinRateWhenPicked": 0.76816607,
+        "AvgPlayCount": 12.9359865,
+        "IsTrapCard": false,
+        "IsMustPick": true,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "shield_bash",
+        "PickRate": 0.575,
+        "WinRateWhenPicked": 0.7669565,
+        "AvgPlayCount": 14.194782,
+        "IsTrapCard": false,
+        "IsMustPick": true,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "scrounge",
+        "PickRate": 0.555,
+        "WinRateWhenPicked": 0.7297297,
+        "AvgPlayCount": 5.5369368,
+        "IsTrapCard": false,
+        "IsMustPick": true,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "barricade",
+        "PickRate": 0.249,
+        "WinRateWhenPicked": 0.75100404,
+        "AvgPlayCount": 14.746988,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "catalyst",
+        "PickRate": 0.24,
+        "WinRateWhenPicked": 0.6958333,
+        "AvgPlayCount": 13.558333,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "battle_trance",
+        "PickRate": 0.228,
+        "WinRateWhenPicked": 0.7017544,
+        "AvgPlayCount": 16.162281,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "piercing_shot",
+        "PickRate": 0.228,
+        "WinRateWhenPicked": 0.6798246,
+        "AvgPlayCount": 6.5307016,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "adrenaline",
+        "PickRate": 0.201,
+        "WinRateWhenPicked": 0.93532336,
+        "AvgPlayCount": 4.084577,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "ethereal_form",
+        "PickRate": 0.186,
+        "WinRateWhenPicked": 0.9354839,
+        "AvgPlayCount": 1.9462366,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "demon_form",
+        "PickRate": 0.183,
+        "WinRateWhenPicked": 0.92349726,
+        "AvgPlayCount": 0.06010929,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "annihilate",
+        "PickRate": 0.18,
+        "WinRateWhenPicked": 0.93333334,
+        "AvgPlayCount": 1.2444445,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "expose_weakness",
+        "PickRate": 0.068,
+        "WinRateWhenPicked": 0.63235295,
+        "AvgPlayCount": 10.441176,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "power_up",
+        "PickRate": 0.066,
+        "WinRateWhenPicked": 0.6666667,
+        "AvgPlayCount": 8.5,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "bunker_down",
+        "PickRate": 0.065,
+        "WinRateWhenPicked": 0.6923077,
+        "AvgPlayCount": 11.538462,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      },
+      {
+        "CardId": "cleave",
+        "PickRate": 0.061,
+        "WinRateWhenPicked": 0.57377046,
+        "AvgPlayCount": 3.3770492,
+        "IsTrapCard": false,
+        "IsMustPick": false,
+        "IsBalanced": false
+      }
+    ],
+    "ShannonEntropy": 0.9125603,
+    "GiniCoefficient": 0.37417608,
+    "EffectiveNumberOfCards": 12.555444,
+    "TotalUniqueCardsPicked": 16,
+    "ViableCards": 12,
+    "BalancedCards": 0,
+    "UnusedCards": 0,
+    "BuildVarietyScore": 0.696622,
+    "FloorConsistency": 2.991561,
+    "HasCriticalIssues": false,
+    "HasBalanceIssues": true,
+    "QualityScore": 42.268528
+  }
+}

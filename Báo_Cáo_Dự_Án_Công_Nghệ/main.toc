@@ -1,0 +1,89 @@
+\contentsline {chapter}{Lời cam đoan}{i}{chapter*.1}%
+\contentsline {chapter}{Lời cảm ơn}{ii}{chapter*.2}%
+\contentsline {chapter}{Tóm tắt}{iii}{chapter*.3}%
+\contentsline {chapter}{Danh mục hình vẽ}{iv}{chapter*.3}%
+\contentsline {chapter}{Danh mục bảng biểu}{v}{chapter*.3}%
+\contentsline {chapter}{Danh mục các ký hiệu và chữ viết tắt}{vi}{chapter*.5}%
+\contentsline {chapter}{{Mở đầu}}{1}{section*.6}%
+\contentsline {section}{\numberline {0.1}Lý do chọn đề tài}{1}{section.0.1}%
+\contentsline {section}{\numberline {0.2}Mục tiêu nghiên cứu}{1}{section.0.2}%
+\contentsline {section}{\numberline {0.3}Phương pháp nghiên cứu}{1}{section.0.3}%
+\contentsline {subsection}{\numberline {0.3.1}Nghiên cứu lý thuyết}{2}{subsection.0.3.1}%
+\contentsline {subsection}{\numberline {0.3.2}Phát triển hệ thống}{2}{subsection.0.3.2}%
+\contentsline {subsection}{\numberline {0.3.3}Tối ưu hóa và thực nghiệm}{2}{subsection.0.3.3}%
+\contentsline {section}{\numberline {0.4}Nội dung nghiên cứu}{2}{section.0.4}%
+\contentsline {section}{\numberline {0.5}Đóng góp của đề tài}{2}{section.0.5}%
+\contentsline {section}{\numberline {0.6}Bố cục của báo cáo}{3}{section.0.6}%
+\contentsline {chapter}{\numberline {1}TỔNG QUAN VÀ CƠ SỞ LÝ THUYẾT}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Giới thiệu về Roguelike Deckbuilder}{4}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Roguelike}{4}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Deckbuilder}{4}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}Roguelike Deckbuilder}{4}{subsection.1.1.3}%
+\contentsline {section}{\numberline {1.2}Thuật toán Di truyền (Genetic Algorithm)}{4}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Các thành phần chính}{5}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Quy trình hoạt động}{5}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}NSGA-II - Multi-Objective Optimization}{6}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Bài toán tối ưu đa mục tiêu}{6}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Thuật toán NSGA-II}{6}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Game Balancing - Cân bằng trò chơi}{7}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Tầm quan trọng của Game Balancing}{7}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Các phương pháp cân bằng truyền thống}{7}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}Thách thức trong automated game balancing}{8}{subsection.1.4.3}%
+\contentsline {section}{\numberline {1.5}Các nghiên cứu liên quan}{8}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Procedural Content Generation}{8}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Automated Game Balancing}{8}{subsection.1.5.2}%
+\contentsline {chapter}{\numberline {2}PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Phân tích yêu cầu}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Mục tiêu hệ thống}{9}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Kiến trúc tổng thể}{9}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Thiết kế chi tiết các module}{10}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Genome Representation}{10}{subsection.2.2.1}%
+\contentsline {subsubsection}{BalanceGenome trong GA đơn mục tiêu}{10}{subsubsection*.11}%
+\contentsline {subsubsection}{HierarchicalGenome trong NSGA-II đa mục tiêu}{10}{subsubsection*.12}%
+\contentsline {subsection}{\numberline {2.2.2}AI Agent Design (HeuristicPlayerAI)}{11}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Data Flow Diagram}{12}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Combat Sequence Diagram}{12}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Class Diagram}{13}{subsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.2.6}Fitness Evaluation}{13}{subsection.2.2.6}%
+\contentsline {chapter}{\numberline {3}CÀI ĐẶT VÀ TRIỂN KHAI}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Môi trường phát triển}{15}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Cấu trúc dự án}{15}{subsection.3.1.1}%
+\contentsline {section}{\numberline {3.2}Triển khai các module cốt lõi}{16}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Core Game Layer}{16}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}AI Agent}{16}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Triển khai các module tối ưu hóa}{17}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}GA đơn mục tiêu}{17}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}NSGA-II đa mục tiêu}{17}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}Thách thức và giải pháp}{21}{section.3.4}%
+\contentsline {chapter}{\numberline {4}THỰC NGHIỆM VÀ ĐÁNH GIÁ}{23}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Thiết lập thực nghiệm}{23}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Cấu hình hệ thống}{23}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Tham số thuật toán}{23}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Các chỉ số mục tiêu (Target Metrics)}{24}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}Kết quả thực nghiệm}{25}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Phương pháp 1: GA đơn mục tiêu}{25}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Phương pháp 2: NSGA-II đa mục tiêu}{25}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}So sánh hai phương pháp}{27}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Phân tích quá trình tiến hóa}{28}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}GA Evolution Tracking}{28}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Card Balance Analysis}{29}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}NSGA-II Pareto Front Analysis}{30}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Objectives Evolution Over Time}{32}{subsection.4.3.4}%
+\contentsline {section}{\numberline {4.4}Phân tích chi tiết}{34}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Statistical Significance Analysis}{34}{subsection.4.4.1}%
+\contentsline {subsubsection}{Comparison of Key Metrics}{34}{subsubsection*.28}%
+\contentsline {subsubsection}{Effect Size Analysis}{34}{subsubsection*.29}%
+\contentsline {subsection}{\numberline {4.4.2}Convergence Analysis}{35}{subsection.4.4.2}%
+\contentsline {subsubsection}{GA Single-Objective Convergence}{35}{subsubsection*.30}%
+\contentsline {subsubsection}{NSGA-II Multi-Objective Convergence}{35}{subsubsection*.31}%
+\contentsline {subsection}{\numberline {4.4.3}Sensitivity Analysis}{35}{subsection.4.4.3}%
+\contentsline {subsubsection}{Parameter Robustness}{35}{subsubsection*.32}%
+\contentsline {subsubsection}{AI Agent Sensitivity}{36}{subsubsection*.33}%
+\contentsline {chapter}{\numberline {5}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{37}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Tổng kết kết quả đạt được}{37}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Đóng góp của đề tài}{37}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Hạn chế của nghiên cứu}{38}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Hướng phát triển trong tương lai}{38}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Kết luận cuối cùng}{39}{section.5.5}%
+\contentsline {chapter}{Phụ lục}{40}{chapter*.36}%
+\contentsline {chapter}{{TÀI LIỆU THAM KHẢO}}{53}{section*.46}%

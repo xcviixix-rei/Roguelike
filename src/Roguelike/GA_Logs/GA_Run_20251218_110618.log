@@ -1,0 +1,1706 @@
+=== GENETIC ALGORITHM RUN ===
+Started: 12/18/2025 11:06:18 AM
+Population Size: 100
+Generations: 30
+Runs Per Genome: 200
+Mutation Rate: 0.05
+Elitism Rate: 0.1
+
+TARGET METRICS:
+  Win Rate: 45%
+  Victory HP: 30%
+  Floor on Death: 10.0
+
+
+                                                           =
+GENERATION 1 / 30
+                                                           =
+Time: 11.44s
+Best Fitness: 64.53
+
+FITNESS COMPONENTS:
+  Win Rate:       21.24 /  35.00  (  61%)  [Actual: 63.0%]
+  Victory HP:      7.78 /  20.00  (  39%)  [Actual: 64.4%]
+  Game Length:     8.94 /  10.00  (  89%)  [Floor: 10.9]
+  Card Viab:      15.74 /  20.00  (  79%)
+  Elite Perf:      8.36 /  10.00  (  84%)  [Kill: 76.5%]
+  Consistency:     2.48 /   5.00  (  50%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 116):
+    Monster:  53.7 (  46%)
+    Elite:    16.2 (  14%)
+    Event:    26.2 (  23%)
+    Shop:      5.6 (   5%)
+    Rest:     14.7 (  13%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   60% (Monster + Elite)
+    Recovery Rooms: 17% (Rest + Shop)
+    Event Rooms:    23%
+    Avg Combat Difficulty: 2.00★
+    Rest Healing: 87% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.62
+
+⚠  BALANCE ISSUES:
+  - Win rate high (63.0%)
+  - Victory HP high (64.4%)
+
+TOP 5 MOST PICKED CARDS:
+  double_tap           Pick: 61.0%  Win: 74.6% [MUST]
+  scrounge             Pick: 57.0%  Win: 81.6% [MUST]
+  shield_bash          Pick: 56.5%  Win: 82.3% [MUST]
+  heavy_blow           Pick: 53.5%  Win: 73.8% [MUST]
+  battle_trance        Pick: 30.5%  Win: 63.9%
+
+POPULATION STATS:
+  Best:    64.53
+  Worst:   0.69
+  Average: 1.94
+  StdDev:  6.33
+
+
+                                                           =
+GENERATION 2 / 30
+                                                           =
+Time: 11.01s
+Best Fitness: 64.37
+
+FITNESS COMPONENTS:
+  Win Rate:       18.60 /  35.00  (  53%)  [Actual: 66.0%]
+  Victory HP:      9.59 /  20.00  (  48%)  [Actual: 60.3%]
+  Game Length:     9.19 /  10.00  (  92%)  [Floor: 10.8]
+  Card Viab:      16.08 /  20.00  (  80%)
+  Elite Perf:      8.32 /  10.00  (  83%)  [Kill: 76.1%]
+  Consistency:     2.59 /   5.00  (  52%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 116):
+    Monster:  53.7 (  46%)
+    Elite:    16.2 (  14%)
+    Event:    26.2 (  23%)
+    Shop:      5.6 (   5%)
+    Rest:     14.7 (  13%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   60% (Monster + Elite)
+    Recovery Rooms: 17% (Rest + Shop)
+    Event Rooms:    23%
+    Avg Combat Difficulty: 2.00★
+    Rest Healing: 87% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.68
+
+⚠  BALANCE ISSUES:
+  - Win rate high (66.0%)
+  - Victory HP high (60.3%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 67.5%  Win: 74.1% [MUST]
+  double_tap           Pick: 60.0%  Win: 81.7% [MUST]
+  shield_bash          Pick: 56.0%  Win: 85.7% [MUST]
+  scrounge             Pick: 53.0%  Win: 72.6% [MUST]
+  piercing_shot        Pick: 32.0%  Win: 71.9%
+
+POPULATION STATS:
+  Best:    64.37
+  Worst:   0.73
+  Average: 4.07
+  StdDev:  10.32
+
+
+                                                           =
+GENERATION 3 / 30
+                                                           =
+Time: 10.81s
+Best Fitness: 68.14
+
+FITNESS COMPONENTS:
+  Win Rate:       22.66 /  35.00  (  65%)  [Actual: 61.5%]
+  Victory HP:      9.70 /  20.00  (  48%)  [Actual: 60.1%]
+  Game Length:     9.83 /  10.00  (  98%)  [Floor: 9.7]
+  Card Viab:      16.22 /  20.00  (  81%)
+  Elite Perf:      7.46 /  10.00  (  75%)  [Kill: 63.7%]
+  Consistency:     2.27 /   5.00  (  45%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 110):
+    Monster:  53.7 (  49%)
+    Elite:    16.2 (  15%)
+    Event:    26.2 (  24%)
+    Shop:      5.6 (   5%)
+    Rest:      7.9 (   7%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   61% are 4-star (Avg: 3.61★)
+
+  Derived Metrics:
+    Combat Rooms:   64% (Monster + Elite)
+    Recovery Rooms: 12% (Rest + Shop)
+    Event Rooms:    24%
+    Avg Combat Difficulty: 1.98★
+    Rest Healing: 136% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.73
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.5%)
+  - Victory HP high (60.1%)
+  - Limited recovery (12%)
+
+TOP 5 MOST PICKED CARDS:
+  double_tap           Pick: 54.0%  Win: 75.0% [MUST]
+  shield_bash          Pick: 53.5%  Win: 84.1% [MUST]
+  heavy_blow           Pick: 52.0%  Win: 82.7% [MUST]
+  scrounge             Pick: 50.5%  Win: 77.2% [MUST]
+  piercing_shot        Pick: 30.0%  Win: 76.7%
+
+POPULATION STATS:
+  Best:    68.14
+  Worst:   0.96
+  Average: 8.97
+  StdDev:  17.14
+
+
+                                                           =
+GENERATION 4 / 30
+                                                           =
+Time: 10.82s
+Best Fitness: 69.95
+
+FITNESS COMPONENTS:
+  Win Rate:       23.64 /  35.00  (  68%)  [Actual: 60.5%]
+  Victory HP:     10.17 /  20.00  (  51%)  [Actual: 59.1%]
+  Game Length:     9.80 /  10.00  (  98%)  [Floor: 10.4]
+  Card Viab:      16.33 /  20.00  (  82%)
+  Elite Perf:      7.70 /  10.00  (  77%)  [Kill: 67.1%]
+  Consistency:     2.31 /   5.00  (  46%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 120):
+    Monster:  50.6 (  42%)
+    Elite:    16.2 (  13%)
+    Event:    33.4 (  28%)
+    Shop:      5.6 (   5%)
+    Rest:     14.7 (  12%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   55% (Monster + Elite)
+    Recovery Rooms: 17% (Rest + Shop)
+    Event Rooms:    28%
+    Avg Combat Difficulty: 2.03★
+    Rest Healing: 87% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.71
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.5%)
+  - Victory HP high (59.1%)
+
+TOP 5 MOST PICKED CARDS:
+  scrounge             Pick: 63.0%  Win: 73.0% [MUST]
+  heavy_blow           Pick: 61.0%  Win: 73.8% [MUST]
+  double_tap           Pick: 55.5%  Win: 77.5% [MUST]
+  shield_bash          Pick: 53.5%  Win: 77.6% [MUST]
+  barricade            Pick: 32.0%  Win: 68.8%
+
+POPULATION STATS:
+  Best:    69.95
+  Worst:   1.15
+  Average: 16.30
+  StdDev:  23.45
+
+
+                                                           =
+GENERATION 5 / 30
+                                                           =
+Time: 10.79s
+Best Fitness: 69.66
+
+FITNESS COMPONENTS:
+  Win Rate:       21.71 /  35.00  (  62%)  [Actual: 62.5%]
+  Victory HP:     11.40 /  20.00  (  57%)  [Actual: 56.5%]
+  Game Length:     9.08 /  10.00  (  91%)  [Floor: 10.8]
+  Card Viab:      16.22 /  20.00  (  81%)
+  Elite Perf:      8.34 /  10.00  (  83%)  [Kill: 76.3%]
+  Consistency:     2.91 /   5.00  (  58%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 99):
+    Monster:  33.1 (  33%)
+    Elite:    13.0 (  13%)
+    Event:    32.8 (  33%)
+    Shop:     13.9 (  14%)
+    Rest:      6.1 (   6%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   47% (Monster + Elite)
+    Recovery Rooms: 20% (Rest + Shop)
+    Event Rooms:    33%
+    Avg Combat Difficulty: 2.11★
+    Rest Healing: 136% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 14 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.75
+
+⚠  BALANCE ISSUES:
+  - Win rate high (62.5%)
+  - Victory HP high (56.5%)
+
+TOP 5 MOST PICKED CARDS:
+  shield_bash          Pick: 60.0%  Win: 80.8% [MUST]
+  heavy_blow           Pick: 59.5%  Win: 73.9% [MUST]
+  scrounge             Pick: 54.5%  Win: 76.1% [MUST]
+  double_tap           Pick: 54.5%  Win: 72.5% [MUST]
+  battle_trance        Pick: 28.0%  Win: 71.4%
+
+POPULATION STATS:
+  Best:    69.66
+  Worst:   1.39
+  Average: 25.87
+  StdDev:  28.34
+
+
+                                                           =
+GENERATION 6 / 30
+                                                           =
+Time: 10.48s
+Best Fitness: 70.16
+
+FITNESS COMPONENTS:
+  Win Rate:       23.15 /  35.00  (  66%)  [Actual: 61.0%]
+  Victory HP:     11.35 /  20.00  (  57%)  [Actual: 56.6%]
+  Game Length:     9.18 /  10.00  (  92%)  [Floor: 10.8]
+  Card Viab:      15.97 /  20.00  (  80%)
+  Elite Perf:      8.14 /  10.00  (  81%)  [Kill: 73.5%]
+  Consistency:     2.38 /   5.00  (  48%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 98):
+    Monster:  30.5 (  31%)
+    Elite:    13.0 (  13%)
+    Event:    33.4 (  34%)
+    Shop:      6.9 (   7%)
+    Rest:     14.7 (  15%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   44% (Monster + Elite)
+    Recovery Rooms: 22% (Rest + Shop)
+    Event Rooms:    34%
+    Avg Combat Difficulty: 2.15★
+    Rest Healing: 136% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.66
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.0%)
+  - Victory HP high (56.6%)
+
+TOP 5 MOST PICKED CARDS:
+  scrounge             Pick: 59.0%  Win: 78.0% [MUST]
+  heavy_blow           Pick: 58.5%  Win: 74.4% [MUST]
+  double_tap           Pick: 54.0%  Win: 76.9% [MUST]
+  shield_bash          Pick: 54.0%  Win: 69.4% [MUST]
+  annihilate           Pick: 28.0%  Win: 87.5%
+
+POPULATION STATS:
+  Best:    70.16
+  Worst:   1.86
+  Average: 30.64
+  StdDev:  30.18
+
+
+                                                           =
+GENERATION 7 / 30
+                                                           =
+Time: 10.35s
+Best Fitness: 70.93
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     10.69 /  20.00  (  53%)  [Actual: 58.0%]
+  Game Length:     8.97 /  10.00  (  90%)  [Floor: 10.9]
+  Card Viab:      15.73 /  20.00  (  79%)
+  Elite Perf:      8.46 /  10.00  (  85%)  [Kill: 78.1%]
+  Consistency:     2.94 /   5.00  (  59%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 127):
+    Monster:  53.9 (  42%)
+    Elite:    22.0 (  17%)
+    Event:    29.2 (  23%)
+    Shop:     13.2 (  10%)
+    Rest:      8.5 (   7%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   65% are 4-star (Avg: 3.65★)
+
+  Derived Metrics:
+    Combat Rooms:   60% (Monster + Elite)
+    Recovery Rooms: 17% (Rest + Shop)
+    Event Rooms:    23%
+    Avg Combat Difficulty: 2.12★
+    Rest Healing: 139% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.62
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (58.0%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 55.5%  Win: 73.0% [MUST]
+  scrounge             Pick: 54.5%  Win: 69.7% [MUST]
+  double_tap           Pick: 54.0%  Win: 73.1% [MUST]
+  shield_bash          Pick: 49.0%  Win: 86.7% [MUST]
+  battle_trance        Pick: 31.0%  Win: 61.3%
+
+POPULATION STATS:
+  Best:    70.93
+  Worst:   2.36
+  Average: 41.38
+  StdDev:  29.11
+
+
+                                                           =
+GENERATION 8 / 30
+                                                           =
+Time: 10.20s
+Best Fitness: 72.09
+
+FITNESS COMPONENTS:
+  Win Rate:       21.24 /  35.00  (  61%)  [Actual: 63.0%]
+  Victory HP:     14.17 /  20.00  (  71%)  [Actual: 50.8%]
+  Game Length:     9.36 /  10.00  (  94%)  [Floor: 10.7]
+  Card Viab:      16.27 /  20.00  (  81%)
+  Elite Perf:      8.17 /  10.00  (  82%)  [Kill: 73.8%]
+  Consistency:     2.89 /   5.00  (  58%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 115):
+    Monster:  53.7 (  47%)
+    Elite:    16.2 (  14%)
+    Event:    26.2 (  23%)
+    Shop:      5.6 (   5%)
+    Rest:     12.9 (  11%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   61% (Monster + Elite)
+    Recovery Rooms: 16% (Rest + Shop)
+    Event Rooms:    23%
+    Avg Combat Difficulty: 2.00★
+    Rest Healing: 136% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.65
+
+⚠  BALANCE ISSUES:
+  - Win rate high (63.0%)
+  - Victory HP high (50.8%)
+
+TOP 5 MOST PICKED CARDS:
+  scrounge             Pick: 58.5%  Win: 77.8% [MUST]
+  shield_bash          Pick: 57.5%  Win: 80.0% [MUST]
+  heavy_blow           Pick: 57.5%  Win: 80.9% [MUST]
+  double_tap           Pick: 53.5%  Win: 79.4% [MUST]
+  catalyst             Pick: 32.0%  Win: 76.6%
+
+POPULATION STATS:
+  Best:    72.09
+  Worst:   2.46
+  Average: 41.05
+  StdDev:  28.73
+
+
+                                                           =
+GENERATION 9 / 30
+                                                           =
+Time: 10.16s
+Best Fitness: 71.91
+
+FITNESS COMPONENTS:
+  Win Rate:       22.66 /  35.00  (  65%)  [Actual: 61.5%]
+  Victory HP:     13.50 /  20.00  (  68%)  [Actual: 52.2%]
+  Game Length:     8.51 /  10.00  (  85%)  [Floor: 11.0]
+  Card Viab:      16.17 /  20.00  (  81%)
+  Elite Perf:      8.14 /  10.00  (  81%)  [Kill: 73.4%]
+  Consistency:     2.93 /   5.00  (  59%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 126):
+    Monster:  53.7 (  43%)
+    Elite:    22.0 (  17%)
+    Event:    33.4 (  27%)
+    Shop:      9.1 (   7%)
+    Rest:      7.7 (   6%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   60% (Monster + Elite)
+    Recovery Rooms: 13% (Rest + Shop)
+    Event Rooms:    27%
+    Avg Combat Difficulty: 2.13★
+    Rest Healing: 135% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.75
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.5%)
+  - Victory HP high (52.2%)
+  - Limited recovery (13%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 62.5%  Win: 73.6% [MUST]
+  scrounge             Pick: 59.5%  Win: 72.3% [MUST]
+  double_tap           Pick: 59.0%  Win: 75.4% [MUST]
+  shield_bash          Pick: 52.5%  Win: 85.7% [MUST]
+  barricade            Pick: 34.5%  Win: 69.6%
+
+POPULATION STATS:
+  Best:    71.91
+  Worst:   2.46
+  Average: 44.92
+  StdDev:  27.13
+
+
+                                                           =
+GENERATION 10 / 30
+                                                           =
+Time: 10.25s
+Best Fitness: 70.85
+
+FITNESS COMPONENTS:
+  Win Rate:       21.71 /  35.00  (  62%)  [Actual: 62.5%]
+  Victory HP:     14.02 /  20.00  (  70%)  [Actual: 51.1%]
+  Game Length:     8.78 /  10.00  (  88%)  [Floor: 10.9]
+  Card Viab:      15.95 /  20.00  (  80%)
+  Elite Perf:      8.01 /  10.00  (  80%)  [Kill: 71.5%]
+  Consistency:     2.39 /   5.00  (  48%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 113):
+    Monster:  53.7 (  47%)
+    Elite:    22.0 (  19%)
+    Event:    19.2 (  17%)
+    Shop:      5.6 (   5%)
+    Rest:     12.9 (  11%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   67% (Monster + Elite)
+    Recovery Rooms: 16% (Rest + Shop)
+    Event Rooms:    17%
+    Avg Combat Difficulty: 2.13★
+    Rest Healing: 135% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.67
+
+⚠  BALANCE ISSUES:
+  - Win rate high (62.5%)
+  - Victory HP high (51.1%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 55.0%  Win: 69.1% [MUST]
+  shield_bash          Pick: 54.5%  Win: 80.7% [MUST]
+  double_tap           Pick: 53.0%  Win: 81.1% [MUST]
+  scrounge             Pick: 52.0%  Win: 63.5% [MUST]
+  barricade            Pick: 30.0%  Win: 65.0%
+
+POPULATION STATS:
+  Best:    70.85
+  Worst:   2.12
+  Average: 44.76
+  StdDev:  28.26
+
+
+                                                           =
+GENERATION 11 / 30
+                                                           =
+Time: 10.51s
+Best Fitness: 72.84
+
+FITNESS COMPONENTS:
+  Win Rate:       22.66 /  35.00  (  65%)  [Actual: 61.5%]
+  Victory HP:     14.79 /  20.00  (  74%)  [Actual: 49.4%]
+  Game Length:     8.71 /  10.00  (  87%)  [Floor: 11.0]
+  Card Viab:      15.90 /  20.00  (  80%)
+  Elite Perf:      8.02 /  10.00  (  80%)  [Kill: 71.7%]
+  Consistency:     2.75 /   5.00  (  55%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 113):
+    Monster:  53.7 (  47%)
+    Elite:    22.0 (  19%)
+    Event:    19.2 (  17%)
+    Shop:      5.6 (   5%)
+    Rest:     12.9 (  11%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   67% (Monster + Elite)
+    Recovery Rooms: 16% (Rest + Shop)
+    Event Rooms:    17%
+    Avg Combat Difficulty: 2.13★
+    Rest Healing: 136% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.63
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.5%)
+  - Victory HP high (49.4%)
+
+TOP 5 MOST PICKED CARDS:
+  double_tap           Pick: 60.5%  Win: 75.2% [MUST]
+  heavy_blow           Pick: 59.5%  Win: 72.3% [MUST]
+  shield_bash          Pick: 56.0%  Win: 83.0% [MUST]
+  scrounge             Pick: 55.0%  Win: 67.3% [MUST]
+  catalyst             Pick: 31.0%  Win: 66.1%
+
+POPULATION STATS:
+  Best:    72.84
+  Worst:   2.46
+  Average: 37.26
+  StdDev:  29.90
+
+
+                                                           =
+GENERATION 12 / 30
+                                                           =
+Time: 10.43s
+Best Fitness: 73.50
+
+FITNESS COMPONENTS:
+  Win Rate:       22.66 /  35.00  (  65%)  [Actual: 61.5%]
+  Victory HP:     15.12 /  20.00  (  76%)  [Actual: 48.7%]
+  Game Length:     8.74 /  10.00  (  87%)  [Floor: 10.9]
+  Card Viab:      16.14 /  20.00  (  81%)
+  Elite Perf:      8.06 /  10.00  (  81%)  [Kill: 72.3%]
+  Consistency:     2.78 /   5.00  (  56%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 107):
+    Monster:  57.8 (  54%)
+    Elite:    16.4 (  15%)
+    Event:    19.2 (  18%)
+    Shop:      5.6 (   5%)
+    Rest:      8.5 (   8%)
+
+  Star Ratings:
+    Monster: 44% are 2-star (Avg: 1.44★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   69% (Monster + Elite)
+    Recovery Rooms: 13% (Rest + Shop)
+    Event Rooms:    18%
+    Avg Combat Difficulty: 1.94★
+    Rest Healing: 139% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.72
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.5%)
+  - Victory HP high (48.7%)
+  - Limited recovery (13%)
+
+TOP 5 MOST PICKED CARDS:
+  double_tap           Pick: 62.0%  Win: 77.4% [MUST]
+  scrounge             Pick: 58.0%  Win: 69.8% [MUST]
+  heavy_blow           Pick: 57.5%  Win: 67.8% [MUST]
+  shield_bash          Pick: 57.5%  Win: 80.0% [MUST]
+  ethereal_form        Pick: 27.0%  Win: 79.6%
+
+POPULATION STATS:
+  Best:    73.50
+  Worst:   2.51
+  Average: 43.29
+  StdDev:  28.50
+
+
+                                                           =
+GENERATION 13 / 30
+                                                           =
+Time: 10.28s
+Best Fitness: 71.88
+
+FITNESS COMPONENTS:
+  Win Rate:       23.64 /  35.00  (  68%)  [Actual: 60.5%]
+  Victory HP:     11.64 /  20.00  (  58%)  [Actual: 56.0%]
+  Game Length:     9.98 /  10.00  ( 100%)  [Floor: 9.9]
+  Card Viab:      16.13 /  20.00  (  81%)
+  Elite Perf:      7.75 /  10.00  (  78%)  [Kill: 67.9%]
+  Consistency:     2.74 /   5.00  (  55%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 81):
+    Monster:  30.5 (  38%)
+    Elite:    16.2 (  20%)
+    Event:    19.2 (  24%)
+    Shop:      5.6 (   7%)
+    Rest:      9.4 (  12%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   58% (Monster + Elite)
+    Recovery Rooms: 19% (Rest + Shop)
+    Event Rooms:    24%
+    Avg Combat Difficulty: 2.26★
+    Rest Healing: 146% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.67
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.5%)
+  - Victory HP high (56.0%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 53.0%  Win: 69.8% [MUST]
+  double_tap           Pick: 52.0%  Win: 80.8% [MUST]
+  shield_bash          Pick: 52.0%  Win: 80.8% [MUST]
+  scrounge             Pick: 52.0%  Win: 75.0% [MUST]
+  piercing_shot        Pick: 29.0%  Win: 69.0%
+
+POPULATION STATS:
+  Best:    71.88
+  Worst:   2.46
+  Average: 45.11
+  StdDev:  28.44
+
+
+                                                           =
+GENERATION 14 / 30
+                                                           =
+Time: 10.40s
+Best Fitness: 73.55
+
+FITNESS COMPONENTS:
+  Win Rate:       23.15 /  35.00  (  66%)  [Actual: 61.0%]
+  Victory HP:     13.84 /  20.00  (  69%)  [Actual: 51.5%]
+  Game Length:     9.15 /  10.00  (  92%)  [Floor: 10.8]
+  Card Viab:      16.33 /  20.00  (  82%)
+  Elite Perf:      7.98 /  10.00  (  80%)  [Kill: 71.2%]
+  Consistency:     3.10 /   5.00  (  62%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 124):
+    Monster:  57.8 (  46%)
+    Elite:    22.0 (  18%)
+    Event:    19.2 (  15%)
+    Shop:     11.9 (  10%)
+    Rest:     13.5 (  11%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   64% (Monster + Elite)
+    Recovery Rooms: 20% (Rest + Shop)
+    Event Rooms:    15%
+    Avg Combat Difficulty: 2.10★
+    Rest Healing: 136% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.72
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.0%)
+  - Victory HP high (51.5%)
+
+TOP 5 MOST PICKED CARDS:
+  shield_bash          Pick: 59.5%  Win: 78.2% [MUST]
+  scrounge             Pick: 59.5%  Win: 73.9% [MUST]
+  double_tap           Pick: 58.0%  Win: 75.0% [MUST]
+  heavy_blow           Pick: 55.0%  Win: 71.8% [MUST]
+  battle_trance        Pick: 29.0%  Win: 60.3%
+
+POPULATION STATS:
+  Best:    73.55
+  Worst:   1.70
+  Average: 37.06
+  StdDev:  31.01
+
+
+                                                           =
+GENERATION 15 / 30
+                                                           =
+Time: 10.40s
+Best Fitness: 71.19
+
+FITNESS COMPONENTS:
+  Win Rate:       23.15 /  35.00  (  66%)  [Actual: 61.0%]
+  Victory HP:     11.92 /  20.00  (  60%)  [Actual: 55.4%]
+  Game Length:     9.77 /  10.00  (  98%)  [Floor: 9.6]
+  Card Viab:      16.00 /  20.00  (  80%)
+  Elite Perf:      7.62 /  10.00  (  76%)  [Kill: 66.0%]
+  Consistency:     2.74 /   5.00  (  55%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 102):
+    Monster:  33.0 (  32%)
+    Elite:    16.2 (  16%)
+    Event:    33.9 (  33%)
+    Shop:      5.6 (   5%)
+    Rest:     13.5 (  13%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   65% are 4-star (Avg: 3.65★)
+
+  Derived Metrics:
+    Combat Rooms:   48% (Monster + Elite)
+    Recovery Rooms: 19% (Rest + Shop)
+    Event Rooms:    33%
+    Avg Combat Difficulty: 2.20★
+    Rest Healing: 133% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.61
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.0%)
+  - Victory HP high (55.4%)
+
+TOP 5 MOST PICKED CARDS:
+  double_tap           Pick: 57.5%  Win: 79.1% [MUST]
+  scrounge             Pick: 56.5%  Win: 79.6% [MUST]
+  shield_bash          Pick: 54.0%  Win: 80.6% [MUST]
+  heavy_blow           Pick: 53.5%  Win: 78.5% [MUST]
+  battle_trance        Pick: 27.0%  Win: 79.6%
+
+POPULATION STATS:
+  Best:    71.19
+  Worst:   2.46
+  Average: 41.54
+  StdDev:  30.38
+
+
+                                                           =
+GENERATION 16 / 30
+                                                           =
+Time: 10.07s
+Best Fitness: 72.94
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     14.37 /  20.00  (  72%)  [Actual: 50.3%]
+  Game Length:     6.93 /  10.00  (  69%)  [Floor: 11.6]
+  Card Viab:      15.87 /  20.00  (  79%)
+  Elite Perf:      8.34 /  10.00  (  83%)  [Kill: 76.3%]
+  Consistency:     3.29 /   5.00  (  66%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 102):
+    Monster:  30.5 (  30%)
+    Elite:    17.8 (  17%)
+    Event:    33.4 (  33%)
+    Shop:     10.8 (  11%)
+    Rest:      9.4 (   9%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   47% (Monster + Elite)
+    Recovery Rooms: 20% (Rest + Shop)
+    Event Rooms:    33%
+    Avg Combat Difficulty: 2.30★
+    Rest Healing: 143% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.72
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (50.3%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 64.5%  Win: 67.4% [MUST]
+  scrounge             Pick: 63.0%  Win: 73.8% [MUST]
+  double_tap           Pick: 59.5%  Win: 73.9% [MUST]
+  shield_bash          Pick: 52.5%  Win: 78.1% [MUST]
+  battle_trance        Pick: 28.5%  Win: 56.1%
+
+POPULATION STATS:
+  Best:    72.94
+  Worst:   2.46
+  Average: 43.34
+  StdDev:  29.88
+
+
+                                                           =
+GENERATION 17 / 30
+                                                           =
+Time: 9.96s
+Best Fitness: 70.76
+
+FITNESS COMPONENTS:
+  Win Rate:       23.64 /  35.00  (  68%)  [Actual: 60.5%]
+  Victory HP:     11.32 /  20.00  (  57%)  [Actual: 56.7%]
+  Game Length:     9.48 /  10.00  (  95%)  [Floor: 10.6]
+  Card Viab:      15.84 /  20.00  (  79%)
+  Elite Perf:      7.99 /  10.00  (  80%)  [Kill: 71.3%]
+  Consistency:     2.48 /   5.00  (  50%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 132):
+    Monster:  53.7 (  41%)
+    Elite:    16.2 (  12%)
+    Event:    33.4 (  25%)
+    Shop:     15.0 (  11%)
+    Rest:     13.5 (  10%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   53% (Monster + Elite)
+    Recovery Rooms: 22% (Rest + Shop)
+    Event Rooms:    25%
+    Avg Combat Difficulty: 2.00★
+    Rest Healing: 146% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.71
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.5%)
+  - Victory HP high (56.7%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 59.0%  Win: 75.4% [MUST]
+  shield_bash          Pick: 56.0%  Win: 76.8% [MUST]
+  scrounge             Pick: 55.5%  Win: 73.9% [MUST]
+  double_tap           Pick: 53.5%  Win: 75.7% [MUST]
+  battle_trance        Pick: 30.0%  Win: 71.7%
+
+POPULATION STATS:
+  Best:    70.76
+  Worst:   2.46
+  Average: 41.16
+  StdDev:  30.16
+
+
+                                                           =
+GENERATION 18 / 30
+                                                           =
+Time: 9.94s
+Best Fitness: 72.94
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     12.41 /  20.00  (  62%)  [Actual: 54.4%]
+  Game Length:     8.76 /  10.00  (  88%)  [Floor: 10.9]
+  Card Viab:      16.42 /  20.00  (  82%)
+  Elite Perf:      8.42 /  10.00  (  84%)  [Kill: 77.5%]
+  Consistency:     2.78 /   5.00  (  56%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 101):
+    Monster:  30.5 (  30%)
+    Elite:    17.8 (  18%)
+    Event:    33.4 (  33%)
+    Shop:     10.8 (  11%)
+    Rest:      8.6 (   9%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   48% (Monster + Elite)
+    Recovery Rooms: 19% (Rest + Shop)
+    Event Rooms:    33%
+    Avg Combat Difficulty: 2.30★
+    Rest Healing: 146% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.73
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (54.4%)
+
+TOP 5 MOST PICKED CARDS:
+  double_tap           Pick: 60.0%  Win: 67.5% [MUST]
+  shield_bash          Pick: 59.0%  Win: 82.2% [MUST]
+  heavy_blow           Pick: 56.0%  Win: 67.9% [MUST]
+  scrounge             Pick: 56.0%  Win: 67.9% [MUST]
+  catalyst             Pick: 32.0%  Win: 65.6%
+
+POPULATION STATS:
+  Best:    72.94
+  Worst:   2.46
+  Average: 44.77
+  StdDev:  29.60
+
+
+                                                           =
+GENERATION 19 / 30
+                                                           =
+Time: 10.07s
+Best Fitness: 73.79
+
+FITNESS COMPONENTS:
+  Win Rate:       23.15 /  35.00  (  66%)  [Actual: 61.0%]
+  Victory HP:     14.31 /  20.00  (  72%)  [Actual: 50.5%]
+  Game Length:     9.61 /  10.00  (  96%)  [Floor: 10.5]
+  Card Viab:      15.85 /  20.00  (  79%)
+  Elite Perf:      7.92 /  10.00  (  79%)  [Kill: 70.3%]
+  Consistency:     2.96 /   5.00  (  59%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 132):
+    Monster:  56.4 (  43%)
+    Elite:    17.8 (  14%)
+    Event:    27.4 (  21%)
+    Shop:     10.8 (   8%)
+    Rest:     19.2 (  15%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   56% (Monster + Elite)
+    Recovery Rooms: 23% (Rest + Shop)
+    Event Rooms:    21%
+    Avg Combat Difficulty: 2.02★
+    Rest Healing: 139% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.55
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.0%)
+  - Victory HP high (50.5%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 60.0%  Win: 75.8% [MUST]
+  scrounge             Pick: 59.0%  Win: 70.3% [MUST]
+  double_tap           Pick: 55.5%  Win: 78.4% [MUST]
+  shield_bash          Pick: 52.0%  Win: 79.8% [MUST]
+  catalyst             Pick: 36.0%  Win: 70.8%
+
+POPULATION STATS:
+  Best:    73.79
+  Worst:   2.46
+  Average: 43.03
+  StdDev:  30.91
+
+
+                                                           =
+GENERATION 20 / 30
+                                                           =
+Time: 10.03s
+Best Fitness: 74.60
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     14.75 /  20.00  (  74%)  [Actual: 49.5%]
+  Game Length:     9.36 /  10.00  (  94%)  [Floor: 10.7]
+  Card Viab:      15.67 /  20.00  (  78%)
+  Elite Perf:      7.87 /  10.00  (  79%)  [Kill: 69.5%]
+  Consistency:     2.81 /   5.00  (  56%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 113):
+    Monster:  53.7 (  47%)
+    Elite:    16.4 (  14%)
+    Event:    27.4 (  24%)
+    Shop:     10.8 (  10%)
+    Rest:      5.0 (   4%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   62% (Monster + Elite)
+    Recovery Rooms: 14% (Rest + Shop)
+    Event Rooms:    24%
+    Avg Combat Difficulty: 2.01★
+    Rest Healing: 146% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.62
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (49.5%)
+  - Limited recovery (14%)
+
+TOP 5 MOST PICKED CARDS:
+  double_tap           Pick: 58.5%  Win: 73.5% [MUST]
+  heavy_blow           Pick: 58.0%  Win: 75.9% [MUST]
+  shield_bash          Pick: 54.5%  Win: 80.7% [MUST]
+  scrounge             Pick: 51.5%  Win: 72.8% [MUST]
+  piercing_shot        Pick: 29.5%  Win: 69.5%
+
+POPULATION STATS:
+  Best:    74.60
+  Worst:   2.46
+  Average: 42.57
+  StdDev:  30.49
+
+
+                                                           =
+GENERATION 21 / 30
+                                                           =
+Time: 10.12s
+Best Fitness: 74.43
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     14.15 /  20.00  (  71%)  [Actual: 50.8%]
+  Game Length:     9.91 /  10.00  (  99%)  [Floor: 9.8]
+  Card Viab:      15.52 /  20.00  (  78%)
+  Elite Perf:      7.75 /  10.00  (  77%)  [Kill: 67.8%]
+  Consistency:     2.97 /   5.00  (  59%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 115):
+    Monster:  57.8 (  50%)
+    Elite:    16.4 (  14%)
+    Event:    19.2 (  17%)
+    Shop:     10.8 (   9%)
+    Rest:     10.6 (   9%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   65% (Monster + Elite)
+    Recovery Rooms: 19% (Rest + Shop)
+    Event Rooms:    17%
+    Avg Combat Difficulty: 1.98★
+    Rest Healing: 136% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 14 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.65
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (50.8%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 57.0%  Win: 73.7% [MUST]
+  scrounge             Pick: 56.0%  Win: 72.3% [MUST]
+  shield_bash          Pick: 50.5%  Win: 78.2% [MUST]
+  double_tap           Pick: 48.5%  Win: 78.4% [MUST]
+  barricade            Pick: 27.0%  Win: 74.1%
+
+POPULATION STATS:
+  Best:    74.43
+  Worst:   2.41
+  Average: 48.96
+  StdDev:  28.18
+
+
+                                                           =
+GENERATION 22 / 30
+                                                           =
+Time: 10.07s
+Best Fitness: 74.27
+
+FITNESS COMPONENTS:
+  Win Rate:       22.18 /  35.00  (  63%)  [Actual: 62.0%]
+  Victory HP:     15.98 /  20.00  (  80%)  [Actual: 46.8%]
+  Game Length:     9.32 /  10.00  (  93%)  [Floor: 10.7]
+  Card Viab:      16.04 /  20.00  (  80%)
+  Elite Perf:      8.15 /  10.00  (  82%)  [Kill: 73.6%]
+  Consistency:     2.60 /   5.00  (  52%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 128):
+    Monster:  56.4 (  44%)
+    Elite:    19.3 (  15%)
+    Event:    33.4 (  26%)
+    Shop:     10.8 (   8%)
+    Rest:      8.5 (   7%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   59% (Monster + Elite)
+    Recovery Rooms: 15% (Rest + Shop)
+    Event Rooms:    26%
+    Avg Combat Difficulty: 2.05★
+    Rest Healing: 89% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 14 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.72
+
+⚠  BALANCE ISSUES:
+  - Win rate high (62.0%)
+  - Victory HP high (46.8%)
+
+TOP 5 MOST PICKED CARDS:
+  scrounge             Pick: 61.0%  Win: 72.1% [MUST]
+  double_tap           Pick: 59.0%  Win: 74.6% [MUST]
+  shield_bash          Pick: 59.0%  Win: 80.5% [MUST]
+  heavy_blow           Pick: 58.0%  Win: 72.4% [MUST]
+  barricade            Pick: 27.5%  Win: 65.5%
+
+POPULATION STATS:
+  Best:    74.27
+  Worst:   2.46
+  Average: 44.36
+  StdDev:  31.24
+
+
+                                                           =
+GENERATION 23 / 30
+                                                           =
+Time: 10.35s
+Best Fitness: 74.03
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     14.35 /  20.00  (  72%)  [Actual: 50.4%]
+  Game Length:     9.59 /  10.00  (  96%)  [Floor: 10.5]
+  Card Viab:      15.52 /  20.00  (  78%)
+  Elite Perf:      7.89 /  10.00  (  79%)  [Kill: 69.9%]
+  Consistency:     2.54 /   5.00  (  51%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 132):
+    Monster:  57.8 (  44%)
+    Elite:    20.3 (  15%)
+    Event:    19.2 (  15%)
+    Shop:     15.6 (  12%)
+    Rest:     19.2 (  15%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   59% (Monster + Elite)
+    Recovery Rooms: 26% (Rest + Shop)
+    Event Rooms:    15%
+    Avg Combat Difficulty: 2.06★
+    Rest Healing: 143% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.67
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (50.4%)
+
+TOP 5 MOST PICKED CARDS:
+  shield_bash          Pick: 61.0%  Win: 73.8% [MUST]
+  scrounge             Pick: 60.5%  Win: 69.4% [MUST]
+  double_tap           Pick: 53.5%  Win: 80.4% [MUST]
+  heavy_blow           Pick: 51.5%  Win: 78.6% [MUST]
+  catalyst             Pick: 26.0%  Win: 67.3%
+
+POPULATION STATS:
+  Best:    74.03
+  Worst:   2.46
+  Average: 48.60
+  StdDev:  29.36
+
+
+                                                           =
+GENERATION 24 / 30
+                                                           =
+Time: 10.31s
+Best Fitness: 75.19
+
+FITNESS COMPONENTS:
+  Win Rate:       21.71 /  35.00  (  62%)  [Actual: 62.5%]
+  Victory HP:     17.14 /  20.00  (  86%)  [Actual: 43.9%]
+  Game Length:     9.03 /  10.00  (  90%)  [Floor: 10.8]
+  Card Viab:      16.05 /  20.00  (  80%)
+  Elite Perf:      8.52 /  10.00  (  85%)  [Kill: 78.8%]
+  Consistency:     2.75 /   5.00  (  55%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 128):
+    Monster:  56.4 (  44%)
+    Elite:    19.4 (  15%)
+    Event:    33.4 (  26%)
+    Shop:     10.8 (   8%)
+    Rest:      8.5 (   7%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   59% (Monster + Elite)
+    Recovery Rooms: 15% (Rest + Shop)
+    Event Rooms:    26%
+    Avg Combat Difficulty: 2.06★
+    Rest Healing: 89% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.67
+
+⚠  BALANCE ISSUES:
+  - Win rate high (62.5%)
+  - Victory HP high (43.9%)
+
+TOP 5 MOST PICKED CARDS:
+  shield_bash          Pick: 58.0%  Win: 81.0% [MUST]
+  heavy_blow           Pick: 57.5%  Win: 72.2% [MUST]
+  scrounge             Pick: 55.0%  Win: 76.4% [MUST]
+  double_tap           Pick: 54.5%  Win: 80.7% [MUST]
+  battle_trance        Pick: 34.0%  Win: 63.2%
+
+POPULATION STATS:
+  Best:    75.19
+  Worst:   2.46
+  Average: 47.46
+  StdDev:  30.06
+
+
+                                                           =
+GENERATION 25 / 30
+                                                           =
+Time: 10.15s
+Best Fitness: 75.46
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     15.48 /  20.00  (  77%)  [Actual: 47.9%]
+  Game Length:     8.37 /  10.00  (  84%)  [Floor: 11.1]
+  Card Viab:      15.92 /  20.00  (  80%)
+  Elite Perf:      8.49 /  10.00  (  85%)  [Kill: 78.4%]
+  Consistency:     3.06 /   5.00  (  61%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 121):
+    Monster:  57.8 (  48%)
+    Elite:    16.4 (  14%)
+    Event:    28.5 (  24%)
+    Shop:      9.1 (   7%)
+    Rest:      9.5 (   8%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   61% (Monster + Elite)
+    Recovery Rooms: 15% (Rest + Shop)
+    Event Rooms:    24%
+    Avg Combat Difficulty: 1.98★
+    Rest Healing: 141% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.64
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (47.9%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 60.5%  Win: 67.8% [MUST]
+  shield_bash          Pick: 58.5%  Win: 76.1% [MUST]
+  double_tap           Pick: 58.0%  Win: 73.3% [MUST]
+  scrounge             Pick: 57.0%  Win: 71.1% [MUST]
+  catalyst             Pick: 31.0%  Win: 69.4%
+
+POPULATION STATS:
+  Best:    75.46
+  Worst:   2.46
+  Average: 43.72
+  StdDev:  31.53
+
+
+                                                           =
+GENERATION 26 / 30
+                                                           =
+Time: 10.23s
+Best Fitness: 76.65
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     16.99 /  20.00  (  85%)  [Actual: 44.3%]
+  Game Length:     9.24 /  10.00  (  92%)  [Floor: 10.7]
+  Card Viab:      15.85 /  20.00  (  79%)
+  Elite Perf:      7.85 /  10.00  (  78%)  [Kill: 69.2%]
+  Consistency:     2.59 /   5.00  (  52%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 135):
+    Monster:  56.4 (  42%)
+    Elite:    19.3 (  14%)
+    Event:    31.0 (  23%)
+    Shop:     15.0 (  11%)
+    Rest:     13.5 (  10%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   56% (Monster + Elite)
+    Recovery Rooms: 21% (Rest + Shop)
+    Event Rooms:    23%
+    Avg Combat Difficulty: 2.05★
+    Rest Healing: 141% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.66
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (44.3%)
+
+TOP 5 MOST PICKED CARDS:
+  shield_bash          Pick: 58.5%  Win: 75.2% [MUST]
+  double_tap           Pick: 58.0%  Win: 75.9% [MUST]
+  scrounge             Pick: 57.0%  Win: 72.8% [MUST]
+  heavy_blow           Pick: 52.0%  Win: 80.8% [MUST]
+  catalyst             Pick: 27.5%  Win: 70.9%
+
+POPULATION STATS:
+  Best:    76.65
+  Worst:   2.46
+  Average: 42.48
+  StdDev:  31.85
+
+
+                                                           =
+GENERATION 27 / 30
+                                                           =
+Time: 10.20s
+Best Fitness: 75.11
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     14.29 /  20.00  (  71%)  [Actual: 50.5%]
+  Game Length:     9.56 /  10.00  (  96%)  [Floor: 10.6]
+  Card Viab:      16.18 /  20.00  (  81%)
+  Elite Perf:      8.25 /  10.00  (  82%)  [Kill: 75.0%]
+  Consistency:     2.70 /   5.00  (  54%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 127):
+    Monster:  53.7 (  42%)
+    Elite:    16.4 (  13%)
+    Event:    32.7 (  26%)
+    Shop:     10.8 (   8%)
+    Rest:     13.5 (  11%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   55% (Monster + Elite)
+    Recovery Rooms: 19% (Rest + Shop)
+    Event Rooms:    26%
+    Avg Combat Difficulty: 2.01★
+    Rest Healing: 141% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.71
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (50.5%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 58.5%  Win: 72.6% [MUST]
+  scrounge             Pick: 57.0%  Win: 70.2% [MUST]
+  double_tap           Pick: 55.0%  Win: 74.5% [MUST]
+  shield_bash          Pick: 54.5%  Win: 75.2% [MUST]
+  barricade            Pick: 27.0%  Win: 57.4%
+
+POPULATION STATS:
+  Best:    75.11
+  Worst:   2.46
+  Average: 44.33
+  StdDev:  31.94
+
+
+                                                           =
+GENERATION 28 / 30
+                                                           =
+Time: 10.16s
+Best Fitness: 75.23
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     15.56 /  20.00  (  78%)  [Actual: 47.7%]
+  Game Length:     9.43 /  10.00  (  94%)  [Floor: 10.6]
+  Card Viab:      15.39 /  20.00  (  77%)
+  Elite Perf:      7.95 /  10.00  (  80%)  [Kill: 70.7%]
+  Consistency:     2.77 /   5.00  (  55%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 119):
+    Monster:  56.4 (  47%)
+    Elite:    20.3 (  17%)
+    Event:    32.7 (  27%)
+    Shop:      5.0 (   4%)
+    Rest:      5.0 (   4%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   64% (Monster + Elite)
+    Recovery Rooms: 8% (Rest + Shop)
+    Event Rooms:    27%
+    Avg Combat Difficulty: 2.07★
+    Rest Healing: 141% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 13 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.57
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (47.7%)
+  - Limited recovery (8%)
+
+TOP 5 MOST PICKED CARDS:
+  shield_bash          Pick: 59.0%  Win: 78.8% [MUST]
+  heavy_blow           Pick: 56.5%  Win: 72.6% [MUST]
+  scrounge             Pick: 54.0%  Win: 77.8% [MUST]
+  double_tap           Pick: 52.0%  Win: 72.1% [MUST]
+  battle_trance        Pick: 31.0%  Win: 61.3%
+
+POPULATION STATS:
+  Best:    75.23
+  Worst:   2.46
+  Average: 40.04
+  StdDev:  33.11
+
+
+                                                           =
+GENERATION 29 / 30
+                                                           =
+Time: 10.15s
+Best Fitness: 76.73
+
+FITNESS COMPONENTS:
+  Win Rate:       23.15 /  35.00  (  66%)  [Actual: 61.0%]
+  Victory HP:     17.31 /  20.00  (  87%)  [Actual: 43.4%]
+  Game Length:     8.77 /  10.00  (  88%)  [Floor: 10.9]
+  Card Viab:      16.44 /  20.00  (  82%)
+  Elite Perf:      7.93 /  10.00  (  79%)  [Kill: 70.5%]
+  Consistency:     3.13 /   5.00  (  63%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 119):
+    Monster:  53.7 (  45%)
+    Elite:    16.4 (  14%)
+    Event:    31.0 (  26%)
+    Shop:      9.1 (   8%)
+    Rest:      8.5 (   7%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   59% (Monster + Elite)
+    Recovery Rooms: 15% (Rest + Shop)
+    Event Rooms:    26%
+    Avg Combat Difficulty: 2.01★
+    Rest Healing: 139% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 12 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.70
+
+⚠  BALANCE ISSUES:
+  - Win rate high (61.0%)
+  - Victory HP high (43.4%)
+  - Limited recovery (15%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 64.5%  Win: 70.5% [MUST]
+  shield_bash          Pick: 60.5%  Win: 79.3% [MUST]
+  scrounge             Pick: 58.5%  Win: 72.6% [MUST]
+  double_tap           Pick: 52.0%  Win: 73.1% [MUST]
+  catalyst             Pick: 31.0%  Win: 71.0%
+
+POPULATION STATS:
+  Best:    76.73
+  Worst:   2.46
+  Average: 38.22
+  StdDev:  33.39
+
+
+                                                           =
+GENERATION 30 / 30
+                                                           =
+Time: 10.16s
+Best Fitness: 75.19
+
+FITNESS COMPONENTS:
+  Win Rate:       24.14 /  35.00  (  69%)  [Actual: 60.0%]
+  Victory HP:     15.18 /  20.00  (  76%)  [Actual: 48.6%]
+  Game Length:     8.89 /  10.00  (  89%)  [Floor: 10.9]
+  Card Viab:      16.62 /  20.00  (  83%)
+  Elite Perf:      8.32 /  10.00  (  83%)  [Kill: 75.9%]
+  Consistency:     2.04 /   5.00  (  41%)
+
+ROOM DISTRIBUTION:
+  Weights (Total: 118):
+    Monster:  53.7 (  46%)
+    Elite:    16.4 (  14%)
+    Event:    27.7 (  24%)
+    Shop:     15.0 (  13%)
+    Rest:      5.0 (   4%)
+
+  Star Ratings:
+    Monster: 49% are 2-star (Avg: 1.49★)
+    Elite:   69% are 4-star (Avg: 3.69★)
+
+  Derived Metrics:
+    Combat Rooms:   60% (Monster + Elite)
+    Recovery Rooms: 17% (Rest + Shop)
+    Event Rooms:    24%
+    Avg Combat Difficulty: 2.01★
+    Rest Healing: 141% of base (30%)
+
+CARD DIVERSITY:
+  Viable Cards: 14 (>10% pick rate)
+  Trap Cards: 0
+  Build Variety: 0.90
+
+⚠  BALANCE ISSUES:
+  - Win rate high (60.0%)
+  - Victory HP high (48.6%)
+
+TOP 5 MOST PICKED CARDS:
+  heavy_blow           Pick: 61.0%  Win: 72.1% [MUST]
+  double_tap           Pick: 55.0%  Win: 77.3% [MUST]
+  scrounge             Pick: 53.0%  Win: 64.2% [MUST]
+  shield_bash          Pick: 52.5%  Win: 79.0% [MUST]
+  battle_trance        Pick: 28.5%  Win: 57.9%
+
+POPULATION STATS:
+  Best:    75.19
+  Worst:   2.36
+  Average: 38.63
+  StdDev:  33.14
+
+
+
+                                                           =
+GA RUN COMPLETE
+                                                           =
+Total Time: 6.04 minutes
+Average Time per Generation: 0.20 minutes

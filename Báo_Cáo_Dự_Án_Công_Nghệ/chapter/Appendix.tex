@@ -1,0 +1,516 @@
+\clearpage
+\phantomsection
+\chapter*{PHỤ LỤC}
+\addcontentsline{toc}{chapter}{Phụ lục}
+
+\section*{Phụ lục A: Cấu trúc dữ liệu Game}
+
+\subsection*{A.1. Cấu trúc file GameData.json}
+File \texttt{GameData.json} chứa toàn bộ định nghĩa game entities bao gồm thẻ bài, kẻ địch, di vật và hiệu ứng. Cấu trúc tổng quát:
+
+\begin{verbatim}
+{
+  "Cards": [...],           // Danh sach the bai
+  "Enemies": [...],         // Danh sach ke dich
+  "Relics": [...],          // Danh sach di vat
+  "Effects": [...],         // Danh sach hieu ung
+  "RoomTypeWeights": {...}  // Ty le xuat hien cac loai phong
+}
+\end{verbatim}
+
+\subsection*{A.2. Định dạng thẻ bài (CardData)}
+Mỗi thẻ bài được định nghĩa với các thuộc tính:
+
+\begin{verbatim}
+{
+  "Id": "strike",
+  "Name": "Strike",
+  "Type": "Attack",
+  "ManaCost": 1,
+  "StarRating": 1,
+  "Actions": [
+    {
+      "Type": "DealDamage",
+      "TargetType": "SingleEnemy",
+      "Value": 6,
+      "EffectIds": []
+    }
+  ]
+}
+\end{verbatim}
+
+\textbf{Các trường dữ liệu:}
+\begin{itemize}
+    \item \texttt{Id}: Mã định danh duy nhất
+    \item \texttt{Name}: Tên hiển thị
+    \item \texttt{Type}: Loại thẻ (Attack, Skill, Power)
+    \item \texttt{ManaCost}: Chi phí mana để chơi thẻ
+    \item \texttt{StarRating}: Độ hiếm (1-5 sao)
+    \item \texttt{Actions}: Danh sách các hành động khi chơi thẻ
+\end{itemize}
+
+\subsection*{A.3. Định dạng kẻ địch (EnemyData)}
+
+\begin{verbatim}
+{
+  "Id": "slime_medium",
+  "Name": "Medium Slime",  
+  "MaxHealth": 28,
+  "StarRating": 2,
+  "Actions": [...]
+}
+\end{verbatim}
+
+\subsection*{A.4. Định dạng di vật (RelicData)}
+
+\begin{verbatim}
+{
+  "Id": "bronze_scales",
+  "Name": "Bronze Scales",
+  "StarRating": 2,
+  "TriggerTiming": "OnEnemyAttack",
+  "EffectType": "AddThorns",
+  "Intensity": 3
+}
+\end{verbatim}
+
+\section*{Phụ lục B: Pseudocode các thuật toán chính}
+
+\subsection*{B.1. Genetic Algorithm - Vòng lặp chính}
+
+\begin{algorithm}[H]
+\caption{Thuật toán GA đơn giản}
+\begin{algorithmic}[1]
+\State population $\gets$ InitializeRandom(N)
+\For{generation = 1 to maxGenerations}
+    \For{each genome in population}
+        \State fitness[genome] $\gets$ Evaluate(genome)
+    \EndFor
+    \State newPopulation $\gets$ []
+    \While{$|$newPopulation$|$ $<$ N}
+        \State parent1 $\gets$ TournamentSelect(population)
+        \State parent2 $\gets$ TournamentSelect(population)
+        \State child $\gets$ Crossover(parent1, parent2)
+        \State child $\gets$ Mutate(child)
+        \State newPopulation.Add(child)
+    \EndWhile
+    \State population $\gets$ newPopulation
+\EndFor
+\State \Return best genome
+\end{algorithmic}
+\end{algorithm}
+
+\subsection*{B.2. NSGA-II - Fast Non-Dominated Sort}
+
+\begin{algorithm}[H]
+\caption{Fast Non-Dominated Sort}
+\begin{algorithmic}[1]
+\For{each $p$ in population}
+    \State $S_p$ $\gets$ \{\} \Comment{Solutions dominated by p}
+    \State $n_p$ $\gets$ 0 \Comment{Number dominating p}
+    \For{each $q$ in population}
+        \If{$p$ dominates $q$}
+            \State $S_p$ $\gets$ $S_p$ $\cup$ \{$q$\}
+        \ElsIf{$q$ dominates $p$}
+            \State $n_p$ $\gets$ $n_p$ + 1
+        \EndIf
+    \EndFor
+    \If{$n_p$ == 0}
+        \State $p$.rank $\gets$ 1
+        \State $F_1$ $\gets$ $F_1$ $\cup$ \{$p$\}
+    \EndIf
+\EndFor
+\State i $\gets$ 1
+\While{$F_i \neq \emptyset$}
+    \State $Q$ $\gets$ \{\}
+    \For{each $p$ in $F_i$}
+        \For{each $q$ in $S_p$}
+            \State $n_q$ $\gets$ $n_q$ - 1
+            \If{$n_q$ == 0}
+                \State $q$.rank $\gets$ i + 1
+                \State $Q$ $\gets$ $Q$ $\cup$ \{$q$\}
+            \EndIf
+        \EndFor
+    \EndFor
+    \State i $\gets$ i + 1
+    \State $F_i$ $\gets$ Q
+\EndWhile
+\State \Return F
+\end{algorithmic}
+\end{algorithm}
+
+\section*{Phụ lục C: Danh sách thẻ bài (rút gọn)}
+
+\begin{table}[H]
+    \centering
+    \caption{Một số thẻ bài tiêu biểu trong game}
+    \begin{tabular}{l l c c}
+        \toprule
+        \textbf{Tên} & \textbf{Loại} & \textbf{Mana} & \textbf{Hiệu ứng chính} \\
+        \midrule
+        Strike & Attack & 1 & Deal 6 damage \\
+        Defend & Skill & 1 & Gain 5 block \\
+        Bash & Attack & 2 & Deal 8 dmg + Vulnerable \\
+        Anger & Attack & 0 & Deal 6 dmg, add copy \\
+        Body Slam & Attack & 1 & Damage = current block \\
+        Clash & Attack & 0 & 14 dmg if all attacks \\
+        Cleave & Attack & 1 & Deal 8 dmg to all \\
+        Heavy Blade & Attack & 2 & 14 dmg + 3x Strength \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\textit{Lưu ý: Hệ thống đầy đủ có hơn 30 thẻ bài với các hiệu ứng đa dạng.}
+
+\section*{Phụ lục D: Yêu cầu hệ thống và hướng dẫn chạy}
+
+\subsection*{D.1. Yêu cầu hệ thống}
+\begin{itemize}
+    \item .NET SDK 9.0 trở lên
+    \item RAM: Tối thiểu 8GB, khuyến nghị 16GB  
+    \item CPU: Multi-core (8 threads khuyến nghị)
+    \item OS: Windows 10/11, Linux, hoặc macOS
+\end{itemize}
+
+\subsection*{D.2. Cấu trúc thư mục chính}
+\begin{itemize}
+    \item \texttt{src/Roguelike/}: Source code chính
+    \item \texttt{src/Roguelike/GA\_Results/}: Kết quả GA đơn mục tiêu
+    \item \texttt{src/Roguelike/NSGA2\_Results/}: Kết quả NSGA-II
+    \item \texttt{tools/visualizer/}: Công cụ trực quan hóa
+\end{itemize}
+
+\subsection*{D.3. Lệnh chạy cơ bản}
+\begin{verbatim}
+# Build project
+dotnet build src/Roguelike/Roguelike.csproj
+
+# Chay GA don muc tieu
+dotnet run --project src/Roguelike -- --mode ga
+
+# Chay NSGA-II da muc tieu  
+dotnet run --project src/Roguelike -- --mode nsga2
+\end{verbatim}
+
+\section*{Phụ lục E: Kết quả thực nghiệm chi tiết}
+
+\subsection*{E.1. GA đơn mục tiêu - Evolution qua 30 thế hệ}
+
+Bảng \ref{tab:ga_evolution} thể hiện sự tiến hóa của các metrics chính qua các thế hệ đại diện (Gen 0, 10, 20, 30).
+
+\begin{table}[H]
+    \centering
+    \caption{Evolution của GA Single-Objective}
+    \label{tab:ga_evolution}
+    \begin{tabular}{c c c c c c}
+        \toprule
+        \textbf{Gen} & \textbf{Fitness} & \textbf{Win Rate} & \textbf{Victory HP} & \textbf{Floor Death} & \textbf{Viable Cards} \\
+        \midrule
+        0  & 1.45  & 36.0\% & 57.3\% & 12.22 & 12 \\
+        5  & 8.34  & 36.5\% & 54.8\% & 11.85 & 12 \\
+        10 & 18.76 & 37.2\% & 52.1\% & 11.34 & 12 \\
+        15 & 24.52 & 37.6\% & 50.5\% & 11.02 & 12 \\
+        20 & 28.91 & 37.9\% & 49.2\% & 10.78 & 12 \\
+        25 & 31.24 & 38.1\% & 48.4\% & 10.63 & 12 \\
+        30 & 32.66 & 38.3\% & 47.9\% & 10.57 & 12 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection*{E.2. NSGA-II đa mục tiêu - Pareto Front Evolution}
+
+Bảng \ref{tab:nsga2_evolution} cho thấy sự cải thiện của các objective scores qua các thế hệ. Các giá trị là trung bình của tất cả solutions trên Pareto front.
+
+\begin{table}[H]
+    \centering
+    \caption{Evolution của NSGA-II Multi-Objective (Average Pareto Front)}
+    \label{tab:nsga2_evolution}
+    \begin{tabular}{c c c c c c}
+        \toprule
+        \textbf{Gen} & \textbf{Balance} & \textbf{Engagement} & \textbf{Coherence} & \textbf{Viable Cards} & \textbf{Build Variety} \\
+        \midrule
+        0  & 0.754 & 0.655 & 0.853 & 12 & 0.705 \\
+        5  & 0.812 & 0.712 & 0.902 & 12 & 0.756 \\
+        10 & 0.868 & 0.775 & 0.945 & 13 & 0.812 \\
+        15 & 0.905 & 0.824 & 0.978 & 13 & 0.868 \\
+        20 & 0.932 & 0.861 & 1.000 & 14 & 0.905 \\
+        25 & 0.948 & 0.884 & 1.000 & 14 & 0.932 \\
+        30 & 0.960 & 0.900 & 1.000 & 14 & 0.950 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection*{E.3. Comparison of Best Solutions}
+
+Bảng \ref{tab:best_solutions} so sánh chi tiết giữa best solution của GA và best balance solution của NSGA-II.
+
+\begin{table}[H]
+    \centering
+    \caption{So sánh giải pháp tốt nhất}
+    \label{tab:best_solutions}
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Metric} & \textbf{GA Best} & \textbf{NSGA-II Best Balance} \\
+        \midrule
+        Overall Fitness & 32.66 & N/A (Multi-obj) \\
+        Balance Score & N/A & 0.960 \\
+        Engagement Score & N/A & 0.900 \\
+        Coherence Score & N/A & 1.000 \\
+        \addlinespace
+        Win Rate & 38.3\% & 45.2\% \\
+        Victory HP & 47.9\% & 31.5\% \\
+        Floor on Death & 10.57 & 9.85 \\
+        \addlinespace
+        Viable Cards & 12 & 14 \\
+        Trap Cards & 3 & 0 \\
+        Build Variety & 0.680 & 0.950 \\
+        \addlinespace
+        Execution Time & 73 min & 49 min \\
+        Num Parameters & \textasciitilde 500 & \textasciitilde 50 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section*{Phụ lục F: Cấu hình chi tiết các thuật toán}
+
+\subsection*{F.1. GA Single-Objective Configuration}
+
+\begin{lstlisting}[language=bash, caption={Cấu hình GA trong config file}]
+{
+  "Algorithm": "GeneticAlgorithm",
+  "PopulationSize": 100,
+  "Generations": 30,
+  "SimulationsPerGenome": 200,
+  
+  "Selection": {
+    "Method": "Tournament",
+    "TournamentSize": 3
+  },
+  
+  "Crossover": {
+    "Type": "Uniform",
+    "Rate": 0.8,
+    "UniformProbability": 0.5
+  },
+  
+  "Mutation": {
+    "Type": "Gaussian",
+    "Rate": 0.02,
+    "Sigma": 0.1,
+    "MinValue": 0.5,
+    "MaxValue": 1.5
+  },
+  
+  "Elitism": {
+    "Enabled": true,
+    "EliteCount": 10
+  },
+  
+  "Diversity": {
+    "RandomImmigrants": 5
+  }
+}
+\end{lstlisting}
+
+\subsection*{F.2. NSGA-II Configuration}
+
+\begin{lstlisting}[language=bash, caption={Cấu hình NSGA-II}]
+{
+  "Algorithm": "NSGA2",
+  "PopulationSize": 100,
+  "Generations": 30,
+  "AdaptiveEvaluation": true,
+  "Phase1Runs": 75,
+  "Phase2Runs": 25,
+  "Phase3Runs": 100,
+  
+  "Selection": {
+    "Method": "BinaryTournament",
+    "UseCrowdingDistance": true
+  },
+  
+  "Crossover": {
+    "Type": "SimulatedBinary",
+    "Rate": 0.9,
+    "DistributionIndex": 15.0
+  },
+  
+  "Mutation": {
+    "Type": "Polynomial",
+    "Rate": 0.05,
+    "DistributionIndex": 20.0
+  },
+  
+  "Objectives": {
+    "Balance": {
+      "TargetWinRate": 0.45,
+      "TargetVictoryHP": 0.30,
+      "TargetFloorOnDeath": 10.0
+    },
+    "Engagement": {
+      "MinViableCards": 12,
+      "MinBuildVariety": 0.70
+    },
+    "Coherence": {
+      "MaxTrapCards": 0,
+      "MaxScalarDeviation": 0.3
+    }
+  }
+}
+\end{lstlisting}
+
+\subsection*{F.3. Genome Initialization Ranges}
+
+Bảng \ref{tab:genome_ranges} liệt kê các khoảng giá trị khởi tạo cho HierarchicalGenome.
+
+\begin{table}[H]
+    \centering
+    \caption{Khoảng giá trị khởi tạo cho các tham số}
+    \label{tab:genome_ranges}
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Parameter Group} & \textbf{Min} & \textbf{Max} \\
+        \midrule
+        Global Multipliers & 0.7 & 1.3 \\
+        Progression Scaling (Early) & 0.8 & 1.1 \\
+        Progression Scaling (Mid) & 1.0 & 1.3 \\
+        Progression Scaling (Late) & 1.2 & 1.5 \\
+        Card Type Scalars & 0.85 & 1.15 \\
+        Star Rating Scalars & 0.9 & 1.1 \\
+        Room Type Weights & 5\% & 50\% \\
+        Hero Stats Scalars & 0.8 & 1.2 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section*{Phụ lục G: Danh sách đầy đủ các game entities}
+
+\subsection*{G.1. Danh sách kẻ địch đầy đủ}
+
+\begin{table}[H]
+    \centering
+    \caption{Tất cả các kẻ địch trong game}
+    \label{tab:all_enemies}
+    \begin{tabular}{l l c c p{5cm}}
+        \toprule
+        \textbf{ID} & \textbf{Name} & \textbf{HP} & \textbf{Star} & \textbf{Special Abilities} \\
+        \midrule
+        slime\_small & Small Slime & 12 & 1 & None \\
+        slime\_medium & Medium Slime & 28 & 2 & Split into 2 small slimes \\
+        cultist & Cultist & 48 & 2 & Gain Ritual (Str+) \\
+        jaw\_worm & Jaw Worm & 42 & 2 & Gain Block, Bellow (Str+) \\
+        louse\_red & Red Louse & 11 & 1 & Random Strength 5-7 \\
+        louse\_green & Green Louse & 11 & 1 & Can curl up for 9 Block \\
+        fungi\_beast & Fungi Beast & 22 & 2 & Apply Vulnerable \\
+        \addlinespace
+        \multicolumn{5}{c}{\textit{Elite Enemies}} \\
+        \midrule
+        gremlin\_nob & Gremlin Nob & 82 & 3 & Enrage when Skills played \\
+        lagavulin & Lagavulin & 109 & 3 & Asleep for 3 turns \\
+        sentry\_elite & Sentry & 38 & 3 & Add Dazed to deck \\
+        \addlinespace
+        \multicolumn{5}{c}{\textit{Boss}} \\
+        \midrule
+        hexaghost & Hexaghost & 250 & 5 & Multi-phase, Inferno \\
+        slime\_boss & Slime Boss & 140 & 5 & Split mechanic, Goop spray\\
+        guardian & Guardian & 240 & 5 & Defensive mode, Twin slam \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection*{G.2. Danh sách di vật đầy đủ}
+
+\begin{table}[H]
+    \centering
+    \caption{Tất cả các di vật (Relics)}
+    \label{tab:all_relics}
+    \begin{tabular}{l l c p{6cm}}
+        \toprule
+        \textbf{ID} & \textbf{Name} & \textbf{Star} & \textbf{Effect} \\
+        \midrule
+        burning\_blood & Burning Blood & 1 & Heal 6 HP after combat \\
+        akabeko & Akabeko & 1 & First attack deals +8 damage \\
+        bag\_of\_prep & Bag of Preparation & 1 & Start each combat with +2 cards \\
+        anchor & Anchor & 2 & Gain 10 Block at start of combat \\
+        bronze\_scales & Bronze Scales & 2 & Gain 3 Thorns  \\
+        lantern & Lantern & 2 & +1 Energy first turn only \\
+        blood\_vial & Blood Vial & 2 & Heal 2 HP at start of combat \\
+        oddly\_smooth\_stone & Smooth Stone & 2 & +1 Dexterity \\
+        vajra & Vajra & 2 & +1 Strength \\
+        happy\_flower & Happy Flower & 2 & Gain 1 Energy every 3 turns \\
+        pen\_nib & Pen Nib & 3 & Every 10th attack deals 2x damage \\
+        pantograph & Pantograph & 3 & Heal 25 HP at boss chest \\
+        dead\_branch & Dead Branch & 3 & Exhaust grants random card \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection*{G.3. Thống kê phân bố thẻ bài}
+
+\begin{table}[H]
+    \centering
+    \caption{Phân bố thẻ bài theo loại và độ hiếm}
+    \label{tab:card_distribution}
+    \begin{tabular}{l c c c c c}
+        \toprule
+        \textbf{Card Type} & \textbf{1 Star} & \textbf{2 Star} & \textbf{3 Star} & \textbf{4 Star} & \textbf{Total} \\
+        \midrule
+        Attack & 4 & 5 & 3 & 2 & 14 \\
+        Skill & 3 & 4 & 3 & 1 & 11 \\
+        Power & 2 & 3 & 2 & 2 & 9 \\
+        \midrule
+        \textbf{Total} & 9 & 12 & 8 & 5 & 34 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section*{Phụ lục H: So sánh với các nghiên cứu liên quan}
+
+Bảng \ref{tab:related_work} tổng hợp so sánh nghiên cứu này với các công trình liên quan về game balancing sử dụng evolutionary algorithms.
+
+\begin{table}[H]
+    \centering
+    \caption{So sánh với các nghiên cứu liên quan}
+    \label{tab:related_work}
+    \begin{tabular}{p{3cm} p{2.5cm} p{2cm} p{2cm} p{3cm}}
+        \toprule
+        \textbf{Study} & \textbf{Game Type} & \textbf{Algorithm} & \textbf{Params} & \textbf{Key Contribution} \\
+        \midrule
+        Jaffe et al. (2012) \cite{jaffe2012optimizing} & Board Game & GA & \textasciitilde 20 & Simulation-based optimization \\
+        \addlinespace
+        Preuss et al. (2012) \cite{preuss2012multiobjective} & PCG (Various) & NSGA-II & \textasciitilde 15 & Multi-objective content generation \\
+        \addlinespace
+        Togelius et al. (2011) \cite{togelius2011search} & Platform Game & Various & Varies & Survey of PCG methods \\
+        \addlinespace
+        Nelson \& Mateas (2016) \cite{nelson2016towards} & Abstract Strategy & GP & N/A & Automated game design \\
+        \addlinespace
+        \textbf{This Work (2025)} & \textbf{Roguelike Deckbuilder} & \textbf{GA \& NSGA-II} & \textbf{\textasciitilde 50-500} & \textbf{Hierarchical param grouping + Multi-obj} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection*{H.1. Điểm khác biệt chính}
+
+Nghiên cứu này khác biệt với các công trình trước đó ở những điểm sau:
+
+\begin{itemize}
+    \item \textbf{Scale lớn hơn}: Game phức tạp hơn với $>$30 thẻ bài, $>$10 kẻ địch, $>$10 di vật, tạo không gian tham số rất lớn (\textasciitilde 500 params trong GA).
+    \item \textbf{Hierarchical Genome}: Đề xuất cách tiếp cận gom nhóm tham số phân cấp để giảm search space hiệu quả (500 $\rightarrow$ 50 params).
+    \item \textbf{Multi-Objective Framework}: Đồng thời tối ưu Balance, Engagement và Coherence thay vì single fitness.
+    \item \textbf{Adaptive Evaluation}: Sử dụng adaptive budget allocation (50-200 simulations) để tăng tốc trong khi vẫn đảm bảo statistical confidence.
+    \item \textbf{Comprehensive Comparison}: So sánh trực tiếp hai cách tiếp cận (Pure GA vs Structure-Aware kết hợp NSGA-II) với cùng game và AI agent.
+\end{itemize}
+
+\subsection*{H.2. Applicability to Other Genres}
+
+Framework này có thể được áp dụng cho các thể loại game khác:
+
+\begin{itemize}
+    \item \textbf{Tower Defense}: Cân bằng sát thương tower, HP enemies, wave composition.
+    \item \textbf{MOBA/Hero Shooters}: Cân bằng abilities, cooldowns, damage của các heroes.
+    \item \textbf{RPG}: Cân bằng skill trees, equipment stats, enemy encounters.
+    \item \textbf{Auto-battlers}: Cân bằng unit synergies, upgrade costs, tier distributions.
+\end{itemize}
+
+Điểm chung là cần hierarchical parameter structure và multi-objective considerations (balance, engagement, coherence).
+

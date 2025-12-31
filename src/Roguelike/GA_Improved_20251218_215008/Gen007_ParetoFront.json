@@ -1,0 +1,361 @@
+[
+  {
+    "Index": 0,
+    "Generation": 7,
+    "Fitness": {
+      "BalanceScore": 0.908016,
+      "EngagementScore": 0.6,
+      "CoherenceScore": 0.859629,
+      "WinRate": 0.449,
+      "VictoryHp": 0.453435,
+      "AvgFloorOnDeath": 10.447509,
+      "ViableCards": 11,
+      "TrapCards": 0,
+      "BuildVariety": 0.7139154,
+      "Rank": 1,
+      "CrowdingDistance": 3.4028235e+38,
+      "IsFeasible": true,
+      "ConstraintViolations": 0
+    },
+    "Genome": {
+      "GlobalDamageMultiplier": 0.8596705,
+      "GlobalHealthMultiplier": 0.8643078,
+      "GlobalBlockMultiplier": 0.9101051,
+      "GlobalManaCostMultiplier": 1.0780462,
+      "GlobalGoldMultiplier": 0.807993,
+      "EarlyGameDamageScaling": 0.809837,
+      "MidGameDamageScaling": 1.1667757,
+      "LateGameDamageScaling": 1.2905856,
+      "EarlyGameHealthScaling": 0.80754966,
+      "MidGameHealthScaling": 1.1535035,
+      "LateGameHealthScaling": 1.1923219,
+      "EarlyGameBlockScaling": 0.90683687,
+      "MidGameBlockScaling": 1.0583789,
+      "LateGameBlockScaling": 1.0861079,
+      "CardTypeScalars": {
+        "Attack": 0.8685373,
+        "Skill": 0.95090795,
+        "Power": 0.8997333
+      },
+      "CardStarScalars": {
+        "1": 1.090562,
+        "2": 1.084109,
+        "3": 0.99744594,
+        "4": 0.9570813,
+        "5": 0.9367506
+      },
+      "EnemyStarScalars": {
+        "1": 1.0817562,
+        "2": 0.96407115,
+        "3": 1.0326333,
+        "4": 1.0348904,
+        "5": 0.97958285
+      },
+      "RoomTypeWeights": {
+        "Monster": 46.707603,
+        "Elite": 20.133368,
+        "Event": 13.595474,
+        "Shop": 9.286596,
+        "Rest": 27.409159
+      },
+      "MonsterStarRatio": 0.49410924,
+      "EliteStarRatio": 0.56893766,
+      "RestHealingScalar": 0.95364964,
+      "HeroHealthScalar": 1.2125957,
+      "HeroStartGoldScalar": 1.1491656,
+      "HeroManaOffset": 0,
+      "DifficultyProgressionRate": 0.03,
+      "CardDamageOverrides": {
+        "strike": 0.921034
+      },
+      "CardManaCostOverrides": {},
+      "EnemyHealthOverrides": {
+        "cultist": 1.2156551
+      }
+    }
+  },
+  {
+    "Index": 1,
+    "Generation": 7,
+    "Fitness": {
+      "BalanceScore": 0.856743,
+      "EngagementScore": 0.676828,
+      "CoherenceScore": 0.849553,
+      "WinRate": 0.449,
+      "VictoryHp": 0.4113702,
+      "AvgFloorOnDeath": 10.557146,
+      "ViableCards": 11,
+      "TrapCards": 0,
+      "BuildVariety": 0.8059536,
+      "Rank": 1,
+      "CrowdingDistance": 0.6,
+      "IsFeasible": true,
+      "ConstraintViolations": 0
+    },
+    "Genome": {
+      "GlobalDamageMultiplier": 0.9721989,
+      "GlobalHealthMultiplier": 0.8415678,
+      "GlobalBlockMultiplier": 0.81449395,
+      "GlobalManaCostMultiplier": 0.9611984,
+      "GlobalGoldMultiplier": 0.8176763,
+      "EarlyGameDamageScaling": 0.84893054,
+      "MidGameDamageScaling": 1.046826,
+      "LateGameDamageScaling": 1.3737092,
+      "EarlyGameHealthScaling": 0.8933702,
+      "MidGameHealthScaling": 1.2354873,
+      "LateGameHealthScaling": 1.251733,
+      "EarlyGameBlockScaling": 0.9417015,
+      "MidGameBlockScaling": 1.0913839,
+      "LateGameBlockScaling": 1.0194249,
+      "CardTypeScalars": {
+        "Attack": 0.96615106,
+        "Skill": 0.98068064,
+        "Power": 0.9006
+      },
+      "CardStarScalars": {
+        "1": 1.064071,
+        "2": 1.0927072,
+        "3": 1.0648963,
+        "4": 0.90131974,
+        "5": 0.9504164
+      },
+      "EnemyStarScalars": {
+        "1": 1.016794,
+        "2": 1.0545485,
+        "3": 1.0331486,
+        "4": 0.99340826,
+        "5": 0.9186044
+      },
+      "RoomTypeWeights": {
+        "Monster": 59.045135,
+        "Elite": 20.512135,
+        "Event": 22.150486,
+        "Shop": 14.930361,
+        "Rest": 9.664236
+      },
+      "MonsterStarRatio": 0.28841662,
+      "EliteStarRatio": 0.3123255,
+      "RestHealingScalar": 0.7602103,
+      "HeroHealthScalar": 1.1932143,
+      "HeroStartGoldScalar": 1.0256573,
+      "HeroManaOffset": 0,
+      "DifficultyProgressionRate": 0.03,
+      "CardDamageOverrides": {},
+      "CardManaCostOverrides": {},
+      "EnemyHealthOverrides": {}
+    }
+  },
+  {
+    "Index": 2,
+    "Generation": 7,
+    "Fitness": {
+      "BalanceScore": 0.822142,
+      "EngagementScore": 0.619927,
+      "CoherenceScore": 0.929651,
+      "WinRate": 0.444,
+      "VictoryHp": 0.4437654,
+      "AvgFloorOnDeath": 12.196571,
+      "ViableCards": 11,
+      "TrapCards": 0,
+      "BuildVariety": 0.7468366,
+      "Rank": 1,
+      "CrowdingDistance": 0.2,
+      "IsFeasible": true,
+      "ConstraintViolations": 0
+    },
+    "Genome": {
+      "GlobalDamageMultiplier": 0.849203,
+      "GlobalHealthMultiplier": 0.77608955,
+      "GlobalBlockMultiplier": 1.0171875,
+      "GlobalManaCostMultiplier": 0.85,
+      "GlobalGoldMultiplier": 0.7032926,
+      "EarlyGameDamageScaling": 0.8263185,
+      "MidGameDamageScaling": 1.230143,
+      "LateGameDamageScaling": 1.483151,
+      "EarlyGameHealthScaling": 1.0087397,
+      "MidGameHealthScaling": 1.2352858,
+      "LateGameHealthScaling": 1.2242639,
+      "EarlyGameBlockScaling": 0.9452367,
+      "MidGameBlockScaling": 1.0846075,
+      "LateGameBlockScaling": 1.0194159,
+      "CardTypeScalars": {
+        "Attack": 1.0930952,
+        "Skill": 1.1226379,
+        "Power": 0.8674279
+      },
+      "CardStarScalars": {
+        "1": 1.0265486,
+        "2": 0.99142325,
+        "3": 0.9334297,
+        "4": 0.98916155,
+        "5": 1.063749
+      },
+      "EnemyStarScalars": {
+        "1": 1.0003377,
+        "2": 1.0102792,
+        "3": 1.0331486,
+        "4": 1.036937,
+        "5": 1.0691098
+      },
+      "RoomTypeWeights": {
+        "Monster": 51.73277,
+        "Elite": 20.558548,
+        "Event": 32.508835,
+        "Shop": 11.472621,
+        "Rest": 21.868176
+      },
+      "MonsterStarRatio": 0.31420317,
+      "EliteStarRatio": 0.68694836,
+      "RestHealingScalar": 0.7637125,
+      "HeroHealthScalar": 0.96377575,
+      "HeroStartGoldScalar": 0.8462734,
+      "HeroManaOffset": 0,
+      "DifficultyProgressionRate": 0.03,
+      "CardDamageOverrides": {},
+      "CardManaCostOverrides": {},
+      "EnemyHealthOverrides": {}
+    }
+  },
+  {
+    "Index": 3,
+    "Generation": 7,
+    "Fitness": {
+      "BalanceScore": 0.923169,
+      "EngagementScore": 0.618334,
+      "CoherenceScore": 0.853081,
+      "WinRate": 0.459,
+      "VictoryHp": 0.4421525,
+      "AvgFloorOnDeath": 9.710656,
+      "ViableCards": 12,
+      "TrapCards": 0,
+      "BuildVariety": 0.7636008,
+      "Rank": 1,
+      "CrowdingDistance": 0.2,
+      "IsFeasible": true,
+      "ConstraintViolations": 0
+    },
+    "Genome": {
+      "GlobalDamageMultiplier": 0.7155623,
+      "GlobalHealthMultiplier": 0.8038717,
+      "GlobalBlockMultiplier": 0.78170884,
+      "GlobalManaCostMultiplier": 0.87131864,
+      "GlobalGoldMultiplier": 0.77512646,
+      "EarlyGameDamageScaling": 0.8509685,
+      "MidGameDamageScaling": 1.143554,
+      "LateGameDamageScaling": 1.2371914,
+      "EarlyGameHealthScaling": 0.97506887,
+      "MidGameHealthScaling": 1.0712351,
+      "LateGameHealthScaling": 1.2766593,
+      "EarlyGameBlockScaling": 0.9118544,
+      "MidGameBlockScaling": 1.021391,
+      "LateGameBlockScaling": 1.0178621,
+      "CardTypeScalars": {
+        "Attack": 1.0572298,
+        "Skill": 0.9738267,
+        "Power": 0.86773103
+      },
+      "CardStarScalars": {
+        "1": 0.92393893,
+        "2": 1.0706513,
+        "3": 1.0647624,
+        "4": 0.92331314,
+        "5": 0.9012173
+      },
+      "EnemyStarScalars": {
+        "1": 0.92751867,
+        "2": 1.0545485,
+        "3": 1.0328951,
+        "4": 0.95376194,
+        "5": 0.9187081
+      },
+      "RoomTypeWeights": {
+        "Monster": 48.043137,
+        "Elite": 17.003126,
+        "Event": 10.298165,
+        "Shop": 12.136175,
+        "Rest": 19.419998
+      },
+      "MonsterStarRatio": 0.31288007,
+      "EliteStarRatio": 0.41925445,
+      "RestHealingScalar": 0.72220623,
+      "HeroHealthScalar": 0.96557987,
+      "HeroStartGoldScalar": 0.8552647,
+      "HeroManaOffset": 0,
+      "DifficultyProgressionRate": 0.030153103,
+      "CardDamageOverrides": {},
+      "CardManaCostOverrides": {},
+      "EnemyHealthOverrides": {}
+    }
+  },
+  {
+    "Index": 4,
+    "Generation": 7,
+    "Fitness": {
+      "BalanceScore": 0.831657,
+      "EngagementScore": 0.669541,
+      "CoherenceScore": 0.867007,
+      "WinRate": 0.416,
+      "VictoryHp": 0.4546503,
+      "AvgFloorOnDeath": 10.289988,
+      "ViableCards": 12,
+      "TrapCards": 0,
+      "BuildVariety": 0.7910469,
+      "Rank": 1,
+      "CrowdingDistance": 3.4028235e+38,
+      "IsFeasible": true,
+      "ConstraintViolations": 0
+    },
+    "Genome": {
+      "GlobalDamageMultiplier": 0.8596705,
+      "GlobalHealthMultiplier": 0.8643078,
+      "GlobalBlockMultiplier": 0.9101051,
+      "GlobalManaCostMultiplier": 0.9175279,
+      "GlobalGoldMultiplier": 0.8080248,
+      "EarlyGameDamageScaling": 0.8047662,
+      "MidGameDamageScaling": 1.1667757,
+      "LateGameDamageScaling": 1.2905856,
+      "EarlyGameHealthScaling": 0.80754966,
+      "MidGameHealthScaling": 1.1502643,
+      "LateGameHealthScaling": 1.1882765,
+      "EarlyGameBlockScaling": 0.90683687,
+      "MidGameBlockScaling": 1.0583789,
+      "LateGameBlockScaling": 1.0391396,
+      "CardTypeScalars": {
+        "Attack": 1.1307125,
+        "Skill": 0.95090795,
+        "Power": 0.8997333
+      },
+      "CardStarScalars": {
+        "1": 1.0782332,
+        "2": 1.084109,
+        "3": 1.0803626,
+        "4": 0.9794804,
+        "5": 0.9367506
+      },
+      "EnemyStarScalars": {
+        "1": 1.0817562,
+        "2": 0.96336794,
+        "3": 1.0326333,
+        "4": 0.96930873,
+        "5": 0.96424747
+      },
+      "RoomTypeWeights": {
+        "Monster": 57.929226,
+        "Elite": 17.399313,
+        "Event": 22.690239,
+        "Shop": 13.358473,
+        "Rest": 17.352003
+      },
+      "MonsterStarRatio": 0.4965546,
+      "EliteStarRatio": 0.46459958,
+      "RestHealingScalar": 0.6262556,
+      "HeroHealthScalar": 1.1386187,
+      "HeroStartGoldScalar": 0.99615693,
+      "HeroManaOffset": 0,
+      "DifficultyProgressionRate": 0.03,
+      "CardDamageOverrides": {},
+      "CardManaCostOverrides": {},
+      "EnemyHealthOverrides": {}
+    }
+  }
+]

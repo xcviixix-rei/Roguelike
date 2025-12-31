@@ -1,0 +1,12 @@
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\Roguelike.Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\Roguelike.Core.AssemblyInfoInputs.cache
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\Roguelike.Core.AssemblyInfo.cs
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\Roguelike.Core.csproj.CoreCompileInputs.cache
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\Roguelike.Core.sourcelink.json
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Debug\net9.0\Roguelike.Core.deps.json
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Debug\net9.0\Roguelike.Core.dll
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Debug\net9.0\Roguelike.Core.pdb
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\Roguelike.Core.dll
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\refint\Roguelike.Core.dll
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\Roguelike.Core.pdb
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Debug\net9.0\ref\Roguelike.Core.dll

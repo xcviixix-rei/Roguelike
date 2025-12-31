@@ -1,0 +1,45 @@
+\clearpage
+\phantomsection
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+
+\section{Tổng kết kết quả đạt được}
+
+Đề tài đã thành công triển khai và so sánh hai phương pháp tự động cân bằng game cho Roguelike Deckbuilder \cite{slaythespire}. Phương pháp GA đơn mục tiêu sử dụng GA truyền thống tối ưu trực tiếp khoảng 500 tham số, đạt được những cải thiện đáng kể: Overall Fitness tăng từ 1.45 lên 32.66 (cải thiện +2150\%), Win Rate tăng từ 36.0\% lên 38.3\% (+6.4\%), Victory HP cải thiện từ 59.95\% xuống 40.87\% (tiến gần mục tiêu 30\%), và Floor on Death giảm từ 12.22 xuống 10.57. Tuy nhiên, phương pháp này tốn 73 phút và không cải thiện được sự đa dạng chiến thuật (Viable Cards giữ nguyên ở 12, Build Variety chỉ tăng từ 0.616 lên 0.680).
+
+Phương pháp NSGA-II đa mục tiêu với khoảng 50 tham số phân cấp vượt trội hơn hẳn: Balance Score tăng từ 0.754 lên 0.960 (+27.3\%), Engagement Score cải thiện mạnh từ 0.655 lên 0.900 (+37.4\%), Coherence Score đạt mức tối đa từ 0.853 lên 1.000 (+17.2\%, không còn trap cards), số thẻ bài khả dụng tăng từ 12 lên 14 (+16.7\%), và đa dạng lối chơi tăng ấn tượng từ 0.705 lên 0.950 (+34.8\%). Đặc biệt, phương pháp này chỉ mất 49 phút, nhanh hơn 33\% so với GA đơn mục tiêu.
+
+Qua thực nghiệm với 30 thế hệ và 100 cá thể mỗi thế hệ, phương pháp NSGA-II đa mục tiêu vượt trội hơn về mọi khía cạnh: thời gian chạy (49 phút so với 73 phút, giảm 33\%), cải thiện độ hấp dẫn mạnh mẽ (+37.4\% so với +10.4\%), tăng đa dạng thẻ bài khả dụng (14 thẻ so với 12, tăng 16.7\%), độ nhất quán đạt mức tối đa (1.000, không còn trap cards), và đa dạng lối chơi tăng 34.8\% thay vì chỉ 10.4\%. Kết quả này chứng minh việc gom nhóm tham số phân cấp kết hợp với tối ưu hóa đa mục tiêu mang lại lợi thế vượt trội cho bài toán cân bằng game.
+
+\section{Đóng góp của đề tài}
+
+Về mặt khoa học, đề tài chứng minh hiệu quả của việc gom nhóm tham số phân cấp trong bối cảnh cân bằng game \cite{preuss2012multiobjective}, so sánh thực nghiệm toàn diện giữa các phương pháp đơn mục tiêu và đa mục tiêu, phân tích sự đánh đổi giữa kích thước không gian tìm kiếm và chất lượng giải pháp, và đề xuất framework tự động cân bằng game có thể áp dụng thực tế. Nghiên cứu này lấp đầy khoảng trống trong các tài liệu hiện có chủ yếu tập trung vào các trò chơi đơn giản với không gian tham số hạn chế.
+
+Về mặt thực tiễn, đề tài cung cấp công cụ hoàn chỉnh giúp các nhà phát triển tự động hóa việc cân bằng game, tiết kiệm hàng trăm giờ điều chỉnh thủ công \cite{jaffe2012optimizing,nelson2016towards}. Hệ thống có khả năng mở rộng rõ ràng và có thể thích nghi cho nhiều loại game khác nhau như tower defense, game chiến thuật, RPG với các điều chỉnh phù hợp. Cấu trúc code base đảm bảo khả năng bảo trì và mở rộng cho các cải tiến trong tương lai.
+
+Về mặt công nghệ, đề tài thành công trong việc tích hợp phát triển game với các thuật toán tiến hóa trong một hệ thống sẵn sàng sản xuất. Các công cụ trực quan hóa được phát triển hỗ trợ phân tích sâu quá trình tiến hóa và trao quyền cho các nhà thiết kế game với khả năng ra quyết định dựa trên dữ liệu \cite{smith2011analyzing}. Sự tích hợp này chứng minh tính khả thi của quy trình phát triển game có sự hỗ trợ của AI.
+
+\section{Hạn chế của nghiên cứu}
+
+Về phương pháp, AI Agent sử dụng các heuristic cố định không học được các chiến lược mới, có khả năng bỏ sót các chiến thuật nâng cao mà người chơi có thể khám phá. Agent không phản ánh được đầy đủ sự đa dạng của người chơi thực trên các mức độ kỹ năng và phong cách chơi khác nhau. Hàm fitness với cách tiếp cận kết hợp có trọng số khó nắm bắt hết bản chất chủ quan của "yếu tố vui", đòi hỏi điều chỉnh trọng số thủ công, và có thể bỏ sót các đặc tính nổi lên không được định nghĩa rõ ràng.
+
+Về phạm vi, việc kiểm thử chỉ được thực hiện trên một thiết kế game cụ thể (Roguelike Deckbuilder), hạn chế khả năng tổng quát hóa các kết luận. Chưa có kiểm thử dài hạn với người chơi thực để xác thực sự phù hợp giữa các chỉ số được tối ưu và sự hài lòng thực tế của người chơi. Cấu trúc phân cấp được thiết kế thủ công dựa trên kiến thức chuyên môn, giảm mức độ tự động hóa và đòi hỏi đầu vào từ chuyên gia cho các lĩnh vực mới.
+
+\section{Hướng phát triển trong tương lai}
+
+Agent học tăng cường (Reinforcement Learning) có thể thay thế AI heuristic bằng cách huấn luyện agent sử dụng Deep Q-Network \cite{mnih2015human} hoặc PPO để tự động học các chiến lược thay vì các quy tắc mã hóa cứng, có khả năng khám phá các chiến thuật tối ưu ngoài trực giác của con người. Cách tiếp cận nhóm agent đa dạng sử dụng nhiều agent với phong cách chơi khác nhau (tấn công, phòng thủ, cân bằng) đánh giá sự cân bằng từ nhiều góc nhìn và mô phỏng các mức độ kỹ năng khác nhau của người chơi cho đánh giá vững chắc hơn.
+
+Cấu trúc phân cấp tự động sử dụng các kỹ thuật phân cụm để tự động nhóm các tham số, áp dụng tối ưu hóa Bayes phân cấp, và tận dụng meta-learning cho việc nhóm tham số loại bỏ yêu cầu thiết kế thủ công. Các thuật toán đa mục tiêu nâng cao như MOEA/D, NSGA-III dựa trên điểm tham chiếu, và các phương pháp kết hợp với tìm kiếm cục bộ có thể cải thiện tốc độ hội tụ và chất lượng Pareto front. Tối ưu hóa tương tác cho phép nhà thiết kế hướng dẫn sự tiến hóa thông qua sở thích, học trực tuyến từ phản hồi người chơi, và tích hợp kiểm thử A/B trong môi trường sản xuất tạo ra hệ thống có con người trong vòng lặp \cite{coello2007evolutionary}.
+
+Mở rộng nội dung bằng cách thêm các nhân vật với bộ bài khởi đầu khác nhau, tăng số lượng thẻ bài (>50), di vật (>30), kẻ địch (>30), và cơ chế boss phức tạp hơn với nhiều giai đoạn để kiểm tra khả năng mở rộng của framework. Các cơ chế nâng cao như hệ thống combo, nhiều loại tiền tệ và nâng cấp vĩnh viễn (tiến trình meta) giới thiệu các chiều hướng cân bằng mới thách thức cách tiếp cận hiện tại.
+
+Công cụ trực quan hóa nâng cao với giám sát thời gian thực trong quá trình tối ưu, các công cụ phân tích độ nhạy tham số, và khả năng so sánh lịch sử giữa các lần chạy cải thiện việc gỡ lỗi và hiểu biết. Bảng điều khiển cho nhà thiết kế với giao diện web để cấu hình và chạy tối ưu hóa, xuất dữ liệu cân bằng trực tiếp sang định dạng game, và tích hợp với các công cụ game (Unity/Unreal) đơn giản hóa quy trình từ nghiên cứu đến sản xuất.
+
+Framework có khả năng áp dụng cho các trò chơi Tower Defense cân bằng sát thương tháp, máu kẻ địch, cấu trúc đợt sóng; Game chiến thuật cân bằng chỉ số đơn vị, chi phí tài nguyên, cây công nghệ; MOBA cân bằng khả năng tướng, vật phẩm, ghép cặp; RPG cân bằng chỉ số class, cây kỹ năng, trang bị; và Auto-battler cân bằng hiệp lực đơn vị, tiến trình cấp độ thể hiện tính áp dụng rộng rãi \cite{yannakakis2018artificial}.
+
+\section{Kết luận cuối cùng}
+
+Đề tài đã thành công thiết lập một hệ thống hoàn chỉnh cho cân bằng game tự động, so sánh thực nghiệm hai phương pháp khác biệt căn bản với dữ liệu cụ thể, chứng minh sự vượt trội của NSGA-II (nhanh hơn 33\%, đa dạng hơn 33\%, Coherence tối đa), và cung cấp những hiểu biết có giá trị về việc áp dụng các thuật toán tiến hóa vào phát triển game. Kết quả chứng minh các ưu điểm của phương pháp Structure-Aware: tìm kiếm hiệu quả trong không gian nhỏ hơn (khoảng 50 so với khoảng 500 tham số), tối ưu hóa đa mục tiêu cho các giải pháp cân bằng, tính nhất quán hoàn hảo (Coherence = 1.000), và sự phù hợp tốt hơn với các nguyên tắc thiết kế game.
+
+Hệ thống có tiềm năng mạnh mẽ cho việc tiết kiệm thời gian và giảm chi phí cho các nhà phát triển game, cải thiện chất lượng game thông qua cân bằng hướng mục tiêu, mở rộng cho các dự án lớn hơn, và mở rộng trên nhiều thể loại game khác nhau. Với các hướng phát triển được đề xuất, đặc biệt là việc tích hợp các agent học tăng cường và cấu trúc phân cấp tự động, hệ thống có thể phát triển thành công cụ mạnh mẽ và thiết yếu cho ngành công nghiệp phát triển game.
+
+Nghiên cứu này mở ra các hướng mới cho việc áp dụng AI và các thuật toán tiến hóa vào phát triển game, đặc biệt giải quyết vấn đề cân bằng game - một thách thức lớn mà ngành công nghiệp đang đối mặt. Sự kết hợp của tự động hóa, tối ưu hóa đa mục tiêu, và các công cụ trực quan hóa tạo ra framework toàn diện thúc đẩy cả hiểu biết học thuật và ứng dụng thực tiễn trong lĩnh vực phát triển game.

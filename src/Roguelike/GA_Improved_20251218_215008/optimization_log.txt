@@ -1,0 +1,1969 @@
+=== IMPROVED GENETIC ALGORITHM ===
+Started: 12/18/2025 9:50:08 PM
+Population Size: 100
+Generations: 30
+Mutation Rate: 0.15
+
+IMPROVEMENTS:
+  - Hierarchical genome (~50 params instead of ~500)
+  - Multi-objective optimization (NSGA-II)
+  - Adaptive evaluation budget
+  - Improved genetic operators (SBX, polynomial mutation)
+
+
+                                                           =
+GENERATION 1
+                                                           =
+Time: 25.77s
+Pareto Front Size: 4
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.931
+  Engagement: 0.627
+  Coherence:  0.650
+  Win Rate:   33.0%
+  Victory HP: 34.7%
+  Viable Cards: 11
+  Trap Cards: 1
+  Crowding Distance: 0.000
+
+Solution 2:
+  Balance:    0.929
+  Engagement: 0.737
+  Coherence:  0.750
+  Win Rate:   33.5%
+  Victory HP: 38.4%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.000
+
+Solution 3:
+  Balance:    0.891
+  Engagement: 0.707
+  Coherence:  1.000
+  Win Rate:   36.0%
+  Victory HP: 47.9%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.000
+
+Solution 4:
+  Balance:    0.878
+  Engagement: 0.745
+  Coherence:  1.000
+  Win Rate:   35.0%
+  Victory HP: 41.8%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 8
+  Front Sizes: 4, 4, 2, 3, 2
+  Balance Score Range: [0.363, 0.931]
+  Balance Score Avg: 0.751
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.6366
+  Phenotype Diversity (objective space): 0.6635
+
+                                                           =
+GENERATION 2
+                                                           =
+Time: 0.00s
+Pareto Front Size: 3
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.943
+  Engagement: 0.749
+  Coherence:  1.000
+  Win Rate:   49.0%
+  Victory HP: 41.5%
+  Viable Cards: 15
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.902
+  Engagement: 0.793
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 44.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 2.000
+
+Solution 3:
+  Balance:    0.863
+  Engagement: 0.794
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 53.5%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 10
+  Front Sizes: 3, 6, 9, 11, 10
+  Balance Score Range: [0.625, 0.943]
+  Balance Score Avg: 0.844
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.6351
+  Phenotype Diversity (objective space): 0.3715
+
+                                                           =
+GENERATION 3
+                                                           =
+Time: 0.00s
+Pareto Front Size: 2
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 10
+  Front Sizes: 2, 7, 9, 11, 12
+  Balance Score Range: [0.758, 0.962]
+  Balance Score Avg: 0.884
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.3293
+  Phenotype Diversity (objective space): 0.2188
+
+                                                           =
+GENERATION 4
+                                                           =
+Time: 0.00s
+Pareto Front Size: 3
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.968
+  Engagement: 0.616
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 38.8%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 3.000
+
+Solution 3:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 9
+  Front Sizes: 3, 7, 12, 12, 14
+  Balance Score Range: [0.743, 0.968]
+  Balance Score Avg: 0.892
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2463
+  Phenotype Diversity (objective space): 0.2039
+
+                                                           =
+GENERATION 5
+                                                           =
+Time: 0.00s
+Pareto Front Size: 3
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.968
+  Engagement: 0.616
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 38.8%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 3.000
+
+Solution 3:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 9
+  Front Sizes: 3, 10, 10, 12, 14
+  Balance Score Range: [0.742, 0.968]
+  Balance Score Avg: 0.898
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1678
+  Phenotype Diversity (objective space): 0.1988
+
+                                                           =
+GENERATION 6
+                                                           =
+Time: 0.00s
+Pareto Front Size: 3
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.968
+  Engagement: 0.616
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 38.8%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 3.000
+
+Solution 3:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 9
+  Front Sizes: 3, 10, 13, 15, 10
+  Balance Score Range: [0.743, 0.968]
+  Balance Score Avg: 0.906
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1458
+  Phenotype Diversity (objective space): 0.1880
+
+                                                           =
+GENERATION 7
+                                                           =
+Time: 0.00s
+Pareto Front Size: 6
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.974
+  Engagement: 0.615
+  Coherence:  1.000
+  Win Rate:   45.5%
+  Victory HP: 40.0%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.968
+  Engagement: 0.616
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 38.8%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.137
+
+Solution 3:
+  Balance:    0.967
+  Engagement: 0.628
+  Coherence:  1.000
+  Win Rate:   43.5%
+  Victory HP: 41.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.858
+
+Solution 4:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 2.249
+
+Solution 5:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 9
+  Front Sizes: 6, 8, 11, 11, 13
+  Balance Score Range: [0.765, 0.974]
+  Balance Score Avg: 0.912
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1632
+  Phenotype Diversity (objective space): 0.1809
+
+                                                           =
+GENERATION 8
+                                                           =
+Time: 0.00s
+Pareto Front Size: 5
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.965
+  Engagement: 0.688
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 36.4%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 2.126
+
+Solution 4:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.888
+  Engagement: 0.797
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 39.8%
+  Viable Cards: 14
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 9
+  Front Sizes: 5, 11, 12, 11, 18
+  Balance Score Range: [0.765, 0.981]
+  Balance Score Avg: 0.917
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1711
+  Phenotype Diversity (objective space): 0.1735
+
+                                                           =
+GENERATION 9
+                                                           =
+Time: 0.00s
+Pareto Front Size: 5
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.965
+  Engagement: 0.688
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 36.4%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 2.126
+
+Solution 4:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.888
+  Engagement: 0.797
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 39.8%
+  Viable Cards: 14
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 8
+  Front Sizes: 5, 13, 13, 13, 17
+  Balance Score Range: [0.765, 0.981]
+  Balance Score Avg: 0.921
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1722
+  Phenotype Diversity (objective space): 0.1724
+
+                                                           =
+GENERATION 10
+                                                           =
+Time: 0.00s
+Pareto Front Size: 5
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.965
+  Engagement: 0.688
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 36.4%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.950
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 2.271
+
+Solution 4:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.904
+  Engagement: 0.805
+  Coherence:  1.000
+  Win Rate:   41.0%
+  Victory HP: 49.2%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 5, 14, 12, 17, 19
+  Balance Score Range: [0.810, 0.981]
+  Balance Score Avg: 0.923
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1415
+  Phenotype Diversity (objective space): 0.1697
+
+                                                           =
+GENERATION 11
+                                                           =
+Time: 0.00s
+Pareto Front Size: 5
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.965
+  Engagement: 0.688
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 36.4%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.950
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 2.271
+
+Solution 4:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.904
+  Engagement: 0.805
+  Coherence:  1.000
+  Win Rate:   41.0%
+  Victory HP: 49.2%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 5, 15, 15, 16, 22
+  Balance Score Range: [0.730, 0.981]
+  Balance Score Avg: 0.922
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1920
+  Phenotype Diversity (objective space): 0.1720
+
+                                                           =
+GENERATION 12
+                                                           =
+Time: 0.00s
+Pareto Front Size: 6
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.965
+  Engagement: 0.688
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 36.4%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.950
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.788
+
+Solution 4:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 6, 16, 12, 14, 21
+  Balance Score Range: [0.834, 0.981]
+  Balance Score Avg: 0.932
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2087
+  Phenotype Diversity (objective space): 0.1680
+
+                                                           =
+GENERATION 13
+                                                           =
+Time: 0.00s
+Pareto Front Size: 6
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.981
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.663
+
+Solution 4:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.642
+
+Solution 5:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 6, 16, 14, 20, 23
+  Balance Score Range: [0.863, 0.981]
+  Balance Score Avg: 0.938
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.3168
+  Phenotype Diversity (objective space): 0.1693
+
+                                                           =
+GENERATION 14
+                                                           =
+Time: 0.00s
+Pareto Front Size: 6
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.981
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.663
+
+Solution 4:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.642
+
+Solution 5:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 6, 15, 16, 17, 20
+  Balance Score Range: [0.864, 0.981]
+  Balance Score Avg: 0.939
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2452
+  Phenotype Diversity (objective space): 0.1695
+
+                                                           =
+GENERATION 15
+                                                           =
+Time: 0.00s
+Pareto Front Size: 7
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.964
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.649
+
+Solution 4:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.609
+
+Solution 5:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 7, 17, 16, 19, 25
+  Balance Score Range: [0.864, 0.981]
+  Balance Score Avg: 0.939
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2825
+  Phenotype Diversity (objective space): 0.1639
+
+                                                           =
+GENERATION 16
+                                                           =
+Time: 0.00s
+Pareto Front Size: 7
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.964
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.649
+
+Solution 4:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.609
+
+Solution 5:
+  Balance:    0.923
+  Engagement: 0.843
+  Coherence:  0.900
+  Win Rate:   37.0%
+  Victory HP: 44.9%
+  Viable Cards: 13
+  Trap Cards: 1
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 7, 14, 18, 17, 18
+  Balance Score Range: [0.864, 0.981]
+  Balance Score Avg: 0.940
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2411
+  Phenotype Diversity (objective space): 0.1650
+
+                                                           =
+GENERATION 17
+                                                           =
+Time: 0.00s
+Pareto Front Size: 8
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.964
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.578
+
+Solution 4:
+  Balance:    0.961
+  Engagement: 0.796
+  Coherence:  1.000
+  Win Rate:   46.0%
+  Victory HP: 42.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.599
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 8, 13, 19, 17, 23
+  Balance Score Range: [0.864, 0.981]
+  Balance Score Avg: 0.940
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2289
+  Phenotype Diversity (objective space): 0.1624
+
+                                                           =
+GENERATION 18
+                                                           =
+Time: 0.00s
+Pareto Front Size: 9
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.977
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.587
+
+Solution 4:
+  Balance:    0.961
+  Engagement: 0.796
+  Coherence:  1.000
+  Win Rate:   46.0%
+  Victory HP: 42.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.082
+
+Solution 5:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.347
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 9, 12, 22, 20, 22
+  Balance Score Range: [0.864, 0.981]
+  Balance Score Avg: 0.942
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2348
+  Phenotype Diversity (objective space): 0.1602
+
+                                                           =
+GENERATION 19
+                                                           =
+Time: 0.00s
+Pareto Front Size: 9
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.977
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.587
+
+Solution 4:
+  Balance:    0.961
+  Engagement: 0.796
+  Coherence:  1.000
+  Win Rate:   46.0%
+  Victory HP: 42.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.082
+
+Solution 5:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.347
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 9, 14, 22, 21, 24
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.940
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2328
+  Phenotype Diversity (objective space): 0.1575
+
+                                                           =
+GENERATION 20
+                                                           =
+Time: 0.00s
+Pareto Front Size: 10
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.977
+
+Solution 3:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.587
+
+Solution 4:
+  Balance:    0.961
+  Engagement: 0.796
+  Coherence:  1.000
+  Win Rate:   46.0%
+  Victory HP: 42.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.082
+
+Solution 5:
+  Balance:    0.959
+  Engagement: 0.802
+  Coherence:  1.000
+  Win Rate:   39.5%
+  Victory HP: 39.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.347
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 10, 10, 22, 21, 20
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.939
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2571
+  Phenotype Diversity (objective space): 0.1538
+
+                                                           =
+GENERATION 21
+                                                           =
+Time: 0.00s
+Pareto Front Size: 11
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.529
+
+Solution 3:
+  Balance:    0.970
+  Engagement: 0.743
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 4:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.459
+
+Solution 5:
+  Balance:    0.961
+  Engagement: 0.796
+  Coherence:  1.000
+  Win Rate:   46.0%
+  Victory HP: 42.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.082
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 11, 10, 22, 22, 23
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.940
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2252
+  Phenotype Diversity (objective space): 0.1543
+
+                                                           =
+GENERATION 22
+                                                           =
+Time: 0.00s
+Pareto Front Size: 11
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.529
+
+Solution 3:
+  Balance:    0.970
+  Engagement: 0.743
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 4:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.459
+
+Solution 5:
+  Balance:    0.961
+  Engagement: 0.796
+  Coherence:  1.000
+  Win Rate:   46.0%
+  Victory HP: 42.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.082
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 11, 10, 20, 23, 23
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.940
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2804
+  Phenotype Diversity (objective space): 0.1521
+
+                                                           =
+GENERATION 23
+                                                           =
+Time: 0.00s
+Pareto Front Size: 12
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.529
+
+Solution 3:
+  Balance:    0.970
+  Engagement: 0.743
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.371
+
+Solution 4:
+  Balance:    0.966
+  Engagement: 0.772
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.216
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 12, 10, 17, 19, 19
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.941
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2675
+  Phenotype Diversity (objective space): 0.1528
+
+                                                           =
+GENERATION 24
+                                                           =
+Time: 0.00s
+Pareto Front Size: 12
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.529
+
+Solution 3:
+  Balance:    0.970
+  Engagement: 0.743
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.371
+
+Solution 4:
+  Balance:    0.966
+  Engagement: 0.772
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.962
+  Engagement: 0.795
+  Coherence:  1.000
+  Win Rate:   36.5%
+  Victory HP: 37.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.216
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 12, 10, 18, 19, 16
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.942
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2689
+  Phenotype Diversity (objective space): 0.1530
+
+                                                           =
+GENERATION 25
+                                                           =
+Time: 0.00s
+Pareto Front Size: 13
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.648
+  Coherence:  1.000
+  Win Rate:   45.5%
+  Victory HP: 38.5%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.532
+
+Solution 3:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.460
+
+Solution 4:
+  Balance:    0.970
+  Engagement: 0.743
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.326
+
+Solution 5:
+  Balance:    0.966
+  Engagement: 0.772
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.388
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 13, 11, 19, 22, 16
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.943
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2380
+  Phenotype Diversity (objective space): 0.1543
+
+                                                           =
+GENERATION 26
+                                                           =
+Time: 0.00s
+Pareto Front Size: 13
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.648
+  Coherence:  1.000
+  Win Rate:   45.5%
+  Victory HP: 38.5%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.532
+
+Solution 3:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.460
+
+Solution 4:
+  Balance:    0.970
+  Engagement: 0.743
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.326
+
+Solution 5:
+  Balance:    0.966
+  Engagement: 0.772
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.388
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 13, 11, 17, 16, 20
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.943
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2205
+  Phenotype Diversity (objective space): 0.1522
+
+                                                           =
+GENERATION 27
+                                                           =
+Time: 0.00s
+Pareto Front Size: 13
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.648
+  Coherence:  1.000
+  Win Rate:   45.5%
+  Victory HP: 38.5%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.532
+
+Solution 3:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.460
+
+Solution 4:
+  Balance:    0.970
+  Engagement: 0.743
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.326
+
+Solution 5:
+  Balance:    0.966
+  Engagement: 0.772
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.388
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 13, 11, 18, 16, 22
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.944
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2015
+  Phenotype Diversity (objective space): 0.1496
+
+                                                           =
+GENERATION 28
+                                                           =
+Time: 0.00s
+Pareto Front Size: 13
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.648
+  Coherence:  1.000
+  Win Rate:   45.5%
+  Victory HP: 38.5%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.532
+
+Solution 3:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.460
+
+Solution 4:
+  Balance:    0.970
+  Engagement: 0.743
+  Coherence:  1.000
+  Win Rate:   40.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.326
+
+Solution 5:
+  Balance:    0.966
+  Engagement: 0.772
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.388
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 13, 15, 18, 16, 22
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.945
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1987
+  Phenotype Diversity (objective space): 0.1520
+
+                                                           =
+GENERATION 29
+                                                           =
+Time: 0.00s
+Pareto Front Size: 11
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.648
+  Coherence:  1.000
+  Win Rate:   45.5%
+  Victory HP: 38.5%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.532
+
+Solution 3:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.590
+
+Solution 4:
+  Balance:    0.971
+  Engagement: 0.770
+  Coherence:  1.000
+  Win Rate:   43.5%
+  Victory HP: 38.8%
+  Viable Cards: 13
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 5:
+  Balance:    0.966
+  Engagement: 0.772
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 39.1%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.252
+
+
+POPULATION STATISTICS:
+  Total Fronts: 7
+  Front Sizes: 11, 16, 12, 19, 19
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.946
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.1876
+  Phenotype Diversity (objective space): 0.1541
+
+                                                           =
+GENERATION 30
+                                                           =
+Time: 0.00s
+Pareto Front Size: 11
+
+PARETO FRONT SOLUTIONS:
+
+Solution 1:
+  Balance:    0.981
+  Engagement: 0.648
+  Coherence:  1.000
+  Win Rate:   45.5%
+  Victory HP: 38.5%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+Solution 2:
+  Balance:    0.981
+  Engagement: 0.684
+  Coherence:  1.000
+  Win Rate:   40.0%
+  Victory HP: 35.3%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 1.532
+
+Solution 3:
+  Balance:    0.975
+  Engagement: 0.733
+  Coherence:  1.000
+  Win Rate:   41.5%
+  Victory HP: 38.6%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 0.590
+
+Solution 4:
+  Balance:    0.971
+  Engagement: 0.770
+  Coherence:  1.000
+  Win Rate:   43.5%
+  Victory HP: 38.8%
+  Viable Cards: 13
+  Trap Cards: 0
+  Crowding Distance: 0.302
+
+Solution 5:
+  Balance:    0.970
+  Engagement: 0.780
+  Coherence:  1.000
+  Win Rate:   44.0%
+  Victory HP: 40.7%
+  Viable Cards: 12
+  Trap Cards: 0
+  Crowding Distance: 340282346638528859811704183484516925440.000
+
+
+POPULATION STATISTICS:
+  Total Fronts: 6
+  Front Sizes: 11, 16, 15, 18, 22
+  Balance Score Range: [0.854, 0.981]
+  Balance Score Avg: 0.948
+
+DIVERSITY METRICS:
+  Genotype Diversity (parameter space): 3.2435
+  Phenotype Diversity (objective space): 0.1545
+
+
+                                                           =
+OPTIMIZATION COMPLETE
+                                                           =
+Total Time: 23.33 minutes
+Average per Generation: 0.78 minutes
