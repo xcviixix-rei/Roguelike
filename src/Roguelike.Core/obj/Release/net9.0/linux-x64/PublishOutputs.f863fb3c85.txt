@@ -1,0 +1,5 @@
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\publish\Roguelike.Core.dll
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\publish\Roguelike.Core.deps.json
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\publish\Roguelike.Core.runtimeconfig.json
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\publish\Roguelike.Core.pdb
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\publish\Newtonsoft.Json.dll

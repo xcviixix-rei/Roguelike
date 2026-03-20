@@ -422,7 +422,7 @@ namespace Roguelike.Core.Map
                     return false;
             }
 
-            // Elite spacing rule - only check within same floor and adjacent floors
+            // Elite spacing rule: only check within same floor and adjacent floors
             if (r.Type == RoomType.Elite)
             {
                 var elitesOnSameFloor = graph.RoomsOnFloor(r.Y)

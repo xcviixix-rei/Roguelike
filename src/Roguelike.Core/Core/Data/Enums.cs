@@ -46,6 +46,7 @@ namespace Roguelike.Data
     {
         Attack,  // Primarily deals damage to enemies
         Skill,   // Primarily provides Block, card manipulation, or applies effects
+        Heal,    // Primarily heals the player (NEW)
         Power    // Provides a buff that typically lasts for the entire combat
     }
 
@@ -56,6 +57,7 @@ namespace Roguelike.Data
     {
         DealDamage,
         GainBlock,
+        GainHealth,  // NEW: Heal the player
         ApplyStatusEffect,
         ApplyDeckEffect
     }

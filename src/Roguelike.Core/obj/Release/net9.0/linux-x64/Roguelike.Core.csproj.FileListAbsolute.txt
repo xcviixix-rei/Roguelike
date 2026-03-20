@@ -1,0 +1,17 @@
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\Roguelike.Core.deps.json
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\Roguelike.Core.runtimeconfig.json
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\Roguelike.Core.dll
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\Roguelike.Core.pdb
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\bin\Release\net9.0\linux-x64\Newtonsoft.Json.dll
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.csproj.AssemblyReference.cache
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.AssemblyInfoInputs.cache
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.AssemblyInfo.cs
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.csproj.CoreCompileInputs.cache
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.sourcelink.json
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelik.E877BD15.Up2Date
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.dll
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\refint\Roguelike.Core.dll
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.pdb
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\Roguelike.Core.genruntimeconfig.cache
+E:\Unity_Projects\Roguelike\src\Roguelike.Core\obj\Release\net9.0\linux-x64\ref\Roguelike.Core.dll
