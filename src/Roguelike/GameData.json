@@ -225,8 +225,8 @@
     {
       "Id": "enemy_bronze_automaton_strength",
       "Name": "Strength",
-      "Description": "Deals +3 additional damage per stack.",
-      "Intensity": 3,
+      "Description": "Deals +1 additional damage per stack.",
+      "Intensity": 1,
       "IntensityType": "Flat",
       "ApplyType": "RightAway",
       "Decay": "Permanent",
