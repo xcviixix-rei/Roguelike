@@ -8,7 +8,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void StatusEffectData_CanBeCreatedWithAllProperties()
         {
-            // Arrange & Act
+
             var effect = new StatusEffectData
             {
                 Id = "test_strength",
@@ -22,7 +22,7 @@ namespace Roguelike.Tests.Data
                 ApplyType = ApplyType.RightAway
             };
 
-            // Assert
+
             Assert.Equal("test_strength", effect.Id);
             Assert.Equal("Strength", effect.Name);
             Assert.Equal(StatusEffectType.Strength, effect.EffectType);
@@ -36,7 +36,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void StatusEffectData_SupportsAllEffectTypes()
         {
-            // Arrange & Act & Assert
+
             var vulnerable = new StatusEffectData { EffectType = StatusEffectType.Vulnerable };
             var weakened = new StatusEffectData { EffectType = StatusEffectType.Weakened };
             var strength = new StatusEffectData { EffectType = StatusEffectType.Strength };
@@ -57,7 +57,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void StatusEffectData_SupportsBothIntensityTypes()
         {
-            // Arrange & Act
+
             var flatEffect = new StatusEffectData
             {
                 IntensityType = IntensityType.Flat,
@@ -70,7 +70,7 @@ namespace Roguelike.Tests.Data
                 Intensity = 50
             };
 
-            // Assert
+
             Assert.Equal(IntensityType.Flat, flatEffect.IntensityType);
             Assert.Equal(IntensityType.Percentage, percentEffect.IntensityType);
         }
@@ -78,7 +78,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void StatusEffectData_SupportsBothDecayTypes()
         {
-            // Arrange & Act
+
             var temporaryEffect = new StatusEffectData
             {
                 Decay = DecayType.AfterXTURNS,
@@ -91,7 +91,7 @@ namespace Roguelike.Tests.Data
                 Duration = 0
             };
 
-            // Assert
+
             Assert.Equal(DecayType.AfterXTURNS, temporaryEffect.Decay);
             Assert.Equal(3, temporaryEffect.Duration);
             Assert.Equal(DecayType.Permanent, permanentEffect.Decay);
@@ -100,7 +100,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void DeckEffectData_SupportsAllDeckEffectTypes()
         {
-            // Arrange & Act & Assert
+
             var draw = new DeckEffectData { EffectType = DeckEffectType.DrawCard };
             var discard = new DeckEffectData { EffectType = DeckEffectType.DiscardCard };
             var freeze = new DeckEffectData { EffectType = DeckEffectType.FreezeCard };
@@ -115,7 +115,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void EffectData_SupportsAllApplyTypes()
         {
-            // Arrange & Act & Assert
+
             var rightAway = new StatusEffectData { ApplyType = ApplyType.RightAway };
             var startOfCombat = new StatusEffectData { ApplyType = ApplyType.StartOfCombat };
             var startOfTurn = new StatusEffectData { ApplyType = ApplyType.StartOfTurn };

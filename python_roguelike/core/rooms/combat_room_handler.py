@@ -45,7 +45,7 @@ class CombatRoomHandler(IRoomHandler):
             max_minion_star = 2
         elif star_rating == 4:
             minion_count = run.rng.randint(1, 2)
-            max_minion_star = 3
+            max_minion_star = 2
 
         for _ in range(minion_count):
             minion = run.enemy_pool.get_random_enemy_below_star(max_minion_star + 1, run.rng)
@@ -81,3 +81,7 @@ class CombatRoomHandler(IRoomHandler):
 
         run.current_state = GameState.AwaitingReward
         run.current_combat = None
+
+        missing_hp = hero.max_health - hero.current_health
+        if missing_hp > 0:
+            hero.heal(max(1, int(missing_hp * 0.15)))

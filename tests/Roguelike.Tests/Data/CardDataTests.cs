@@ -9,7 +9,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void CardData_CanBeCreatedWithProperties()
         {
-            // Arrange & Act
+
             var card = new CardData
             {
                 Id = "test_card",
@@ -20,7 +20,7 @@ namespace Roguelike.Tests.Data
                 Type = CardType.Attack
             };
 
-            // Assert
+
             Assert.Equal("test_card", card.Id);
             Assert.Equal("Test Card", card.Name);
             Assert.Equal("Test Description", card.Description);
@@ -32,10 +32,10 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void CardData_Actions_InitializesAsEmptyList()
         {
-            // Arrange & Act
+
             var card = new CardData();
 
-            // Assert
+
             Assert.NotNull(card.Actions);
             Assert.Empty(card.Actions);
         }
@@ -43,7 +43,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void CardData_CanContainMultipleActions()
         {
-            // Arrange
+
             var card = new CardData
             {
                 Id = "combo_card",
@@ -56,7 +56,7 @@ namespace Roguelike.Tests.Data
                 }
             };
 
-            // Act & Assert
+
             Assert.Equal(2, card.Actions.Count);
             Assert.Equal(ActionType.DealDamage, card.Actions[0].Type);
             Assert.Equal(ActionType.GainBlock, card.Actions[1].Type);
@@ -65,7 +65,7 @@ namespace Roguelike.Tests.Data
         [Fact]
         public void CardData_SupportsAllCardTypes()
         {
-            // Arrange & Act & Assert
+
             var attack = new CardData { Type = CardType.Attack };
             var skill = new CardData { Type = CardType.Skill };
             var power = new CardData { Type = CardType.Power };

@@ -36,18 +36,18 @@ namespace Roguelike.Core.AI
             switch (room.Type)
             {
                 case RoomType.Rest: return hpPercent < 0.5 ? 50.0 : 10.0;
-                
+
                 case RoomType.Elite:
                     double eliteStarValue = room.StarRating * 10.0;
-                    if (hpPercent > 0.5) return eliteStarValue; 
+                    if (hpPercent > 0.5) return eliteStarValue;
                     if (hpPercent < 0.35) return -eliteStarValue;
                     return eliteStarValue * 0.5;
                 case RoomType.Monster:
                     double monsterStarValue = room.StarRating * 10.0;
-                    if (hpPercent > 0.35) return monsterStarValue; 
+                    if (hpPercent > 0.35) return monsterStarValue;
                     if (hpPercent < 0.2) return -monsterStarValue;
                     return monsterStarValue * 0.5;
-                
+
                 case RoomType.Shop: return run.TheHero.CurrentGold > 150 ? 35.0 : 5.0;
                 case RoomType.Event: return 15.0;
                 case RoomType.Boss: return 1000.0;
@@ -72,37 +72,37 @@ namespace Roguelike.Core.AI
             {
                 return CombatDecision.EndTurn();
             }
-                
+
             if (hero.Deck.Hand.Count == 0 || hero.CurrentMana <= 0)
             {
                 return CombatDecision.EndTurn();
             }
-            
+
             bool hasAffordableCard = false;
             bool isFirstAttack = combat.TurnNumber > 0;
-            
+
             for (int i = 0; i < hero.Deck.Hand.Count; i++)
             {
                 var card = hero.Deck.Hand[i];
                 int effectiveCost = card.ManaCost;
-                
+
                 if (effectiveCost <= hero.CurrentMana)
                 {
                     hasAffordableCard = true;
                     break;
                 }
             }
-            
+
             if (!hasAffordableCard)
             {
                 return CombatDecision.EndTurn();
             }
 
-            // Precise Incoming Damage Calculation
+
             int totalIncomingDamage = CalculateIncomingDamage(run, enemies);
             int neededBlock = Math.Max(0, totalIncomingDamage - hero.Block);
 
-            // 1st PRIORITY: SURVIVAL
+
             if (neededBlock > 0)
             {
                 var defensiveMove = FindBestDefensiveMove(run, hero, enemies, neededBlock);
@@ -112,16 +112,16 @@ namespace Roguelike.Core.AI
                 }
             }
 
-            // 2nd PRIORITY: LETHAL DMG
+
             var lethalMove = FindLethalMove(run, hero, enemies);
             if (lethalMove.HasValue)
             {
                 return lethalMove.Value;
             }
 
-            // LEFT-OVER: BEST GENERAL MOVE (Score-based)
+
             var finalDecision = GetBestGeneralMove(run, hero, enemies);
-    
+
             if (finalDecision.Type == CombatActionType.PlayCard)
             {
                 if (finalDecision.HandIndex < 0 || finalDecision.HandIndex >= hero.Deck.Hand.Count)
@@ -133,7 +133,7 @@ namespace Roguelike.Core.AI
                     return CombatDecision.EndTurn();
                 }
             }
-            
+
             return finalDecision;
         }
 
@@ -160,7 +160,7 @@ namespace Roguelike.Core.AI
             }
             return null;
         }
-        
+
         private CombatDecision GetBestGeneralMove(GameRun run, Hero hero, List<Enemy> enemies)
         {
             int bestCardIndex = -1;
@@ -176,7 +176,7 @@ namespace Roguelike.Core.AI
                 {
                     var targetEnemy = enemies.OrderBy(e => e.CurrentHealth).First();
                     int targetIndex = run.CurrentCombat.Enemies.IndexOf(targetEnemy);
-                    
+
                     double score = ScoreCard(card, hero, targetEnemy);
                     double scorePerMana = score / (Math.Max(card.ManaCost, 1));
 
@@ -200,7 +200,7 @@ namespace Roguelike.Core.AI
                     }
                 }
             }
-            
+
             if (bestCardIndex != -1)
             {
                 return CombatDecision.Play(bestCardIndex, bestTargetIndex);
@@ -209,19 +209,17 @@ namespace Roguelike.Core.AI
             return CombatDecision.EndTurn();
         }
 
-        /// <summary>
-        /// A scoring function for a card's general value.
-        /// </summary>
+
         private double ScoreCard(CardData card, Hero hero, Enemy target)
         {
             double score = 0;
 
-            score += 1; 
+            score += 1;
 
             switch (card.Type)
             {
                 case CardType.Power:
-                    score += 20; 
+                    score += 20;
                     break;
 
                 case CardType.Attack:
@@ -235,7 +233,7 @@ namespace Roguelike.Core.AI
                         score += totalDamage;
                     }
                     break;
-                
+
                 case CardType.Skill:
                     foreach(var action in card.Actions)
                     {
@@ -293,12 +291,12 @@ namespace Roguelike.Core.AI
             int maxDamageFromSingleEnemy = 0;
             foreach (var enemy in enemies)
             {
-                if (run.CurrentCombat.CurrentEnemyIntents.TryGetValue(enemy, out var intent) 
+                if (run.CurrentCombat.CurrentEnemyIntents.TryGetValue(enemy, out var intent)
                     && intent.Type == ActionType.DealDamage)
                 {
-                    bool isAlreadyWeak = enemy.ActiveEffects.Any(e => 
+                    bool isAlreadyWeak = enemy.ActiveEffects.Any(e =>
                         e.SourceData is StatusEffectData s && s.EffectType == StatusEffectType.Weakened);
-                    
+
                     if (!isAlreadyWeak)
                     {
                         int currentEnemyDamage = (int)Math.Floor(PredictEnemyDamage(run, enemy, run.TheHero));
@@ -313,7 +311,7 @@ namespace Roguelike.Core.AI
 
             int bestCardIndex = -1;
             int bestTargetIndex = 0;
-            double bestEfficiency = -1.0; 
+            double bestEfficiency = -1.0;
 
             for (int i = 0; i < hero.Deck.Hand.Count; i++)
             {
@@ -337,7 +335,7 @@ namespace Roguelike.Core.AI
                 int potentialTarget = 0;
 
                 var weakAction = card.Actions.FirstOrDefault(a => a.Type == ActionType.ApplyStatusEffect && a.EffectId.Contains("weakened"));
-                
+
                 if (weakAction != null && bestWeakTarget != null)
                 {
                     var originalDamage = PredictEnemyDamage(run, bestWeakTarget, hero);
@@ -367,7 +365,7 @@ namespace Roguelike.Core.AI
                 }
             }
 
-            if (bestCardIndex != -1) 
+            if (bestCardIndex != -1)
             {
                 return CombatDecision.Play(bestCardIndex, bestTargetIndex);
             }
@@ -381,14 +379,14 @@ namespace Roguelike.Core.AI
                 return 0f;
 
             float dmg = intent.Value;
-            
+
             var strength = enemy.ActiveEffects.FirstOrDefault(e => e.SourceData is StatusEffectData s && s.EffectType == StatusEffectType.Strength);
             if (strength != null)
             {
                 var strengthData = (StatusEffectData)strength.SourceData;
                 dmg += strengthData.Intensity;
             }
-            
+
             var weakened = enemy.ActiveEffects.FirstOrDefault(e => e.SourceData is StatusEffectData s && s.EffectType == StatusEffectType.Weakened);
             if (weakened != null)
             {
@@ -402,7 +400,7 @@ namespace Roguelike.Core.AI
                 var vulData = (StatusEffectData)vulnerable.SourceData;
                 dmg *= (1 + vulData.Intensity / 100f);
             }
-            
+
             return dmg;
         }
 
@@ -487,8 +485,8 @@ namespace Roguelike.Core.AI
                 case EventEffectType.LoseGold: return -effect.Value * 0.5;
                 case EventEffectType.HealHP: return hpRatio < 0.5 ? effect.Value * 2.0 : effect.Value * 1.0;
                 case EventEffectType.LoseHP: return hpRatio < 0.3 ? -effect.Value * 3.0 : -effect.Value * 1.2;
-                case EventEffectType.GainCard: return 25.0; 
-                case EventEffectType.RemoveCard: return 40.0; 
+                case EventEffectType.GainCard: return 25.0;
+                case EventEffectType.RemoveCard: return 40.0;
                 case EventEffectType.GainRelic: return 60.0;
                 default: return 0.0;
             }
@@ -501,7 +499,7 @@ namespace Roguelike.Core.AI
 
             bool allLowStar = choices.All(c => c.StarRating <= 2);
             if (run.TheHero.Deck.MasterDeck.Count > 20 && allLowStar) return -1;
-            
+
             var bestCard = choices.OrderByDescending(c => c.StarRating).First();
             return choices.IndexOf(bestCard);
         }

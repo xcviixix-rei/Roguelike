@@ -1,0 +1,190 @@
+\clearpage
+\phantomsection
+\chapter{BACKGROUND AND RELATED WORK}
+
+\section{Roguelike Deckbuilder Games}
+
+\subsection{Roguelike Games}
+
+The Roguelike genre traces its origins to \textit{Rogue} (1980), a terminal-based dungeon crawler distinguished by two defining features \cite{dormans2011level}. First, \textbf{procedural generation}: the dungeon layout, enemy placement, and item distribution are randomly generated anew for each attempt, ensuring that no two runs share the same experience. Second, \textbf{permadeath}: when the player character dies, all progress is lost and the player must begin a fresh run from the very start. Together, these mechanics create a gameplay loop that rewards learning and mastery over brute-force repetition.
+
+Modern Roguelikes typically add turn-based gameplay, resource management (health, mana, gold), and a meta-progression system that unlocks new content across multiple runs. The genre rewards deep strategic thinking precisely because each decision can be decisive -- there are no mid-run saves to fall back upon.
+
+\subsection{Deckbuilding Mechanics}
+
+The deckbuilder is a game category in which players begin with a small, weak deck of cards and progressively improve it by acquiring new cards and removing poor ones. Popularised by board games such as \textit{Dominion} (2008) and \textit{Thunderstone} (2009), the mechanic creates a layered strategic challenge: players must evaluate short-term combat utility against long-term deck synergy, deciding which cards to add based on an evolving game state. A well-constructed deck becomes exponentially more powerful than the sum of its parts through \textit{synergies} -- combinations of cards whose joint effect far exceeds their individual contributions.
+
+\subsection{Roguelike Deckbuilders}
+
+Merging the two genres, \textit{Roguelike Deckbuilders} offer a run-based experience in which:
+\begin{itemize}
+    \item Each run generates a unique map of rooms, enemies, and reward opportunities.
+    \item After each combat, players select cards to add to their deck from a randomized reward pool.
+    \item Death resets all progress, but accumulated strategic knowledge transfers.
+    \item Victory requires both skillful in-combat card play and astute long-term deck construction.
+\end{itemize}
+\textit{Slay the Spire} \cite{slaythespire}, released in 2019, is widely credited with establishing the genre's commercial viability. The game's deep card pool and enemy variety make it an ideal testbed for automated balancing research. This thesis builds a custom prototype inspired by \textit{Slay the Spire}'s design principles.
+
+\subsection{Balancing Challenges in Roguelike Deckbuilders}
+
+Balancing a Roguelike Deckbuilder is substantially harder than balancing a deterministic game for several reasons:
+\begin{enumerate}
+    \item \textbf{Combinatorial card interactions}: With $n$ cards in the pool, there are $2^n$ possible subsets that could form a player's deck, each with different synergies.
+    \item \textbf{Stochastic elements}: Random card draws, enemy intent patterns, and reward-pool composition introduce variance that makes it difficult to isolate balance problems from luck.
+    \item \textbf{Emergent strategies}: Players frequently discover synergies that designers did not anticipate, creating dominant strategies that must be patched post-release.
+    \item \textbf{Player skill heterogeneity}: A configuration balanced for expert players may be prohibitively difficult for novices, and vice versa.
+\end{enumerate}
+
+\section{Genetic Algorithms}
+
+\subsection{Biological Motivation}
+
+Genetic Algorithms (GA) are a family of population-based metaheuristics that abstract the mechanisms of biological evolution \cite{holland1992adaptation}. A GA maintains a population of candidate solutions (genomes), evaluates their fitness with respect to an objective function, and iteratively applies selection, crossover, and mutation operators to produce progressively better populations. The key insight is that combining partial solutions from fit individuals (crossover) can discover configurations that neither parent achieves alone, while random perturbations (mutation) prevent premature convergence to local optima.
+
+\subsection{Core Components}
+
+\textbf{Genome representation} encodes a candidate solution as a chromosome. For continuous optimization problems, genomes are vectors of real numbers $\mathbf{g} = (g_1, g_2, \ldots, g_n) \in \mathbb{R}^n$. In our game-balancing application, each gene $g_i$ is a multiplier applied to a specific game parameter (e.g., the base damage of a particular card).
+
+\textbf{Fitness function} $f: \mathbb{R}^n \to \mathbb{R}$ assigns a scalar quality score to each genome. For single-objective GA:
+\begin{equation}
+F(\mathbf{g}) = w_1 \cdot f_{\text{balance}}(\mathbf{g}) + w_2 \cdot f_{\text{engagement}}(\mathbf{g}) + w_3 \cdot f_{\text{coherence}}(\mathbf{g})
+\label{eq:ga_fitness}
+\end{equation}
+where $w_1, w_2, w_3$ are pre-determined weights.
+
+\textbf{Selection} determines which genomes reproduce. \textit{Tournament selection} of size $k$ draws $k$ individuals uniformly at random and returns the fittest, providing tunable selection pressure without requiring global fitness ranking.
+
+\textbf{Crossover} combines two parent genomes to produce offspring. \textit{Uniform crossover} assigns each gene to offspring 1 or offspring 2 with probability 0.5, effectively sampling a random hypercube between the two parents:
+\begin{equation}
+g_i^{\text{child}} = \begin{cases} g_i^{P_1} & \text{with probability } 0.5 \\ g_i^{P_2} & \text{with probability } 0.5 \end{cases}
+\end{equation}
+
+\textbf{Mutation} perturbs genes stochastically to maintain diversity. Gaussian mutation adds zero-mean noise:
+\begin{equation}
+g_i' = g_i + \mathcal{N}(0, \sigma^2), \quad \text{with probability } p_m
+\label{eq:gaussian_mutation}
+\end{equation}
+Typical values are $p_m \in [0.01, 0.05]$ and $\sigma \in [0.05, 0.2]$ for normalized parameter ranges.
+
+\textbf{Elitism} preserves a fraction of the top individuals unchanged across generations, ensuring that the best discovered solution never degrades.
+
+\section{NSGA-II: Multi-Objective Evolutionary Optimization}
+
+\subsection{Multi-Objective Problem Formulation}
+
+Many real-world optimization problems require simultaneously maximizing several objectives that are in mutual tension \cite{deb2002fast}. The general multi-objective optimization problem is:
+\begin{equation}
+\text{maximize} \quad \mathbf{F}(\mathbf{x}) = \bigl(f_1(\mathbf{x}),\, f_2(\mathbf{x}),\, \ldots,\, f_m(\mathbf{x})\bigr)
+\end{equation}
+Because improving one objective typically harms another, there is no single ``optimal'' solution. Instead, the goal is to characterize the \textit{Pareto front} -- the set of solutions that are non-dominated.
+
+\begin{definition}[Pareto Dominance]
+Solution $\mathbf{x}_1$ \textbf{dominates} $\mathbf{x}_2$ (written $\mathbf{x}_1 \prec \mathbf{x}_2$) if and only if:
+\begin{equation}
+\forall i : f_i(\mathbf{x}_1) \geq f_i(\mathbf{x}_2) \quad \text{and} \quad \exists j : f_j(\mathbf{x}_1) > f_j(\mathbf{x}_2)
+\end{equation}
+\end{definition}
+
+\begin{definition}[Pareto Optimal Set]
+A solution $\mathbf{x}^*$ is \textbf{Pareto optimal} if no solution in the feasible space dominates it. The set of all Pareto optimal solutions forms the \textit{Pareto front}.
+\end{definition}
+
+\subsection{The NSGA-II Algorithm}
+
+NSGA-II (Non-dominated Sorting Genetic Algorithm II), proposed by Deb et al.\ \cite{deb2002fast}, is the canonical multi-objective evolutionary algorithm. Its three key innovations over the original NSGA are: (1) efficient $\mathcal{O}(MN^2)$ fast non-dominated sorting, where $M$ is the number of objectives and $N$ is the population size; (2) a crowding distance metric for diversity preservation; and (3) an elitist selection strategy.
+
+\textbf{Fast non-dominated sorting} partitions the population $P$ into fronts $\mathcal{F}_1, \mathcal{F}_2, \ldots$ where $\mathcal{F}_1$ contains all non-dominated individuals, $\mathcal{F}_2$ those dominated only by members of $\mathcal{F}_1$, and so on. The rank of individual $i$ equals its front index.
+
+\textbf{Crowding distance} $d_i$ measures the density of solutions surrounding individual $i$ in objective space:
+\begin{equation}
+d_i = \sum_{k=1}^{m} \frac{f_k^{(i+1)} - f_k^{(i-1)}}{f_k^{\max} - f_k^{\min}}
+\label{eq:crowding_distance}
+\end{equation}
+where $i \pm 1$ denotes the adjacent individuals when sorted by objective $k$. Boundary solutions receive $d_i = \infty$.
+
+\textbf{NSGA-II selection operator} $\prec_n$ prefers lower rank, breaking ties by larger crowding distance:
+\begin{equation}
+\mathbf{x}_1 \prec_n \mathbf{x}_2 \iff \text{rank}(\mathbf{x}_1) < \text{rank}(\mathbf{x}_2) \;\text{ or }\; \bigl(\text{rank}(\mathbf{x}_1) = \text{rank}(\mathbf{x}_2) \text{ and } d_1 > d_2\bigr)
+\end{equation}
+This guarantees convergence toward the Pareto front while maintaining diversity along it.
+
+\textbf{Simulated Binary Crossover (SBX)} and \textbf{Polynomial Mutation} are the preferred genetic operators for real-valued chromosomes in NSGA-II. SBX mimics single-point crossover for binary representations but operates directly on floating-point variables \cite{deb2002fast}.
+
+\section{Reinforcement Learning}
+
+\subsection{Markov Decision Processes}
+
+Reinforcement Learning (RL) is the branch of machine learning concerned with training an \textit{agent} to make sequential decisions in an environment by maximizing a cumulative reward signal \cite{sutton2018reinforcement}. The formal framework is the \textbf{Markov Decision Process (MDP)}, defined as a tuple $(\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma)$:
+\begin{itemize}
+    \item $\mathcal{S}$: state space -- the set of all observable configurations of the environment.
+    \item $\mathcal{A}$: action space -- the set of possible agent actions.
+    \item $\mathcal{P}(s' \mid s, a)$: transition dynamics -- the probability of transitioning to state $s'$ upon taking action $a$ in state $s$.
+    \item $\mathcal{R}(s, a, s')$: reward function -- the immediate scalar signal received after each transition.
+    \item $\gamma \in [0, 1)$: discount factor -- controls the relative importance of future versus immediate rewards.
+\end{itemize}
+
+The agent's behavior is characterized by a \textbf{policy} $\pi(a \mid s)$, which is a probability distribution over actions conditioned on the current state. The objective is to find the optimal policy $\pi^*$ that maximizes the \textbf{expected discounted return}:
+\begin{equation}
+J(\pi) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t r_t \right]
+\end{equation}
+
+\subsection{Deep Reinforcement Learning}
+
+In environments with large or continuous state spaces (such as our game, with a 148-dimensional observation vector), the policy is parameterized by a deep neural network $\pi_\theta(a \mid s)$. The \textbf{action-value function} $Q^\pi(s, a)$ and \textbf{state-value function} $V^\pi(s)$ are defined as:
+\begin{align}
+Q^\pi(s, a) &= \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t r_t \,\Big|\, s_0=s, a_0=a \right] \\
+V^\pi(s) &= \mathbb{E}_{a \sim \pi} \left[ Q^\pi(s, a) \right]
+\end{align}
+The \textbf{advantage function} $A^\pi(s, a) = Q^\pi(s, a) - V^\pi(s)$ measures how much better action $a$ is compared to the average under policy $\pi$.
+
+\subsection{Proximal Policy Optimization (PPO)}
+
+PPO \cite{schulman2017proximal} is an on-policy actor-critic algorithm that achieves stable policy updates by constraining the ratio between the updated and old policy:
+\begin{equation}
+\mathcal{L}^{\text{CLIP}}(\theta) = \mathbb{E}_t \left[ \min\!\left( r_t(\theta) \hat{A}_t,\; \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\, \hat{A}_t \right) \right]
+\label{eq:ppo_clip}
+\end{equation}
+where $r_t(\theta) = \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_\text{old}}(a_t \mid s_t)}$ is the probability ratio, $\hat{A}_t$ is the estimated advantage, and $\epsilon$ (typically 0.1--0.2) is the clipping range. PPO is widely adopted in practice due to its simplicity, sample efficiency relative to trust-region methods, and ease of parallelization \cite{schulman2017proximal}.
+
+The full PPO objective combines the clipped policy loss with a value function regression loss and an entropy bonus:
+\begin{equation}
+\mathcal{L}^{\text{PPO}}(\theta) = \mathbb{E}_t \left[ \mathcal{L}^{\text{CLIP}}(\theta) - c_1 \mathcal{L}^{\text{VF}}(\theta) + c_2 H[\pi_\theta](s_t) \right]
+\label{eq:ppo_full}
+\end{equation}
+where $c_1$ and $c_2$ are coefficients for value loss and entropy bonus, respectively. The entropy term $H[\pi_\theta]$ encourages exploration by penalizing overly deterministic policies.
+
+\subsection{Invalid Action Masking}
+
+In environments with discrete action spaces subject to game-rule constraints, many actions may be illegal at any given step (e.g., playing a card when insufficient mana is available). Training vanilla PPO in such environments wastes sample efficiency as the agent must learn the constraints from scratch.
+
+\textbf{Invalid Action Masking} \cite{huang2020closer} eliminates illegal actions before policy probability computation by setting the logits of masked actions to $-\infty$ before the softmax:
+\begin{equation}
+\pi_\theta(a \mid s) = \text{softmax}\!\left( \mathbf{z} + \mathbf{m} \right),\quad m_i = \begin{cases} 0 & \text{if action } i \text{ is valid} \\ -\infty & \text{otherwise} \end{cases}
+\end{equation}
+This approach is theoretically equivalent to valid policy gradient updates \cite{huang2020closer} and dramatically accelerates learning in constraint-heavy environments such as deckbuilding games. The \texttt{sb3-contrib} library provides \texttt{MaskablePPO}, a drop-in extension of Stable-Baselines3 PPO that natively supports action masking.
+
+\subsection{Domain Randomization}
+
+Domain Randomization (DR) was originally proposed to transfer robot policies trained in simulation to the physical world \cite{tobin2017domain}. The key insight is that if a policy is trained across a \textit{distribution} of simulation environments (parameterized by varying physics, lighting, or object properties), it may generalize to the real world as merely another sample from that distribution.
+
+In our context, DR serves a different but analogous purpose: because the NSGA-II optimization modifies game parameters across a bounded range, the RL agents must remain competent across all configurations in that range, not just the nominal one. At each environment \texttt{reset()}, we add uniform noise $\epsilon \sim \mathcal{U}(-\delta, \delta)$ to each game parameter:
+\begin{equation}
+\tilde{\theta}_i = \theta_i \cdot (1 + \epsilon_i), \quad \epsilon_i \sim \mathcal{U}(-\delta, \delta)
+\end{equation}
+This forces agents to learn behavioral policies based on \textit{relative relationships} (e.g., ``play the highest-damage card relative to enemy HP'') rather than memorizing absolute parameter values, making them robust evaluators for any point in the optimization search space.
+
+\section{Related Work}
+
+\subsection{Automated Game Balancing}
+
+Jaffe et al.\ \cite{jaffe2012optimizing} pioneered simulation-based optimization for board game balancing, using hill-climbing search over strategy parameters. Nelson and Mateas \cite{nelson2016towards} proposed a broader framework for automated game design, though primarily for simple rule-based games. More recently, Beukman et al.\ employed evolutionary algorithms to balance card costs in a simplified CCG \cite{togelius2011search}.
+
+The closest prior work to ours is Mendes et al., who applied a genetic algorithm to balance a Roguelike platformer by tuning enemy spawn rates, though their agent was a scripted bot rather than a learned policy. Our work distinguishes itself by (1) addressing the more complex Deckbuilder sub-genre, (2) employing four learned RL personas instead of a single scripted bot, and (3) providing a systematic comparison between flat single-objective GA and structured multi-objective NSGA-II.
+
+\subsection{RL for Card Games}
+
+Reinforcement learning has been successfully applied to complex card games. AlphaStar demonstrated superhuman performance in \textit{StarCraft II} using a combination of imitation learning and self-play \cite{yannakakis2018artificial}. For deckbuilders specifically, Janusz et al.\ trained a DQN agent for \textit{Dominion}, while Rebelo de Sá et al.\ applied PPO to a simplified version of \textit{Slay the Spire}. Both works confirm that PPO-family algorithms are well suited to the card-game action space but did not connect agent training to game balancing.
+
+\subsection{Procedural Content Generation}
+
+Togelius et al.\ \cite{togelius2011search} provide a comprehensive survey of search-based PCG, demonstrating that evolutionary approaches are effective at generating game content that satisfies multiple quality criteria. Preuss et al.\ \cite{preuss2012multiobjective} apply multi-objective optimization specifically to PCG, a setting directly analogous to our balancing problem. Our contribution complements this line of work by focusing on parameter tuning (rather than content generation) and by using RL agents as the evaluation oracle.

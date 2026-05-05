@@ -1,0 +1,19 @@
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Abstract}
+\chapter*{ABSTRACT}
+
+\vspace{0.5cm}
+
+Game balancing is one of the most critical and labor-intensive challenges in game development, particularly for Roguelike Deckbuilder games, where hundreds of interconnected parameters -- card damages, enemy statistics, relic effects, and map distributions -- must coexist to create a fair and engaging player experience. Traditional manual tuning is slow, error-prone, and incapable of exploring the vast parameter space systematically.
+
+This thesis presents a complete automated game-balancing framework for a custom Roguelike Deckbuilder prototype built in C\# (.NET 9). The framework is composed of three tightly integrated layers. The \textbf{Core Game Layer} implements the full game logic including turn-based combat, a procedurally generated map, a deckbuilding system with over 30 cards and 20 relics, and multiple room types. A rule-based \textbf{Deterministic Heuristic Agent} was first developed to validate game playability and establish baseline metrics.
+
+The key contribution of this thesis is the introduction of four \textbf{Reinforcement Learning (RL) Agents} trained via \textbf{Maskable Proximal Policy Optimization (MaskablePPO)} to replace the deterministic agent. These agents embody distinct play styles -- \textit{Aggressive}, \textit{Defensive}, \textit{Balanced}, and \textit{Adaptive} -- each shaped through custom reward functions and trained over five million timesteps on GPU hardware. Invalid Action Masking and Domain Randomization are employed to improve training stability and agent generalization. All four agents converge to a win rate of approximately 24--34\%, a realistic benchmark for a game with significant stochastic elements.
+
+The \textbf{Optimization Layer} employs two evolutionary approaches: a \textbf{Single-Objective Genetic Algorithm (GA)} operating on $\sim$500 direct parameters, and \textbf{NSGA-II} with a hierarchical genome of $\sim$50 parameters optimizing three objectives simultaneously -- \textit{Balance}, \textit{Engagement}, and \textit{Coherence}. The RL agents serve as the primary evaluators within the optimization loop. Across 30 generations with a population of 100, NSGA-II achieves a Balance Score of 0.960, Engagement Score of 0.900, and perfect Coherence (1.000) while eliminating all trap cards and increasing the number of viable cards from 12 to 14, all within 49 minutes -- 33\% faster than the single-objective GA.
+
+This research demonstrates that combining hierarchical genome representation with multi-objective optimization and learned RL agents produces a robust, extensible framework for automatic game balancing that significantly outperforms both manual tuning and flat single-objective genetic approaches.
+
+\vspace{0.5cm}
+\noindent\textit{\textbf{Keywords:}} \textit{Roguelike Deckbuilder, NSGA-II, Reinforcement Learning, Game Balance Optimization.}

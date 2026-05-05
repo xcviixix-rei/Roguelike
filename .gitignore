@@ -115,4 +115,8 @@ InitTestScene*.unity*
 
 #Docs
 /Document.md
+Game_document.md
 implementation_plan.md
+
+#Environment
+/.venv

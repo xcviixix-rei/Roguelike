@@ -1,0 +1,375 @@
+{
+  "genome_vector": [
+    1.0604430437088013,
+    1.264129400253296,
+    1.2258960008621216,
+    1.038185715675354,
+    1.006013035774231,
+    1.1540381908416748,
+    1.432227611541748,
+    0.9663705825805664,
+    1.2695969343185425,
+    1.3744690418243408,
+    1.010755181312561,
+    1.0529855489730835,
+    1.048261046409607,
+    1.0601649284362793,
+    1.0869148969650269,
+    1.0063143968582153,
+    1.0352144241333008,
+    0.9159597754478455,
+    0.8886803984642029,
+    0.9332723021507263,
+    0.9292088150978088,
+    0.9521790742874146,
+    1.0135728120803833,
+    0.7996418476104736,
+    0.7852504253387451,
+    0.041613537818193436
+  ],
+  "fitness": {
+    "balance": 0.956726487035585,
+    "engagement": 0.7834936490538904,
+    "coherence": 0.7392929792404175,
+    "win_rates": {
+      "aggressive": 0.4,
+      "balanced": 0.4,
+      "defensive": 0.4,
+      "adaptive": 0.5
+    },
+    "avg_hp_pct": 0.47794117647058826,
+    "avg_floor": 9.869565217391305
+  },
+  "pareto_front": [
+    {
+      "balance": 0.3848766650332587,
+      "engagement": 0.7834936490538904,
+      "coherence": 1.0,
+      "win_rates": {
+        "aggressive": 1.0,
+        "balanced": 1.0,
+        "defensive": 1.0,
+        "adaptive": 0.9
+      }
+    },
+    {
+      "balance": 0.9593445099566661,
+      "engagement": 0.6464466094067262,
+      "coherence": 0.7358102202415466,
+      "win_rates": {
+        "aggressive": 0.4,
+        "balanced": 0.3,
+        "defensive": 0.4,
+        "adaptive": 0.5
+      }
+    },
+    {
+      "balance": 0.814607315251133,
+      "engagement": 0.03985678151642391,
+      "coherence": 0.8638021945953369,
+      "win_rates": {
+        "aggressive": 0.8,
+        "balanced": 0.5,
+        "defensive": 0.7,
+        "adaptive": 0.3
+      }
+    },
+    {
+      "balance": 0.2611313940237144,
+      "engagement": 1.0,
+      "coherence": 0.8767988681793213,
+      "win_rates": {
+        "aggressive": 1.0,
+        "balanced": 1.0,
+        "defensive": 1.0,
+        "adaptive": 1.0
+      }
+    },
+    {
+      "balance": 0.4809634042083055,
+      "engagement": 0.5854219012055751,
+      "coherence": 0.9857441186904907,
+      "win_rates": {
+        "aggressive": 1.0,
+        "balanced": 1.0,
+        "defensive": 0.9,
+        "adaptive": 0.8
+      }
+    },
+    {
+      "balance": 0.9452973072454754,
+      "engagement": 0.5669872981077806,
+      "coherence": 0.7509707808494568,
+      "win_rates": {
+        "aggressive": 0.2,
+        "balanced": 0.4,
+        "defensive": 0.4,
+        "adaptive": 0.4
+      }
+    },
+    {
+      "balance": 0.4913259497638891,
+      "engagement": 1.0,
+      "coherence": 0.8696649074554443,
+      "win_rates": {
+        "aggressive": 0.9,
+        "balanced": 0.9,
+        "defensive": 0.9,
+        "adaptive": 0.9
+      }
+    },
+    {
+      "balance": 0.8260531674753814,
+      "engagement": 0.2928932188134523,
+      "coherence": 0.8630077838897705,
+      "win_rates": {
+        "aggressive": 0.8,
+        "balanced": 0.6,
+        "defensive": 0.6,
+        "adaptive": 0.4
+      }
+    },
+    {
+      "balance": 0.8704630491992885,
+      "engagement": 0.7834936490538904,
+      "coherence": 0.8067619800567627,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.6,
+        "defensive": 0.5,
+        "adaptive": 0.5
+      }
+    },
+    {
+      "balance": 0.956726487035585,
+      "engagement": 0.7834936490538904,
+      "coherence": 0.7392929792404175,
+      "win_rates": {
+        "aggressive": 0.4,
+        "balanced": 0.4,
+        "defensive": 0.4,
+        "adaptive": 0.5
+      }
+    },
+    {
+      "balance": 0.571747900476106,
+      "engagement": 0.5669872981077808,
+      "coherence": 0.8716531991958618,
+      "win_rates": {
+        "aggressive": 1.0,
+        "balanced": 1.0,
+        "defensive": 1.0,
+        "adaptive": 0.8
+      }
+    },
+    {
+      "balance": 0.8852669344542615,
+      "engagement": 0.09861218113400272,
+      "coherence": 0.8564969301223755,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.4,
+        "defensive": 0.7,
+        "adaptive": 0.2
+      }
+    },
+    {
+      "balance": 0.7122470709597594,
+      "engagement": 0.7834936490538904,
+      "coherence": 0.859367311000824,
+      "win_rates": {
+        "aggressive": 0.6,
+        "balanced": 0.7,
+        "defensive": 0.6,
+        "adaptive": 0.6
+      }
+    },
+    {
+      "balance": 0.8348248535585964,
+      "engagement": 0.44098300562505266,
+      "coherence": 0.8595737218856812,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.7,
+        "defensive": 0.6,
+        "adaptive": 0.4
+      }
+    },
+    {
+      "balance": 0.8363956302193113,
+      "engagement": 0.38762756430420553,
+      "coherence": 0.8597158193588257,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.6,
+        "defensive": 0.6,
+        "adaptive": 0.3
+      }
+    },
+    {
+      "balance": 0.2744442479222326,
+      "engagement": 1.0,
+      "coherence": 0.8763529062271118,
+      "win_rates": {
+        "aggressive": 1.0,
+        "balanced": 1.0,
+        "defensive": 1.0,
+        "adaptive": 1.0
+      }
+    },
+    {
+      "balance": 0.8630746552480159,
+      "engagement": 0.75,
+      "coherence": 0.8187245726585388,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.6,
+        "defensive": 0.5,
+        "adaptive": 0.6
+      }
+    },
+    {
+      "balance": 0.8969115948464917,
+      "engagement": 0.6464466094067263,
+      "coherence": 0.8193356990814209,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.6,
+        "defensive": 0.4,
+        "adaptive": 0.5
+      }
+    },
+    {
+      "balance": 0.8176791289337803,
+      "engagement": 0.75,
+      "coherence": 0.8207567930221558,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.6,
+        "defensive": 0.5,
+        "adaptive": 0.6
+      }
+    },
+    {
+      "balance": 0.8654298030579554,
+      "engagement": 0.5854219012055751,
+      "coherence": 0.8494037389755249,
+      "win_rates": {
+        "aggressive": 0.4,
+        "balanced": 0.6,
+        "defensive": 0.5,
+        "adaptive": 0.6
+      }
+    },
+    {
+      "balance": 0.46002395707771376,
+      "engagement": 0.7834936490538904,
+      "coherence": 0.8759565949440002,
+      "win_rates": {
+        "aggressive": 0.9,
+        "balanced": 0.9,
+        "defensive": 0.9,
+        "adaptive": 1.0
+      }
+    },
+    {
+      "balance": 0.8081306478093779,
+      "engagement": 0.03985678151642391,
+      "coherence": 0.8655593991279602,
+      "win_rates": {
+        "aggressive": 0.9,
+        "balanced": 0.5,
+        "defensive": 0.7,
+        "adaptive": 0.4
+      }
+    },
+    {
+      "balance": 0.5451065248297698,
+      "engagement": 0.7834936490538904,
+      "coherence": 0.8682370185852051,
+      "win_rates": {
+        "aggressive": 0.9,
+        "balanced": 0.9,
+        "defensive": 1.0,
+        "adaptive": 0.9
+      }
+    },
+    {
+      "balance": 0.8549903363384557,
+      "engagement": 0.06458565330651489,
+      "coherence": 0.8622837066650391,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.6,
+        "defensive": 0.7,
+        "adaptive": 0.2
+      }
+    },
+    {
+      "balance": 0.4129933210078998,
+      "engagement": 0.7834936490538904,
+      "coherence": 0.9903459548950195,
+      "win_rates": {
+        "aggressive": 1.0,
+        "balanced": 1.0,
+        "defensive": 1.0,
+        "adaptive": 0.9
+      }
+    },
+    {
+      "balance": 0.7500713213679763,
+      "engagement": 0.5854219012055751,
+      "coherence": 0.8608388304710388,
+      "win_rates": {
+        "aggressive": 0.6,
+        "balanced": 0.7,
+        "defensive": 0.7,
+        "adaptive": 0.5
+      }
+    },
+    {
+      "balance": 0.762710719400069,
+      "engagement": 0.5854219012055751,
+      "coherence": 0.8605011701583862,
+      "win_rates": {
+        "aggressive": 0.6,
+        "balanced": 0.7,
+        "defensive": 0.7,
+        "adaptive": 0.5
+      }
+    },
+    {
+      "balance": 0.9205088434646461,
+      "engagement": 0.585421901205575,
+      "coherence": 0.7476921677589417,
+      "win_rates": {
+        "aggressive": 0.2,
+        "balanced": 0.3,
+        "defensive": 0.4,
+        "adaptive": 0.4
+      }
+    },
+    {
+      "balance": 0.8837138628353096,
+      "engagement": 0.09861218113400272,
+      "coherence": 0.8587566614151001,
+      "win_rates": {
+        "aggressive": 0.5,
+        "balanced": 0.4,
+        "defensive": 0.7,
+        "adaptive": 0.2
+      }
+    },
+    {
+      "balance": 0.9393325083703171,
+      "engagement": 0.6464466094067262,
+      "coherence": 0.7436243295669556,
+      "win_rates": {
+        "aggressive": 0.3,
+        "balanced": 0.4,
+        "defensive": 0.4,
+        "adaptive": 0.5
+      }
+    }
+  ]
+}

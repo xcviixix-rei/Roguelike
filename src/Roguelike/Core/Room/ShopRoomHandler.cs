@@ -5,20 +5,16 @@ namespace Roguelike.Core.Handlers
 {
     public class ShopRoomHandler : IRoomHandler
     {
-        /// <summary>
-        /// Generates a new shop inventory and transitions the game state to await player actions.
-        /// </summary>
+
+
         public void Execute(GameRun run, Room room)
         {
             run.CurrentShop = new ShopInventory(run.CardPool, run.RelicPool, run.Rng);
-            
+
             run.CurrentState = GameState.InShop;
         }
 
-        /// <summary>
-        /// Attempts to purchase a card from the shop. Called by the GameController.
-        /// </summary>
-        /// <returns>True if the purchase was successful, false otherwise.</returns>
+
         public static bool PurchaseCard(GameRun run, int cardIndex)
         {
             if (run.CurrentState != GameState.InShop || run.CurrentShop == null) return false;
@@ -38,10 +34,7 @@ namespace Roguelike.Core.Handlers
             return true;
         }
 
-        /// <summary>
-        /// Attempts to purchase a relic from the shop. Called by the GameController.
-        /// </summary>
-        /// <returns>True if the purchase was successful, false otherwise.</returns>
+
         public static bool PurchaseRelic(GameRun run, int relicIndex)
         {
             if (run.CurrentState != GameState.InShop || run.CurrentShop == null) return false;
@@ -61,9 +54,7 @@ namespace Roguelike.Core.Handlers
             return true;
         }
 
-        /// <summary>
-        /// Cleans up shop state and returns to the map. Called by the GameController.
-        /// </summary>
+
         public static void LeaveShop(GameRun run)
         {
             run.CurrentShop = null;

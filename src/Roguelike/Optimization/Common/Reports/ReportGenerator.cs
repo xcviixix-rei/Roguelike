@@ -21,7 +21,7 @@ namespace Roguelike.Optimization
                 OverallFitness = fitness
             };
 
-            // Basic metrics
+
             report.WinRate = (float)results.Count(r => r.IsVictory) / results.Count;
 
             var winningRuns = results.Where(r => r.IsVictory).ToList();
@@ -32,32 +32,32 @@ namespace Roguelike.Optimization
                 .GroupBy(r => r.FinalFloorReached)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            report.AvgFloorOnDeath = losingRuns.Any() 
-                ? (float)losingRuns.Average(r => r.FinalFloorReached) 
+            report.AvgFloorOnDeath = losingRuns.Any()
+                ? (float)losingRuns.Average(r => r.FinalFloorReached)
                 : 15f;
 
-            // Elite
+
             var runsWithElites = results.Where(r => r.ElitesEncountered > 0).ToList();
             if (runsWithElites.Any())
             {
                 report.AvgElitesDefeated = (float)runsWithElites.Average(r => r.ElitesDefeated);
                 report.AvgElitesEncountered = (float)runsWithElites.Average(r => r.ElitesEncountered);
                 report.EliteKillRate = report.AvgElitesDefeated / report.AvgElitesEncountered;
-                
+
                 var eliteWinners = runsWithElites.Where(r => r.ElitesDefeated > 0).ToList();
                 report.AvgDamagePerElite = eliteWinners.Any()
                     ? (float)eliteWinners.Average(r => r.TotalDamageTakenAtElites / Math.Max(1, r.ElitesDefeated))
                     : 0f;
             }
 
-            // Economy
+
             report.AvgGoldCollected = (float)results.Average(r => r.GoldCollected);
             report.AvgGoldSpent = (float)results.Average(r => r.GoldSpent);
-            report.AvgGoldEfficiency = report.AvgGoldSpent > 0 
-                ? report.AvgGoldSpent / report.AvgGoldCollected 
+            report.AvgGoldEfficiency = report.AvgGoldSpent > 0
+                ? report.AvgGoldSpent / report.AvgGoldCollected
                 : 0f;
 
-            // Card viability (excluding starting cards)
+
             var pickCounts = new Dictionary<string, int>();
             var pickWins = new Dictionary<string, int>();
             var pickPlayCounts = new Dictionary<string, int>();
@@ -79,7 +79,7 @@ namespace Roguelike.Optimization
 
                     pickCounts[cardId]++;
                     if (run.IsVictory) pickWins[cardId]++;
-                    
+
                     if (run.CardPlayCounts.TryGetValue(cardId, out int plays))
                     {
                         pickPlayCounts[cardId] += plays;
@@ -91,7 +91,7 @@ namespace Roguelike.Optimization
             {
                 int picks = pickCounts[cardId];
                 int wins = pickWins[cardId];
-                
+
                 float pickRate = (float)picks / results.Count;
                 float winRate = (float)wins / picks;
                 float avgPlays = (float)pickPlayCounts[cardId] / picks;
@@ -112,7 +112,7 @@ namespace Roguelike.Optimization
 
             report.CardViability = report.CardViability.OrderByDescending(c => c.PickRate).ToList();
 
-            // Diversity
+
             report.TotalUniqueCardsPicked = pickCounts.Count;
             report.ViableCards = report.CardViability.Count(c => c.PickRate >= 0.10f);
             report.BalancedCards = report.CardViability.Count(c => c.IsBalanced);
@@ -125,16 +125,16 @@ namespace Roguelike.Optimization
                 report.EffectiveNumberOfCards = CalculateEffectiveNumberOfCards(pickCounts);
             }
 
-            // Build variety
+
             report.BuildVarietyScore = CalculateBuildVariety(results);
 
-            // Consistency
+
             var floors = results.Select(r => r.FinalFloorReached).ToList();
             float avgFloor = (float)floors.Average();
             float variance = floors.Select(f => (f - avgFloor) * (f - avgFloor)).Average();
             report.FloorConsistency = (float)Math.Sqrt(variance);
 
-            // Quality flasg
+
             report.HasCriticalIssues = CheckCriticalIssues(report);
             report.HasBalanceIssues = CheckBalanceIssues(report);
             report.QualityScore = CalculateQualityScore(report);
@@ -234,7 +234,7 @@ namespace Roguelike.Optimization
             if (comparisons == 0) return 0.5f;
 
             float avgSimilarity = totalSimilarity / comparisons;
-            return 1.0f - avgSimilarity; // Lower similarity = higher variety
+            return 1.0f - avgSimilarity;
         }
 
         private static bool CheckCriticalIssues(EvaluationReport report)
@@ -269,21 +269,21 @@ namespace Roguelike.Optimization
         {
             float score = 100f;
 
-            // Win rate (max -40 points)
+
             float winRateDiff = Math.Abs(report.WinRate - 0.45f);
             score -= winRateDiff * 80f;
 
-            // Victory HP (max -20 points)
+
             float hpDiff = Math.Abs(report.AvgHpOnVictory - 0.30f);
             score -= hpDiff * 40f;
 
-            // Card diversity (max -20 points)
+
             if (report.ViableCards < 15)
             {
                 score -= (15 - report.ViableCards) * 2f;
             }
 
-            // Trap cards (max -20 points)
+
             int trapCount = report.GetTrapCards().Count;
             score -= trapCount * 10f;
 

@@ -35,7 +35,6 @@ class ActionResolver:
     def _apply_damage(base_damage: int, source: Combatant, target: Combatant):
         final_damage = float(base_damage)
 
-        # Apply Strength
         for ae in source.active_effects:
             if isinstance(ae.source_data, StatusEffectData) and ae.source_data.effect_type == StatusEffectType.Strength:
                 if ae.source_data.intensity_type == IntensityType.Flat:
@@ -43,7 +42,6 @@ class ActionResolver:
                 else:
                     final_damage *= (1 + ae.source_data.intensity / 100.0)
 
-        # Apply Weakened (source)
         weak_ae = next(
             (ae for ae in source.active_effects
              if isinstance(ae.source_data, StatusEffectData) and ae.source_data.effect_type == StatusEffectType.Weakened),
@@ -54,7 +52,6 @@ class ActionResolver:
             if wd.intensity_type == IntensityType.Percentage:
                 final_damage *= (1 - wd.intensity / 100.0)
 
-        # Apply Vulnerable (target)
         vul_ae = next(
             (ae for ae in target.active_effects
              if isinstance(ae.source_data, StatusEffectData) and ae.source_data.effect_type == StatusEffectType.Vulnerable),
@@ -69,7 +66,6 @@ class ActionResolver:
         if damage_int < 0:
             damage_int = 0
 
-        # Check Pierced
         has_pierced = any(
             isinstance(ae.source_data, StatusEffectData) and ae.source_data.effect_type == StatusEffectType.Pierced
             for ae in target.active_effects
@@ -130,6 +126,9 @@ class ActionResolver:
                 if hero.deck.hand:
                     hero.deck.discard_card_from_hand(hero.deck.hand[0])
             elif effect_data.effect_type == DeckEffectType.FreezeCard:
-                pass  # TODO
+                if hero.deck.hand:
+                    hero.deck.retained_cards.add(id(hero.deck.hand[0]))
             elif effect_data.effect_type == DeckEffectType.DuplicateCard:
-                pass  # TODO
+                if hero.deck.hand:
+                    import copy as _copy_mod
+                    hero.deck.hand.append(_copy_mod.copy(hero.deck.hand[0]))

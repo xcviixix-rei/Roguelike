@@ -9,7 +9,7 @@ class ActiveEffect:
         if source_data.decay == DecayType.AfterXTURNS:
             self.remaining_duration: int = source_data.duration
         else:
-            self.remaining_duration: int = 2_147_483_647  # int max for permanent
+            self.remaining_duration: int = 2_147_483_647
 
     def tick_down(self) -> bool:
         """Returns True if the effect has expired."""

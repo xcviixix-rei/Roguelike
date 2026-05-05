@@ -5,9 +5,8 @@ using System.Linq;
 
 namespace Roguelike.Core
 {
-    /// <summary>
-    /// Represents the player's character, holding all their run-time state
-    /// </summary>
+
+
     public class Hero : Combatant
     {
         public HeroData SourceHeroData => (HeroData)SourceData;
@@ -31,9 +30,9 @@ namespace Roguelike.Core
             Block = 0;
             CurrentMana = MaxMana;
 
-            var philosophicalEffect = ActiveEffects.FirstOrDefault(e => 
+            var philosophicalEffect = ActiveEffects.FirstOrDefault(e =>
                 e.SourceData is StatusEffectData s && s.EffectType == StatusEffectType.Philosophical);
-            
+
             if (philosophicalEffect != null)
             {
                 var philData = (StatusEffectData)philosophicalEffect.SourceData;

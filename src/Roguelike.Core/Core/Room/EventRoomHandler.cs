@@ -6,9 +6,8 @@ namespace Roguelike.Core.Handlers
 {
     public class EventRoomHandler : IRoomHandler
     {
-        /// <summary>
-        /// Selects a random event and transitions the game state to await a player choice.
-        /// </summary>
+
+
         public void Execute(GameRun run, Room room)
         {
             var allEvents = run.EventPool.EventsById.Values.ToList();
@@ -16,17 +15,14 @@ namespace Roguelike.Core.Handlers
             {
                 return;
             }
-            
+
             int index = run.Rng.Next(allEvents.Count);
             var selectedEvent = allEvents[index];
             run.CurrentEvent = selectedEvent;
             run.CurrentState = GameState.InEvent;
         }
 
-        /// <summary>
-        /// A static helper method to resolve the player's choice.
-        /// This will be called by the GameController after the player/AI has made a decision.
-        /// </summary>
+
         public static void ResolveChoice(GameRun run, int choiceIndex)
         {
             if (run.CurrentState != GameState.InEvent || run.CurrentEvent == null) return;
@@ -54,25 +50,25 @@ namespace Roguelike.Core.Handlers
                     run.TheHero.CurrentGold = System.Math.Max(0, run.TheHero.CurrentGold - effect.Value);
                     break;
                 case EventEffectType.LoseHP:
-                    run.TheHero.TakePiercingDamage(effect.Value); 
+                    run.TheHero.TakePiercingDamage(effect.Value);
                     break;
                 case EventEffectType.HealHP:
                     run.TheHero.Heal(effect.Value);
                     break;
                 case EventEffectType.GainCard:
-                    // TODO: Improve selection logic
+
                     var card = run.CardPool.GetCard(effect.Parameter);
                     if (card != null) run.TheHero.Deck.AddCardToMasterDeck(card);
                     break;
                 case EventEffectType.RemoveCard:
-                    // TODO: Improve selection logic
+
                     if (run.TheHero.Deck.MasterDeck.Any())
                     {
                         run.TheHero.Deck.RemoveCardFromMasterDeck(run.TheHero.Deck.MasterDeck[0]);
                     }
                     break;
                 case EventEffectType.GainRelic:
-                    // TODO: Improve selection logic
+
                     var relic = run.RelicPool.GetRelic(effect.Parameter);
                     if (relic != null) run.TheHero.Relics.Add(relic);
                     break;

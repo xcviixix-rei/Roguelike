@@ -8,24 +8,20 @@ using System.Linq;
 
 namespace Roguelike.Core
 {
-    /// <summary>
-    /// Defines the major states of the game loop.
-    /// </summary>
+
+
     public enum GameState
     {
-        PreRun,         // Game hasn't started
-        OnMap,          // Player is on the map, choosing the next room
-        InCombat,       // Player is in an active combat encounter
-        InEvent,        // Player is presented with an event choice
-        InShop,         // Player is in a shop, buying items
-        AwaitingReward, // Combat is over, player is choosing rewards
-        GameOver        // The run has ended
+        PreRun,
+        OnMap,
+        InCombat,
+        InEvent,
+        InShop,
+        AwaitingReward,
+        GameOver
     }
 
-    /// <summary>
-    /// Represents the complete state of a single game playthrough.
-    /// This class is the central hub for all runtime data.
-    /// </summary>
+
     public class GameRun
     {
         public Hero TheHero { get; }
@@ -53,7 +49,7 @@ namespace Roguelike.Core
         public GameRun(int seed, HeroData heroData, CardPool cardPool, RelicPool relicPool, EnemyPool enemyPool, EffectPool effectPool, EventPool eventPool, Dictionary<RoomType, RoomData> roomConfigs, HierarchicalGenome genome = null)
         {
             Rng = new Random(seed);
-            
+
             CardPool = cardPool;
             RelicPool = relicPool;
             EnemyPool = enemyPool;
@@ -71,10 +67,10 @@ namespace Roguelike.Core
             {
                 TheHero.Relics.Add(startingRelic);
             }
-            
+
             if (genome != null)
             {
-                TheMap.GenerateNewMap(seed, genome.RoomTypeWeights, 
+                TheMap.GenerateNewMap(seed, genome.RoomTypeWeights,
                                      genome.MonsterStarRatio, genome.EliteStarRatio);
             }
             else

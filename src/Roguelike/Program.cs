@@ -1,4 +1,4 @@
-﻿using Roguelike.Core.AI;
+using Roguelike.Core.AI;
 using Roguelike.Data;
 using Roguelike.Optimization;
 using Roguelike.Core.Map;
@@ -21,7 +21,7 @@ namespace RoguelikeGASimulator
                 return;
             }
 
-            var (hero, cards, relics, enemies, effects, events, rooms) = 
+            var (hero, cards, relics, enemies, effects, events, rooms) =
                 GameDataLoader.LoadFromJson(jsonPath);
 
             Console.WriteLine("Game data loaded:");
@@ -58,7 +58,7 @@ namespace RoguelikeGASimulator
                 Console.WriteLine("   - ~500 parameters (individual card/enemy values)");
                 Console.WriteLine("   - Single-objective fitness function");
                 Console.WriteLine("   - Detailed per-generation reports\n");
-                
+
                 Console.WriteLine("2. Structure-Aware Search Approach");
                 Console.WriteLine("   - NSGA-II Multi-Objective Optimization");
                 Console.WriteLine("   - ~50 hierarchical parameters");
@@ -85,12 +85,12 @@ namespace RoguelikeGASimulator
         }
 
         static void RunPureOptimization(
-            HeroData hero, 
-            CardPool cards, 
-            RelicPool relics, 
-            EnemyPool enemies, 
-            EffectPool effects, 
-            EventPool events, 
+            HeroData hero,
+            CardPool cards,
+            RelicPool relics,
+            EnemyPool enemies,
+            EffectPool effects,
+            EventPool events,
             Dictionary<RoomType, RoomData> rooms)
         {
             Console.WriteLine("=== PURE OPTIMIZATION APPROACH ===\n");
@@ -133,12 +133,12 @@ namespace RoguelikeGASimulator
         }
 
         static void RunStructureAwareSearch(
-            HeroData hero, 
-            CardPool cards, 
-            RelicPool relics, 
-            EnemyPool enemies, 
-            EffectPool effects, 
-            EventPool events, 
+            HeroData hero,
+            CardPool cards,
+            RelicPool relics,
+            EnemyPool enemies,
+            EffectPool effects,
+            EventPool events,
             Dictionary<RoomType, RoomData> rooms)
         {
             Console.WriteLine("=== STRUCTURE-AWARE SEARCH APPROACH ===\n");
@@ -147,7 +147,7 @@ namespace RoguelikeGASimulator
             var agent = new HeuristicPlayerAI();
             var runner = new HierarchicalSimulationRunner(
                 agent, hero, cards, relics, enemies, effects, events, rooms);
-            
+
             var moEvaluator = new MultiObjectiveEvaluator
             {
                 TargetWinRate = 0.45f,
@@ -178,29 +178,29 @@ namespace RoguelikeGASimulator
         }
 
         static void RunConsoleGame(
-            HeroData hero, 
-            CardPool cards, 
-            RelicPool relics, 
-            EnemyPool enemies, 
-            EffectPool effects, 
-            EventPool events, 
+            HeroData hero,
+            CardPool cards,
+            RelicPool relics,
+            EnemyPool enemies,
+            EffectPool effects,
+            EventPool events,
             Dictionary<RoomType, RoomData> rooms)
         {
             Console.WriteLine("=== PLAY MODE ===\n");
-            
+
             var player = new ConsolePlayerAI();
             var runner = new HierarchicalSimulationRunner(
                 player, hero, cards, relics, enemies, effects, events, rooms);
-            
+
             Console.WriteLine("Game Initialized. Starting Run...");
-            
-            // Run a single simulation with a default genome
-            var genome = new HierarchicalGenome(); 
+
+
+            var genome = new HierarchicalGenome();
             var rng = new Random();
             int seed = rng.Next();
-            
+
             var stats = runner.Run(genome, seed);
-            
+
             Console.WriteLine("\n=== GAME OVER ===");
             Console.WriteLine($"Result: {(stats.IsVictory ? "VICTORY!" : "DEFEAT")}");
             Console.WriteLine($"Floor Reached: {stats.FinalFloorReached}");

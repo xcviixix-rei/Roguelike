@@ -1,0 +1,19 @@
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Tóm tắt}
+\chapter*{TÓM TẮT}
+
+\vspace{0.5cm}
+
+Cân bằng trò chơi là một trong những thách thức quan trọng và tốn nhiều công sức nhất trong lĩnh vực phát triển game, đặc biệt đối với thể loại Roguelike Deckbuilder -- nơi hàng trăm tham số liên kết với nhau như sát thương thẻ bài, chỉ số kẻ thù, hiệu ứng cổ vật và phân bố bản đồ phải cùng tồn tại để tạo ra trải nghiệm người chơi công bằng và hấp dẫn. Phương pháp tinh chỉnh thủ công truyền thống tốn thời gian, dễ sai sót và không có khả năng khám phá không gian tham số rộng lớn một cách có hệ thống.
+
+Luận văn này trình bày một hệ thống tự động cân bằng game hoàn chỉnh cho một prototype Roguelike Deckbuilder được xây dựng bằng C\# (.NET~9). Hệ thống gồm ba tầng tích hợp chặt chẽ. Tầng Game Core hiện thực hóa toàn bộ logic trò chơi bao gồm chiến đấu theo lượt, bản đồ sinh ngẫu nhiên theo thủ tục, hệ thống xây dựng bộ bài với hơn 30 thẻ bài và 20 cổ vật, cùng nhiều loại phòng khác nhau. Một tác nhân heuristic tất định (DHA) được phát triển trước tiên để xác nhận tính khả chơi của game và thiết lập các chỉ số cơ sở trước khi tiến hành huấn luyện tác nhân học tăng cường.
+
+Đóng góp chính của luận văn là giới thiệu bốn tác nhân Học Tăng Cường được huấn luyện bằng thuật toán MaskablePPO, đại diện cho các lối chơi khác nhau: Tấn công, Phòng thủ, Cân bằng và Thích nghi. Mỗi tác nhân được định hình thông qua hàm phần thưởng tùy chỉnh và huấn luyện trong 8 triệu bước trên phần cứng GPU. Cơ chế che mặt nạ hành động không hợp lệ và kỹ thuật ngẫu nhiên hóa miền được áp dụng để nâng cao sự ổn định huấn luyện và khả năng tổng quát hóa của tác nhân. Cả bốn tác nhân đạt tỷ lệ thắng trong khoảng 24 đến 34\%, là tiêu chuẩn thực tế phù hợp cho trò chơi có yếu tố ngẫu nhiên cao.
+
+Tầng Tối ưu hóa triển khai hai phương pháp tiến hóa: Thuật toán Di truyền đơn mục tiêu hoạt động trên khoảng 500 tham số trực tiếp, và thuật toán NSGA-II với bộ gen phân cấp gồm khoảng 50 tham số tối ưu hóa đồng thời ba mục tiêu là Cân bằng, Thu hút và Tính nhất quán. Sau 30 thế hệ với quần thể 100 cá thể, NSGA-II đạt Điểm Cân bằng 0,960, Điểm Thu hút 0,900 và Tính nhất quán hoàn hảo 1,000, đồng thời tăng số thẻ bài có giá trị từ 12 lên 14 trên tổng số 30 thẻ, trong vòng 49 phút~-- nhanh hơn 33\% so với GA đơn mục tiêu.
+
+Nghiên cứu này chứng minh rằng sự kết hợp giữa biểu diễn bộ gen phân cấp, tối ưu hóa đa mục tiêu và các tác nhân học tăng cường được huấn luyện tạo ra một framework cân bằng game tự động mạnh mẽ, có thể mở rộng, vượt trội đáng kể so với cả phương pháp điều chỉnh thủ công lẫn các phương pháp di truyền đơn mục tiêu truyền thống.
+
+\vspace{0.5cm}
+\noindent\textit{\textbf{Từ khóa:}} \textit{Cân bằng trò chơi, Roguelike Deckbuilder, NSGA-II, Học tăng cường.}

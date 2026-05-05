@@ -51,7 +51,6 @@ class GameController:
             self._effect_pool, self._event_pool, self._room_configs
         )
 
-    # ─── MAP ACTIONS ────────────────────────────────────────────────────────
 
     def choose_map_node(self, node_id: int) -> bool:
         if self.current_run.current_state != GameState.OnMap:
@@ -65,7 +64,6 @@ class GameController:
             handler.execute(self.current_run, room)
         return True
 
-    # ─── COMBAT ACTIONS ─────────────────────────────────────────────────────
 
     def play_card(self, hand_index: int, target_enemy_index: int) -> bool:
         run = self.current_run
@@ -106,7 +104,6 @@ class GameController:
         elif run.current_combat.state == CombatState.Defeat:
             run.current_state = GameState.GameOver
 
-    # ─── EVENT & SHOP ACTIONS ───────────────────────────────────────────────
 
     def choose_event_option(self, choice_index: int):
         if self.current_run.current_state != GameState.InEvent:
@@ -122,7 +119,6 @@ class GameController:
     def leave_shop(self):
         ShopRoomHandler.leave_shop(self.current_run)
 
-    # ─── REWARD ACTIONS ─────────────────────────────────────────────────────
 
     def confirm_rewards(self, card_index: int):
         run = self.current_run

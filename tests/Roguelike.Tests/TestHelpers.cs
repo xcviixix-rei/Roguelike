@@ -3,14 +3,12 @@ using System.Collections.Generic;
 
 namespace Roguelike.Tests
 {
-    /// <summary>
-    /// Helper methods and factory functions for creating test data objects.
-    /// Reduces code duplication across test files.
-    /// </summary>
+
+
     public static class TestHelpers
     {
-        // ============= Card Creation Helpers =============
-        
+
+
         public static CardData CreateBasicAttackCard(string id = "test_attack", int damage = 6, int manaCost = 1)
         {
             return new CardData
@@ -55,7 +53,6 @@ namespace Roguelike.Tests
             };
         }
 
-        // ============= Effect Creation Helpers =============
 
         public static StatusEffectData CreateStrengthEffect(int intensity = 2, IntensityType type = IntensityType.Flat, DecayType decay = DecayType.Permanent)
         {
@@ -153,7 +150,6 @@ namespace Roguelike.Tests
             };
         }
 
-        // ============= Combatant Creation Helpers =============
 
         public static HeroData CreateBasicHeroData(string id = "test_hero", int health = 75)
         {
@@ -177,11 +173,7 @@ namespace Roguelike.Tests
             };
         }
 
-        // ============= Effect Lookup Helper =============
 
-        /// <summary>
-        /// Creates a simple effect lookup function for testing ActionResolver
-        /// </summary>
         public static System.Func<string, EffectData> CreateEffectLookup(params EffectData[] effects)
         {
             var dict = new Dictionary<string, EffectData>();

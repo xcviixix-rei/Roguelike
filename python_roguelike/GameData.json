@@ -775,14 +775,14 @@
       "Id": "goblin",
       "Name": "Goblin",
       "StarRating": 1,
-      "StartingHealth": 22,
+      "StartingHealth": 25,
       "IsBoss": false,
       "ActionSet": [
         {
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 3,
+            "Value": 5,
             "Target": "SingleOpponent"
           }
         },
@@ -800,14 +800,14 @@
       "Id": "slime",
       "Name": "Slime",
       "StarRating": 1,
-      "StartingHealth": 15,
+      "StartingHealth": 20,
       "IsBoss": false,
       "ActionSet": [
         {
           "Weight": 2,
           "Action": {
             "Type": "DealDamage",
-            "Value": 4,
+            "Value": 5,
             "Target": "SingleOpponent"
           }
         },
@@ -815,7 +815,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 3,
+            "Value": 4,
             "Target": "Self"
           }
         }
@@ -825,7 +825,7 @@
       "Id": "kobold",
       "Name": "Kobold",
       "StarRating": 1,
-      "StartingHealth": 18,
+      "StartingHealth": 22,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -851,7 +851,7 @@
       "Id": "gremlin",
       "Name": "Gremlin",
       "StarRating": 1,
-      "StartingHealth": 12,
+      "StartingHealth": 16,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -877,14 +877,14 @@
       "Id": "brute",
       "Name": "Brute",
       "StarRating": 2,
-      "StartingHealth": 60,
+      "StartingHealth": 65,
       "IsBoss": false,
       "ActionSet": [
         {
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 10,
+            "Value": 11,
             "Target": "SingleOpponent"
           }
         },
@@ -892,7 +892,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 5,
+            "Value": 6,
             "Target": "Self"
           }
         }
@@ -902,7 +902,7 @@
       "Id": "cultist",
       "Name": "Cultist",
       "StarRating": 2,
-      "StartingHealth": 36,
+      "StartingHealth": 40,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -918,7 +918,7 @@
           "Weight": 2,
           "Action": {
             "Type": "DealDamage",
-            "Value": 7,
+            "Value": 8,
             "Target": "SingleOpponent"
           }
         }
@@ -928,7 +928,7 @@
       "Id": "assassin",
       "Name": "Assassin",
       "StarRating": 2,
-      "StartingHealth": 30,
+      "StartingHealth": 35,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -954,7 +954,7 @@
       "Id": "guardian_orb",
       "Name": "Guardian Orb",
       "StarRating": 2,
-      "StartingHealth": 45,
+      "StartingHealth": 50,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -979,14 +979,14 @@
       "Id": "slaver",
       "Name": "Slaver",
       "StarRating": 3,
-      "StartingHealth": 75,
+      "StartingHealth": 55,
       "IsBoss": false,
       "ActionSet": [
         {
           "Weight": 2,
           "Action": {
             "Type": "DealDamage",
-            "Value": 15,
+            "Value": 10,
             "Target": "SingleOpponent"
           }
         },
@@ -994,7 +994,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 10,
+            "Value": 8,
             "Target": "Self"
           }
         },
@@ -1013,14 +1013,14 @@
       "Id": "ogre",
       "Name": "Ogre",
       "StarRating": 3,
-      "StartingHealth": 100,
+      "StartingHealth": 65,
       "IsBoss": false,
       "ActionSet": [
         {
           "Weight": 2,
           "Action": {
             "Type": "DealDamage",
-            "Value": 18,
+            "Value": 12,
             "Target": "SingleOpponent"
           }
         },
@@ -1028,7 +1028,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 10,
+            "Value": 8,
             "Target": "Self"
           }
         },
@@ -1047,14 +1047,14 @@
       "Id": "sentinel",
       "Name": "Sentinel",
       "StarRating": 3,
-      "StartingHealth": 65,
+      "StartingHealth": 50,
       "IsBoss": false,
       "ActionSet": [
         {
           "Weight": 2,
           "Action": {
             "Type": "DealDamage",
-            "Value": 10,
+            "Value": 9,
             "Target": "SingleOpponent"
           }
         },
@@ -1062,7 +1062,7 @@
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 20,
+            "Value": 12,
             "Target": "SingleOpponent"
           }
         },
@@ -1070,7 +1070,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 8,
+            "Value": 6,
             "Target": "Self"
           }
         }
@@ -1080,7 +1080,7 @@
       "Id": "gremlin_leader",
       "Name": "Gremlin Leader",
       "StarRating": 3,
-      "StartingHealth": 90,
+      "StartingHealth": 60,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -1114,7 +1114,7 @@
       "Id": "book_of_stabbing",
       "Name": "Book of Stabbing",
       "StarRating": 4,
-      "StartingHealth": 120,
+      "StartingHealth": 75,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -1148,7 +1148,7 @@
       "Id": "giant_head",
       "Name": "Giant Head",
       "StarRating": 4,
-      "StartingHealth": 150,
+      "StartingHealth": 85,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -1164,7 +1164,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 10,
+            "Value": 8,
             "Target": "Self"
           }
         },
@@ -1172,7 +1172,7 @@
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 25,
+            "Value": 14,
             "Target": "SingleOpponent"
           }
         }
@@ -1182,14 +1182,14 @@
       "Id": "nemesis",
       "Name": "Nemesis",
       "StarRating": 4,
-      "StartingHealth": 135,
+      "StartingHealth": 85,
       "IsBoss": false,
       "ActionSet": [
         {
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 20,
+            "Value": 12,
             "Target": "SingleOpponent"
           }
         },
@@ -1197,7 +1197,7 @@
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 10,
+            "Value": 8,
             "Target": "SingleOpponent"
           }
         },
@@ -1205,7 +1205,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 15,
+            "Value": 10,
             "Target": "Self"
           }
         }
@@ -1215,7 +1215,7 @@
       "Id": "reptomancer",
       "Name": "Reptomancer",
       "StarRating": 4,
-      "StartingHealth": 105,
+      "StartingHealth": 65,
       "IsBoss": false,
       "ActionSet": [
         {
@@ -1249,14 +1249,14 @@
       "Id": "dragon",
       "Name": "Dragon",
       "StarRating": 5,
-      "StartingHealth": 350,
+      "StartingHealth": 180,
       "IsBoss": true,
       "ActionSet": [
         {
           "Weight": 2,
           "Action": {
             "Type": "DealDamage",
-            "Value": 20,
+            "Value": 13,
             "Target": "SingleOpponent"
           }
         },
@@ -1264,7 +1264,7 @@
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 8,
+            "Value": 7,
             "Target": "SingleOpponent"
           }
         },
@@ -1272,7 +1272,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 10,
+            "Value": 8,
             "Target": "Self"
           }
         },
@@ -1291,7 +1291,7 @@
       "Id": "time_eater",
       "Name": "Time Eater",
       "StarRating": 5,
-      "StartingHealth": 450,
+      "StartingHealth": 200,
       "IsBoss": true,
       "ActionSet": [
         {
@@ -1307,7 +1307,7 @@
           "Weight": 2,
           "Action": {
             "Type": "DealDamage",
-            "Value": 15,
+            "Value": 12,
             "Target": "SingleOpponent"
           }
         },
@@ -1315,7 +1315,7 @@
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 20,
+            "Value": 15,
             "Target": "Self"
           }
         }
@@ -1325,14 +1325,14 @@
       "Id": "bronze_automaton",
       "Name": "Bronze Automaton",
       "StarRating": 5,
-      "StartingHealth": 450,
+      "StartingHealth": 210,
       "IsBoss": true,
       "ActionSet": [
         {
           "Weight": 1,
           "Action": {
             "Type": "GainBlock",
-            "Value": 30,
+            "Value": 20,
             "Target": "Self"
           }
         },
@@ -1340,7 +1340,7 @@
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 10,
+            "Value": 8,
             "Target": "AllOpponents"
           }
         },
@@ -1359,14 +1359,14 @@
       "Id": "lich_king",
       "Name": "Lich King",
       "StarRating": 5,
-      "StartingHealth": 330,
+      "StartingHealth": 175,
       "IsBoss": true,
       "ActionSet": [
         {
           "Weight": 2,
           "Action": {
             "Type": "DealDamage",
-            "Value": 22,
+            "Value": 14,
             "Target": "SingleOpponent"
           }
         },
@@ -1374,7 +1374,7 @@
           "Weight": 1,
           "Action": {
             "Type": "DealDamage",
-            "Value": 10,
+            "Value": 8,
             "Target": "SingleOpponent"
           }
         },
@@ -1464,7 +1464,7 @@
   "Hero": {
     "Id": "player",
     "Name": "The Player",
-    "StartingHealth": 60,
+    "StartingHealth": 80,
     "StartingMana": 3,
     "StartingGold": 100,
     "StartingHandSize": 5,
@@ -1478,7 +1478,8 @@
       "defend",
       "defend",
       "quick_jab",
-      "cycle"
+      "cycle",
+      "shield_bash"
     ],
     "StartingRelicId": "base_relic"
   },

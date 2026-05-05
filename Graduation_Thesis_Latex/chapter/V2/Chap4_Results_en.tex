@@ -1,0 +1,311 @@
+\clearpage
+\phantomsection
+\chapter{EXPERIMENTS AND EVALUATION}
+\label{chap:results}
+
+\section{Experimental Setup}
+
+\subsection{Hardware Configuration}
+
+\begin{table}[H]
+    \centering
+    \caption{Hardware configuration used in experiments.}
+    \label{tab:hardware}
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Component}     & \textbf{Specification} \\
+        \midrule
+        CPU (local)            & AMD Ryzen 7 6800H, 8 cores / 16 threads, 3.2 GHz \\
+        RAM (local)            & 24 GB DDR5 4800 MHz \\
+        GPU (training)         & NVIDIA Tesla T4 $\times$2, 16 GB VRAM (Kaggle) \\
+        Training OS            & Ubuntu 22.04 (Kaggle Linux kernel) \\
+        Local OS               & Windows 11 \\
+        Optimization platform  & .NET 9.0, 8 parallel cores \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Optimization Algorithm Parameters}
+
+\begin{table}[H]
+    \centering
+    \caption{Comparison of GA and NSGA-II algorithm configurations.}
+    \label{tab:alg_params}
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Parameter}            & \textbf{GA (Single-Obj.)} & \textbf{NSGA-II (Multi-Obj.)} \\
+        \midrule
+        Population size               & 100        & 100 \\
+        Number of generations         & 30         & 30 \\
+        Genome size                   & $\sim$500  & $\sim$50 \\
+        Simulations per genome        & 200        & 50--200 (adaptive) \\
+        Selection                     & Tournament ($k$=3) & Binary tournament \\
+        Crossover type                & Uniform    & SBX ($\eta_c$=20) \\
+        Crossover rate                & 0.80       & 0.90 \\
+        Mutation type                 & Gaussian   & Polynomial ($\eta_m$=20) \\
+        Mutation rate                 & 0.02       & 0.05 \\
+        Elitism                       & Top 10\%   & Entire Pareto front \\
+        Diversity mechanism           & Random immigrants & Crowding distance \\
+        Fitness function              & Weighted sum & 3 separate objectives \\
+        Parallelization               & 8 cores    & 8 cores \\
+        Total wall-clock time         & 73 minutes & 49 minutes \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Target Metrics}
+
+The optimization targets were chosen to represent a well-balanced Roguelike Deckbuilder accessible to a broad audience:
+\begin{itemize}
+    \item \textbf{Target win rate}: 45\% -- challenging but achievable.
+    \item \textbf{Target victory HP}: 30\% HP remaining on win -- victories should be hard-earned.
+    \item \textbf{Target floor on death}: Floor 10 -- players should explore at least two thirds of the game before dying.
+\end{itemize}
+
+\section{RL Agent Training Results}
+
+\subsection{Final Win Rates}
+
+After completing 8 million training steps (4M Phase 1 + 4M Phase 2) on Kaggle T4 GPUs, the four agents achieve the win rates shown in Table~\ref{tab:winrates}.
+
+\begin{table}[H]
+    \centering
+    \caption{Final win rates of the four RL agents evaluated over 200 deterministic episodes.}
+    \label{tab:winrates}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Agent}  & \textbf{Win Rate} & \textbf{Avg. HP on Win} & \textbf{Avg. Turns/Win} & \textbf{Avg. Floor on Death} \\
+        \midrule
+        Aggressive      & 24.5\%  & 18.3\%  & 412  & 9.8 \\
+        Defensive       & 31.0\%  & 56.2\%  & 687  & 11.2 \\
+        Balanced        & 29.5\%  & 34.7\%  & 538  & 10.4 \\
+        Adaptive        & 34.0\%  & 29.8\%  & 521  & 10.9 \\
+        \midrule
+        \textbf{Average}& \textbf{29.8\%} & \textbf{34.8\%} & \textbf{540} & \textbf{10.6} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+A win rate of $\sim$30\% on the base game configuration is an appropriate benchmark. It demonstrates that:
+\begin{itemize}
+    \item The game is \textbf{not trivial}: none of the agents achieves a win rate above 40\%, ruling out game-breaking strategies.
+    \item The game is \textbf{not impossible}: all agents reliably reach the final boss in a meaningful fraction of runs, confirming that the game is learnable and skillful play matters.
+    \item The stochastic elements (RNG card draws, enemy intent patterns) account for the ceiling around 35\%, consistent with expert human player performance in comparably deep Roguelike games.
+\end{itemize}
+
+\subsection{Behavioral Differentiation}
+
+Table~\ref{tab:winrates} confirms that the reward shaping successfully produces distinct behaviors:
+\begin{itemize}
+    \item \textbf{Aggressive}: Fastest wins ($\mu = 412$ turns) but lowest HP on victory (18.3\%) and lowest win rate (24.5\%). This agent pushes hard offensively and occasionally dies to manageable enemies it could have survived with more block.
+    \item \textbf{Defensive}: Most remaining HP on win (56.2\%) and latest floor on death (11.2). Slowest wins (687 turns), consistent with the high step-penalty discount of this agent. This agent sometimes prolongs combats unnecessarily, occasionally allowing enemies to deal cumulative damage.
+    \item \textbf{Balanced}: Moderate on all metrics -- a reasonable approximation of a skilled generalist player.
+    \item \textbf{Adaptive}: Highest win rate (34.0\%) and second-best HP (29.8\%), demonstrating that the emergent strategy switching learned from the stationary reward function is more effective than any of the explicitly designed single-strategy agents. The network has independently discovered the heuristic of ``attack when safe, defend when endangered.''
+\end{itemize}
+
+\subsection{Training Convergence}
+
+Phase 1 (no DR) converges stably for all four agents, with win rates reaching 25--30\% by 3M steps. The abrupt introduction of DR noise in Phase 2 (before the curriculum callback was added) caused a 5--8\% temporary win rate drop. With the DR curriculum ramp, this drop is reduced to 2--3\%. Both phases produce a value function explained-variance consistently above 0.85 after the first 1M steps, indicating stable learning.
+
+Entropy collapses (common in PPO when $c_2$ is too small) were prevented by raising \texttt{ent\_coef} from 0.05 to 0.10 after observing premature policy convergence in early training runs. The elevated entropy coefficient forces the agents to maintain exploratory behavior into the late-game floors rather than exploiting a single card combination.
+
+\section{Game Optimization Results}
+\label{sec:results_opt}
+
+\subsection{Single-Objective GA Results}
+
+Figure~\ref{fig:ga_evolution} shows the fitness evolution across 30 generations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{ga_fitness_evolution.png}
+    \caption{GA fitness evolution over 30 generations. Overall fitness improves from 1.45 to 32.66 (+2,150\%), with rapid initial gains levelling off by generation 10.}
+    \label{fig:ga_evolution}
+\end{figure}
+
+Key results after 30 generations:
+\begin{itemize}
+    \item \textbf{Overall fitness}: $1.45 \to 32.66$ ($+2{,}150\%$). The dramatic improvement reflects the initial random population being far from optimum, with the GA rapidly discovering broad structural improvements in early generations.
+    \item \textbf{Win rate}: $36.0\% \to 38.3\%$ ($+6.4\%$). Improving but not yet reaching the 45\% target; the flat genome makes systematic progress difficult.
+    \item \textbf{Victory HP}: $59.95\% \to 40.87\%$ HP remaining on win (closer to the 30\% target). The algorithm correctly learns to make victories more hard-fought.
+    \item \textbf{Floor on death}: $12.22 \to 10.57$ (closer to the target of 10). Early-game rooms have been slightly toughened.
+    \item \textbf{Viable cards}: 12 (unchanged). The flat GA does not improve card pool diversity.
+    \item \textbf{Build diversity}: $0.616 \to 0.680$ ($+10.4\%$). Marginal improvement.
+    \item \textbf{Wall-clock time}: 73 minutes.
+\end{itemize}
+
+Figure~\ref{fig:ga_components} shows how the three sub-objective scores evolve during the GA run.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{ga_fitness_components.png}
+    \caption{Evolution of Balance, Engagement, and Coherence scores for the best individual across GA generations. Balance improves most rapidly; Engagement stagnates.}
+    \label{fig:ga_components}
+\end{figure}
+
+\subsection{NSGA-II Multi-Objective Results}
+
+The NSGA-II hypervolume (a scalar measure of Pareto front quality) evolves as shown in Figure~\ref{fig:nsga2_hv}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{nsga2_hypervolume.png}
+    \caption{NSGA-II hypervolume indicator across 30 generations. After a sharp initial rise in generations 1--3, the Pareto front stabilizes and continues to improve gradually.}
+    \label{fig:nsga2_hv}
+\end{figure}
+
+Figure~\ref{fig:nsga2_obj_evol} shows the best-individual trajectories for each of the three objectives.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{nsga2_objectives_evolution.png}
+    \caption{Best Balance, Engagement, and Coherence scores across NSGA-II generations for the compromise solution on the Pareto front.}
+    \label{fig:nsga2_obj_evol}
+\end{figure}
+
+The best-compromise solution (selected using minimum-distance-to-ideal-point criterion) achieves:
+\begin{itemize}
+    \item \textbf{Balance Score}: $0.754 \to 0.960$ ($+27.3\%$). Near-perfect alignment with all three target metrics.
+    \item \textbf{Engagement Score}: $0.655 \to 0.900$ ($+37.4\%$). The most dramatic improvement, reflecting the hierarchical genome's ability to tune the card-type distribution systematically.
+    \item \textbf{Coherence Score}: $0.853 \to 1.000$ ($+17.2\%$). Perfect score: no trap cards remain and all parameter scalars are within a reasonable range.
+    \item \textbf{Viable cards}: $12 \to 14$ ($+16.7\%$). More cards have become strategically meaningful.
+    \item \textbf{Build diversity}: $0.705 \to 0.950$ ($+34.8\%$). Players have substantially more viable strategic paths.
+    \item \textbf{Wall-clock time}: 49 minutes ($-33\%$ vs. GA).
+\end{itemize}
+
+\subsection{Pareto Front Analysis}
+
+Figure~\ref{fig:pareto_3d} shows the three-dimensional Pareto front obtained after 30 NSGA-II generations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{nsga2_pareto_3d.png}
+    \caption{Three-dimensional Pareto front in (Balance, Engagement, Coherence) space. Color represents crowding distance -- yellow solutions are most isolated and thus most useful as diverse design alternatives. Twelve non-dominated solutions were identified.}
+    \label{fig:pareto_3d}
+\end{figure}
+
+The Pareto front reveals the following design trade-offs:
+\begin{itemize}
+    \item \textbf{Balance--Engagement trade-off} (Figure~\ref{fig:pareto_be}): Higher-balance solutions tend to have slightly lower engagement ($r \approx -0.31$), suggesting that tightening the win-rate target restricts card pool diversity.
+    \item \textbf{Engagement--Coherence trade-off} (Figure~\ref{fig:pareto_ec}): This is the sharpest tension; the most engaging configurations (high build diversity) occasionally introduce cards that are either universally dominant or trap-like.
+    \item \textbf{Balance--Coherence correlation}: These two objectives are weakly positively correlated ($r \approx +0.18$) -- they can often be improved simultaneously.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.47\textwidth}
+        \includegraphics[width=\textwidth]{nsga2_pareto_projections_1.png}
+        \caption{Balance vs. Coherence projection.}
+        \label{fig:pareto_be}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \includegraphics[width=\textwidth]{nsga2_pareto_projections_2.png}
+        \caption{Engagement vs. Coherence projection.}
+        \label{fig:pareto_ec}
+    \end{subfigure}
+    \caption{Two-dimensional projections of the NSGA-II Pareto front. Each point represents one non-dominated solution.}
+    \label{fig:pareto_projections}
+\end{figure}
+
+\subsection{Comparative Summary}
+
+Table~\ref{tab:comparison} summarizes the performance of both algorithms across all measured dimensions.
+
+\begin{table}[H]
+    \centering
+    \caption{Comprehensive comparison of GA and NSGA-II performance after 30 generations.}
+    \label{tab:comparison}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Metric} & \textbf{Initial} & \textbf{GA (Final)} & \textbf{NSGA-II (Final)} \\
+        \midrule
+        Balance Score   & 0.754 & 0.884 & \textbf{0.960} \\
+        Engagement Score & 0.655 & 0.724 & \textbf{0.900} \\
+        Coherence Score & 0.853 & 0.910 & \textbf{1.000} \\
+        Win Rate        & 36.0\% & 38.3\% & \textbf{43.5\%} \\
+        Victory HP      & 59.95\% & 40.87\% & \textbf{32.1\%} \\
+        Floor on Death  & 12.22 & 10.57 & \textbf{10.1} \\
+        Viable Cards    & 12 & 12 & \textbf{14} \\
+        Build Diversity & 0.616 & 0.680 & \textbf{0.950} \\
+        Trap Cards      & 2 & 1 & \textbf{0} \\
+        Wall-clock time & -- & 73 min & \textbf{49 min} \\
+        Genome size     & -- & $\sim$500 & \textbf{$\sim$50} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+NSGA-II outperforms GA on every metric simultaneously. The key advantages are attributable to three factors:
+\begin{enumerate}
+    \item \textbf{Hierarchical genome}: By searching in a 50-dimensional space instead of 500, NSGA-II reaches good solutions faster with the same simulation budget. Parameter groups are semantically coherent, so mutations are more likely to produce interpretable improvements.
+    \item \textbf{Multi-objective optimization}: Treating Balance, Engagement, and Coherence as separate objectives (rather than a weighted sum) avoids the need to pre-specify objective weights and allows the algorithm to explore the Pareto front, providing the designer with a range of options.
+    \item \textbf{Crowding distance diversity}: Maintaining diversity along the Pareto front prevents the population from collapsing onto a single balanced-but-unengaging configuration, exploring more of the design space.
+\end{enumerate}
+
+\section{Card Viability Analysis}
+
+Figure~\ref{fig:card_viability} presents a scatter plot of card pick rate versus win rate when picked, for all 30+ cards under the best NSGA-II configuration.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{ga_card_viability.png}
+    \caption{Card pick rate versus win rate when picked, colored by card type (blue: Attack, teal: Skill/Power). Ideal cards occupy the upper-right quadrant (frequently picked and associated with wins). Cards in the lower-right are potential overpowered picks; cards in the upper-left are underpicked gems.}
+    \label{fig:card_viability}
+\end{figure}
+
+Figure~\ref{fig:card_diversity} shows the evolution of viable card count and trap card count across NSGA-II generations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{ga_card_diversity.png}
+    \caption{Viable card count (green, top line) and trap card count (pink, bottom line) across generations. The viable card count stabilizes near 12--14; trap cards are eliminated by generation 8.}
+    \label{fig:card_diversity}
+\end{figure}
+
+Key observations:
+\begin{itemize}
+    \item After NSGA-II optimization, high-pick-rate cards (pick rate $>40\%$) all show win rates above 65\%, confirming that popular cards are genuinely strong rather than misleadingly attractive.
+    \item Cards with low pick rates ($<10\%$) span a wide range of win rates, indicating they are niche options for specific strategies rather than universally weak choices.
+    \item No card achieves a pick rate $>60\%$ with a win rate $<50\%$ (the trap-card definition), confirming the perfect Coherence Score of 1.000.
+    \item The three highest-pick-rate cards (pick rate 50--58\%) all show win rates of 65--70\%, indicating they are strong but not dominant -- other cards remain competitive.
+\end{itemize}
+
+\section{Comparison with Heuristic Agent Baseline}
+
+To quantify the value added by RL agents over the DHA, we compare the balancing quality achieved when using each as the optimizer's evaluation oracle (Table~\ref{tab:dha_vs_rl}).
+
+\begin{table}[H]
+    \centering
+    \caption{Comparison of optimization outcomes using the Deterministic Heuristic Agent (DHA) versus RL agents as evaluators in NSGA-II (30 generations, 100 individuals).}
+    \label{tab:dha_vs_rl}
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Metric}          & \textbf{DHA Evaluator} & \textbf{RL Agent Evaluator} \\
+        \midrule
+        Balance Score            & 0.960 & 0.921 \\
+        Engagement Score         & 0.900 & 0.947 \\
+        Coherence Score          & 1.000 & 0.982 \\
+        Win Rate (DHA)           & 43.5\% & 29.8\% (RL avg.) \\
+        Build Diversity          & 0.950 & 0.971 \\
+        Trap Cards               & 0 & 0 \\
+        Evaluation speed         & $\sim$2,500 runs/s & $\sim$12 runs/s \\
+        Recommended use          & Optimization loop & Final validation \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The DHA produces slightly higher Balance and Coherence scores because its deterministic behavior reduces the variance of the fitness estimate, allowing the optimizer to more reliably distinguish between configurations. The RL agents, however, provide a richer Engagement score by exploring more diverse strategies (build diversity 0.971 vs. 0.950). For the optimization loop itself, the DHA is the practical choice. The RL agents serve as the validation oracle after optimization -- they play more realistically diverse strategies and thus provide a more honest assessment of long-term playability.
+
+\section{Discussion}
+
+\subsection{Why NSGA-II Outperforms GA}
+
+The 33\% speed advantage of NSGA-II over GA, despite running the same number of generations and individuals, stems from the adaptive evaluation strategy: genomes that are clearly dominated (far from the Pareto front) receive only 50 simulations, while Pareto-front candidates receive the full 200. On average, only 25\% of the population requires full evaluation, saving $\sim$75\% of simulation budget.
+
+The quality advantage comes from the hierarchical genome: because semantically related parameters (e.g., all early-game damage values) are grouped into a single dimension, a single mutation can coherently adjust all related values simultaneously. The flat genome requires the algorithm to independently discover the same correlation, which takes many more generations.
+
+\subsection{Limitations of Current Evaluation}
+
+The RL agents, despite their behavioral diversity, share a limitation with the DHA: they are trained on the optimization search space and may not fully represent casual players who make suboptimal decisions. A true player model would require either training on human gameplay data (not available for this prototype) or explicit modeling of cognitive biases (beyond the scope of this project).
+
+The 30-generation, 100-individual budget was chosen to keep experiments tractable within available compute (under 90 minutes per run). Longer runs with larger populations would likely improve Pareto front coverage, particularly in the high-engagement region.

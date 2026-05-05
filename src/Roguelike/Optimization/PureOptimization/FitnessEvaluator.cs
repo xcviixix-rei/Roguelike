@@ -6,44 +6,42 @@ namespace Roguelike.Optimization
 {
     public class FitnessEvaluator
     {
-        // Target metrics
+
         public float TargetWinRate = 0.75f;
         public float MinAcceptableWinRate = 0.6f;
         public float MaxAcceptableWinRate = 0.9f;
-        
+
         public float TargetVictoryHpPercent = 0.10f;
         public float MinAcceptableVictoryHp = 0.05f;
         public float MaxAcceptableVictoryHp = 0.20f;
-        
+
         public float TargetAvgFloorOnDeath = 13.0f;
-        
-        // Weights
+
+
         public float WinRateWeight = 35.0f;
         public float VictoryHpWeight = 20.0f;
         public float GameLengthWeight = 10.0f;
         public float CardViabilityWeight = 20.0f;
         public float ElitePerformanceWeight = 10.0f;
         public float ConsistencyWeight = 5.0f;
-        
-        // Starting cards
+
+
         private static readonly HashSet<string> StartingCards = new HashSet<string>
         {
             "strike", "defend", "quick_jab", "cycle"
         };
 
-        /// <summary>
-        /// Calculates fitness and returns detailed breakdown for logging
-        /// </summary>
+
         public FitnessBreakdown CalculateFitnessWithBreakdown(List<SimulationStats> results)
         {
             var breakdown = new FitnessBreakdown();
-            
+
             if (results == null || results.Count == 0)
             {
                 return breakdown;
             }
 
-            // Calculate individual scores
+
             breakdown.WinRateScore = CalculateWinRateScore(results);
             breakdown.VictoryHpScore = CalculateVictoryHpScore(results);
             breakdown.GameLengthScore = CalculateGameLengthScore(results);
@@ -51,12 +49,12 @@ namespace Roguelike.Optimization
             breakdown.EliteScore = CalculateElitePerformanceScore(results);
             breakdown.ConsistencyScore = CalculateConsistencyScore(results);
 
-            // Calculate raw metrics for reporting
+
             breakdown.WinRate = (float)results.Count(r => r.IsVictory) / results.Count;
-            
+
             var winningRuns = results.Where(r => r.IsVictory).ToList();
-            breakdown.AvgVictoryHp = winningRuns.Any() 
-                ? winningRuns.Average(r => r.FinalHPPercent) 
+            breakdown.AvgVictoryHp = winningRuns.Any()
+                ? winningRuns.Average(r => r.FinalHPPercent)
                 : 0f;
 
             var losingRuns = results.Where(r => !r.IsVictory).ToList();
@@ -64,16 +62,16 @@ namespace Roguelike.Optimization
                 ? (float)losingRuns.Average(r => r.FinalFloorReached)
                 : 15f;
 
-            // Count viable cards and trap cards
+
             var pickCounts = new Dictionary<string, int>();
             var pickWins = new Dictionary<string, int>();
-            
+
             foreach (var run in results)
             {
                 var pickedCards = new HashSet<string>(
                     run.MasterDeckIds.Where(id => !StartingCards.Contains(id))
                 );
-                
+
                 foreach (var cardId in pickedCards)
                 {
                     if (!pickCounts.ContainsKey(cardId))
@@ -87,7 +85,7 @@ namespace Roguelike.Optimization
             }
 
             breakdown.ViableCards = pickCounts.Count(kv => (float)kv.Value / results.Count >= 0.10f);
-            
+
             breakdown.TrapCards = 0;
             foreach (var cardId in pickCounts.Keys)
             {
@@ -99,7 +97,7 @@ namespace Roguelike.Optimization
                 }
             }
 
-            // Elite metrics
+
             var runsWithElites = results.Where(r => r.ElitesEncountered > 0).ToList();
             if (runsWithElites.Any())
             {
@@ -108,7 +106,7 @@ namespace Roguelike.Optimization
                 breakdown.EliteKillRate = avgElitesDefeated / avgElitesEncountered;
             }
 
-            // Check hard constraints
+
             if (breakdown.WinRate < MinAcceptableWinRate)
             {
                 breakdown.TotalFitness = breakdown.WinRateScore * WinRateWeight * 0.1f;
@@ -123,7 +121,7 @@ namespace Roguelike.Optimization
                 return breakdown;
             }
 
-            // Normal calculation
+
             breakdown.TotalFitness =
                 (breakdown.WinRateScore * WinRateWeight) +
                 (breakdown.VictoryHpScore * VictoryHpWeight) +
@@ -135,9 +133,7 @@ namespace Roguelike.Optimization
             return breakdown;
         }
 
-        /// <summary>
-        /// Standard fitness calculation (backwards compatible)
-        /// </summary>
+
         public float CalculateFitness(List<SimulationStats> results)
         {
             return CalculateFitnessWithBreakdown(results).TotalFitness;
@@ -147,10 +143,10 @@ namespace Roguelike.Optimization
         {
             float actualWinRate = (float)results.Count(r => r.IsVictory) / results.Count;
             float diff = actualWinRate - TargetWinRate;
-            
+
             float k = 20.0f;
             float score = 1.0f / (1.0f + k * diff * diff);
-            
+
             return score;
         }
 
@@ -160,32 +156,32 @@ namespace Roguelike.Optimization
             if (!winningRuns.Any()) return 0f;
 
             float avgVictoryHp = winningRuns.Average(r => r.FinalHPPercent);
-            
+
             float diff = Math.Abs(avgVictoryHp - TargetVictoryHpPercent);
-            
-            // score = e^(-k * diff^2)
+
+
             float k = 8.0f;
             float score = (float)Math.Exp(-k * diff * diff);
-            
+
             return score;
         }
 
         private float CalculateGameLengthScore(List<SimulationStats> results)
         {
             var losingRuns = results.Where(r => !r.IsVictory).ToList();
-            if (!losingRuns.Any()) 
+            if (!losingRuns.Any())
             {
                 var avgFloor = results.Average(r => r.FinalFloorReached);
                 return avgFloor >= 13 ? 1.0f : 0.8f;
             }
 
             float avgDeathFloor = (float)losingRuns.Average(r => r.FinalFloorReached);
-            
+
             float diff = Math.Abs(avgDeathFloor - TargetAvgFloorOnDeath);
-            
+
             float k = 0.15f;
             float score = (float)Math.Exp(-k * diff * diff);
-            
+
             return score;
         }
 
@@ -193,13 +189,13 @@ namespace Roguelike.Optimization
         {
             var pickCounts = new Dictionary<string, int>();
             var pickWins = new Dictionary<string, int>();
-            
+
             foreach (var run in results)
             {
                 var pickedCards = new HashSet<string>(
                     run.MasterDeckIds.Where(id => !StartingCards.Contains(id))
                 );
-                
+
                 foreach (var cardId in pickedCards)
                 {
                     if (!pickCounts.ContainsKey(cardId))
@@ -219,9 +215,9 @@ namespace Roguelike.Optimization
             float noTrapsScore = CalculateNoTrapsScore(pickCounts, pickWins, results.Count);
             float varietyScore = CalculateBuildVariety(results);
 
-            return (diversityScore * 0.3f) + 
-                   (balanceScore * 0.3f) + 
-                   (noTrapsScore * 0.2f) + 
+            return (diversityScore * 0.3f) +
+                   (balanceScore * 0.3f) +
+                   (noTrapsScore * 0.2f) +
                    (varietyScore * 0.2f);
         }
 
@@ -248,7 +244,7 @@ namespace Roguelike.Optimization
         private float CalculateWinRateBalance(Dictionary<string, int> pickCounts, Dictionary<string, int> pickWins)
         {
             var winRates = new List<float>();
-            
+
             foreach (var cardId in pickCounts.Keys)
             {
                 if (pickCounts[cardId] < 5) continue;
@@ -267,10 +263,10 @@ namespace Roguelike.Optimization
 
         private float CalculateNoTrapsScore(Dictionary<string, int> pickCounts, Dictionary<string, int> pickWins, int totalRuns)
         {
-            // Minimum picks required for statistical validity
-            // With fewer picks, win rate estimates are too noisy
+
+
             const int MIN_PICKS_FOR_TRAP_DETECTION = 10;
-            
+
             float totalPenalty = 0f;
             int cardsEvaluated = 0;
 
@@ -278,15 +274,15 @@ namespace Roguelike.Optimization
             {
                 int picks = pickCounts[cardId];
                 int wins = pickWins[cardId];
-                
+
                 float pickRate = (float)picks / totalRuns;
                 float winRate = (float)wins / picks;
-                
-                // Skip cards with low pick rate OR insufficient sample size
+
+
                 if (pickRate < 0.10f || picks < MIN_PICKS_FOR_TRAP_DETECTION) continue;
-                
+
                 cardsEvaluated++;
-                
+
                 if (winRate < 0.30f)
                 {
                     float trapSeverity = (0.30f - winRate) / 0.30f;
@@ -322,11 +318,11 @@ namespace Roguelike.Optimization
 
                     int intersection = deck1.Intersect(deck2).Count();
                     int union = deck1.Union(deck2).Count();
-                    
+
                     float jaccard = (float)intersection / union;
                     totalSimilarity += jaccard;
                     comparisons++;
-                    
+
                     if (comparisons > 100) break;
                 }
                 if (comparisons > 100) break;
@@ -348,7 +344,7 @@ namespace Roguelike.Optimization
             float eliteKillRate = avgElitesDefeated / avgElitesEncountered;
 
             var eliteWins = runsWithElites.Where(r => r.ElitesDefeated > 0).ToList();
-            float avgDamagePerElite = eliteWins.Any() 
+            float avgDamagePerElite = eliteWins.Any()
                 ? (float)eliteWins.Average(r => r.TotalDamageTakenAtElites / Math.Max(1, r.ElitesDefeated))
                 : 50f;
 
@@ -370,12 +366,12 @@ namespace Roguelike.Optimization
 
             int chunkSize = Math.Max(20, results.Count / 5);
             var winRateChunks = new List<float>();
-            
+
             for (int i = 0; i < results.Count; i += chunkSize)
             {
                 var chunk = results.Skip(i).Take(chunkSize).ToList();
                 if (chunk.Count < 10) continue;
-                
+
                 float chunkWinRate = (float)chunk.Count(r => r.IsVictory) / chunk.Count;
                 winRateChunks.Add(chunkWinRate);
             }
@@ -386,7 +382,7 @@ namespace Roguelike.Optimization
                 float avgChunkWinRate = winRateChunks.Average();
                 float wrVariance = winRateChunks.Select(wr => (wr - avgChunkWinRate) * (wr - avgChunkWinRate)).Average();
                 float wrStdDev = (float)Math.Sqrt(wrVariance);
-                
+
                 winRateConsistency = Math.Max(0f, 1.0f - (wrStdDev / 0.2f));
             }
 

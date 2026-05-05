@@ -54,6 +54,7 @@ class GameRun:
         self.card_reward_choices: List[CardData] = []
         self.relic_reward_choice: Optional[RelicData] = None
         self.current_shop: Optional[ShopInventory] = None
+        self.rest_heal_pct: float = 0.40
 
     @property
     def current_floor(self) -> int:

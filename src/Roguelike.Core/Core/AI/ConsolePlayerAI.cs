@@ -7,9 +7,8 @@ using System.Linq;
 
 namespace Roguelike.Core.AI
 {
-    /// <summary>
-    /// A player agent that interacts via the console for human play.
-    /// </summary>
+
+
     public class ConsolePlayerAI : IPlayerAgent
     {
         public int ChooseMapNode(GameRun run)
@@ -23,12 +22,12 @@ namespace Roguelike.Core.AI
                 return possibleRooms[0].Id;
             }
 
-            // Display full map
+
             DisplayMap(run);
-            
+
             Console.WriteLine($"\n=== FLOOR {run.CurrentFloor} ===");
             DisplayHeroStatus(run.TheHero);
-            
+
             Console.WriteLine("\nChoose next room:");
             for (int i = 0; i < possibleRooms.Count; i++)
             {
@@ -50,7 +49,7 @@ namespace Roguelike.Core.AI
             Console.Clear();
             Console.WriteLine($"=== COMBAT - Turn {combat.TurnNumber} ===");
             DisplayHeroStatus(hero);
-            
+
             Console.WriteLine("\nENEMIES:");
             for (int i = 0; i < enemies.Count; i++)
             {
@@ -95,20 +94,20 @@ namespace Roguelike.Core.AI
 
                 if (int.TryParse(input, out int cardIndex) && cardIndex >= 1 && cardIndex <= hero.Deck.Hand.Count)
                 {
-                    cardIndex--; // 0-indexed
+                    cardIndex--;
                     var card = hero.Deck.Hand[cardIndex];
-                    
+
                     if (card.ManaCost > hero.CurrentMana)
                     {
                         Console.WriteLine("Not enough mana!");
                         continue;
                     }
 
-                    // Check for target
+
                     if (card.Actions.Any(a => a.Target == TargetType.SingleOpponent))
                     {
                         var aliveEnemies = enemies.Select((e, idx) => new { Enemy = e, Index = idx }).Where(x => x.Enemy.CurrentHealth > 0).ToList();
-                        if (aliveEnemies.Count == 0) return CombatDecision.EndTurn(); // Should not happen if combat is ongoing
+                        if (aliveEnemies.Count == 0) return CombatDecision.EndTurn();
 
                         if (aliveEnemies.Count == 1)
                         {
@@ -131,10 +130,10 @@ namespace Roguelike.Core.AI
                     }
                     else
                     {
-                        return CombatDecision.Play(cardIndex, 0); // No target needed
+                        return CombatDecision.Play(cardIndex, 0);
                     }
                 }
-                
+
                 Console.WriteLine("Invalid input. Try again (1-N or E):");
             }
         }
@@ -148,29 +147,29 @@ namespace Roguelike.Core.AI
             var options = new List<string>();
             var actions = new List<Func<ShopDecision>>();
 
-            // Relics
+
             for (int i = 0; i < shop.RelicsForSale.Count; i++)
             {
                 var item = shop.RelicsForSale[i];
                 string status = item.IsSold ? "[SOLD]" : $"{item.Price}g";
                 options.Add($"Buy Relic: {item.Item.Name} ({item.Item.Description}) - {status}");
-                
-                int index = i; // Closure capture
+
+                int index = i;
                 actions.Add(() => ShopDecision.BuyRelic(index));
             }
 
-            // Cards
+
             for (int i = 0; i < shop.CardsForSale.Count; i++)
             {
                 var item = shop.CardsForSale[i];
                 string status = item.IsSold ? "[SOLD]" : $"{item.Price}g";
                 options.Add($"Buy Card: {item.Item.Name} ({item.Item.Description}) - {status}");
 
-                int index = i; // Closure capture
+                int index = i;
                 actions.Add(() => ShopDecision.BuyCard(index));
             }
 
-            // Leave
+
             options.Add("Leave Shop");
             actions.Add(() => ShopDecision.Leave());
 
@@ -188,7 +187,7 @@ namespace Roguelike.Core.AI
             var evt = run.CurrentEvent;
             Console.WriteLine($"\n=== EVENT: {evt.EventTitle} ===");
             Console.WriteLine(evt.EventDescription);
-            
+
             for (int i = 0; i < evt.Choices.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {evt.Choices[i].ChoiceText}");
@@ -214,7 +213,6 @@ namespace Roguelike.Core.AI
             return input - 1;
         }
 
-        // --- Helpers ---
 
         private int GetUserChoice(int min, int max)
         {
@@ -241,7 +239,6 @@ namespace Roguelike.Core.AI
             }
         }
 
-        // --- Display Helpers ---
 
         private void DisplayMap(GameRun run)
         {
@@ -253,11 +250,11 @@ namespace Roguelike.Core.AI
             Console.WriteLine("Legend: [M]onster [E]lite [S]hop [R]est [?]Event [B]oss | @ = Current | * = Available");
             Console.WriteLine();
 
-            // Display from top to bottom (floor 15 to 0)
+
             for (int y = MapGraph.Height; y >= 0; y--)
             {
                 Console.Write($"F{y,2}: ");
-                
+
                 for (int x = 0; x < MapGraph.Width; x++)
                 {
                     var room = map.GetRoomAt(x, y);
@@ -294,7 +291,7 @@ namespace Roguelike.Core.AI
 
         private void DisplayHeroStatus(Hero hero)
         {
-            // Get Strength value if present
+
             int strengthValue = 0;
             var strengthEffect = hero.ActiveEffects.FirstOrDefault(e => e.SourceData is StatusEffectData s && s.EffectType == StatusEffectType.Strength);
             if (strengthEffect != null)
@@ -312,9 +309,9 @@ namespace Roguelike.Core.AI
         private string FormatStatusEffects(List<ActiveEffect> effects)
         {
             if (effects == null || !effects.Any()) return "";
-            
+
             var result = new List<string>();
-            
+
             foreach (var e in effects)
             {
                 string effectName;
@@ -329,7 +326,7 @@ namespace Roguelike.Core.AI
                     result.Add(e.SourceData.Name);
                 }
             }
-            
+
             return string.Join(", ", result);
         }
     }

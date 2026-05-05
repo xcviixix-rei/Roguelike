@@ -1,0 +1,234 @@
+\clearpage
+\phantomsection
+\chapter*{APPENDIX}
+\addcontentsline{toc}{chapter}{APPENDIX}
+
+\section{Game Data JSON Structure}
+\label{app:json}
+
+This appendix presents the JSON schema used to define all game entities in \texttt{GameData.json}. The schema is loaded at startup by \texttt{GameDataLoader.cs} using \texttt{System.Text.Json}.
+
+\subsection{Card Data}
+
+\begin{lstlisting}[language=C, caption={CardData JSON schema and example entries}]
+{
+  "Cards": [
+    {
+      "Id": "flame_strike",
+      "Name": "Flame Strike",
+      "Type": "Attack",          // Attack | Skill | Power | Curse
+      "StarRating": 3,           // 1-5 scale
+      "ManaCost": 2,
+      "Exhaust": false,          // true = removed from deck after play
+      "Actions": [
+        { "Type": "DealDamage",   "TargetType": "AllEnemies", "Value": 8 },
+        { "Type": "ApplyEffect",  "EffectId": "burn",          "Value": 3 }
+      ]
+    },
+    {
+      "Id": "iron_shield",
+      "Name": "Iron Shield",
+      "Type": "Skill",
+      "StarRating": 2,
+      "ManaCost": 1,
+      "Exhaust": false,
+      "Actions": [
+        { "Type": "GainBlock", "TargetType": "Self", "Value": 10 }
+      ]
+    },
+    {
+      "Id": "battle_hymn",
+      "Name": "Battle Hymn",
+      "Type": "Power",
+      "StarRating": 4,
+      "ManaCost": 2,
+      "Exhaust": false,
+      "Actions": [
+        { "Type": "ApplyPermanentEffect",
+          "EffectId": "start_of_turn_strength",
+          "Value": 2 }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsection{Enemy Data}
+
+\begin{lstlisting}[language=C, caption={EnemyData JSON schema and example entries}]
+{
+  "Enemies": [
+    {
+      "Id": "goblin_scout",
+      "Name": "Goblin Scout",
+      "Tier": "Normal",          // Normal | Elite | Boss
+      "MinFloor": 1,
+      "MaxFloor": 5,
+      "BaseMaxHealth": 28,
+      "ActionPattern": "Alternating",  // Fixed | Alternating | Random
+      "Actions": [
+        { "Type": "DealDamage",  "Value": 6, "Phase": "Odd"  },
+        { "Type": "GainBlock",   "Value": 5, "Phase": "Even" }
+      ]
+    },
+    {
+      "Id": "stone_golem",
+      "Name": "Stone Golem",
+      "Tier": "Elite",
+      "MinFloor": 6,
+      "MaxFloor": 10,
+      "BaseMaxHealth": 90,
+      "ActionPattern": "Fixed",
+      "Actions": [
+        { "Type": "DealDamage",  "Value": 14, "Phase": "All" },
+        { "Type": "ApplyEffect", "EffectId": "vulnerability",
+          "Value": 2, "Phase": "Every3" }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsection{Relic Data}
+
+\begin{lstlisting}[language=C, caption={RelicData JSON schema and example entry}]
+{
+  "Relics": [
+    {
+      "Id": "burning_ember",
+      "Name": "Burning Ember",
+      "Tier": "Rare",             // Common | Uncommon | Rare | Boss
+      "TriggerType": "StartOfCombat",
+      "Actions": [
+        { "Type": "ApplyEffect", "TargetType": "AllEnemies",
+          "EffectId": "burn", "Value": 3 }
+      ]
+    },
+    {
+      "Id": "iron_will",
+      "Name": "Iron Will",
+      "Tier": "Common",
+      "TriggerType": "OnReceiveDamage",
+      "Condition": "HeroHpBelow30Pct",
+      "Actions": [
+        { "Type": "GainBlock", "TargetType": "Self", "Value": 6 }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\section{Algorithm Pseudocode}
+\label{app:pseudocode}
+
+\subsection{Single-Objective Genetic Algorithm}
+
+\begin{algorithm}[H]
+\caption{Single-Objective Genetic Algorithm for Game Balancing}
+\label{alg:ga}
+\begin{algorithmic}[1]
+\Require Population size $N=100$, generations $G=30$, simulations per genome $S=200$
+\State $P \gets \text{InitPopulation}(N)$  \Comment{Each genome $\sim$ $\mathcal{U}(0.7, 1.3)^{500}$}
+\For{$g = 1$ \textbf{to} $G$}
+    \State $\text{EvaluateParallel}(P, S)$  \Comment{8-core parallel eval.}
+    \State $P_{\text{elite}} \gets \text{TopK}(P, 0.1N)$  \Comment{Elitism: keep top 10\%}
+    \State $P_{\text{offspring}} \gets \emptyset$
+    \While{$|P_{\text{offspring}}| < N - |P_{\text{elite}}|$}
+        \State $p_1 \gets \text{TournamentSelect}(P, k=3)$
+        \State $p_2 \gets \text{TournamentSelect}(P, k=3)$
+        \State $c \gets \text{UniformCrossover}(p_1, p_2, p_c=0.80)$
+        \State $c \gets \text{GaussianMutate}(c, p_m=0.02, \sigma=0.10)$
+        \State $P_{\text{offspring}} \gets P_{\text{offspring}} \cup \{c\}$
+    \EndWhile
+    \State $P \gets P_{\text{elite}} \cup P_{\text{offspring}}$
+\EndFor
+\State \Return $\text{BestFitness}(P)$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{NSGA-II Multi-Objective Optimizer}
+
+\begin{algorithm}[H]
+\caption{NSGA-II for Multi-Objective Game Balancing}
+\label{alg:nsga2}
+\begin{algorithmic}[1]
+\Require Population size $N=100$, generations $G=30$
+\State $P \gets \text{InitPopulation}(N)$
+\State $\text{AdaptiveEvaluate}(P)$  \Comment{50 sims initial; 200 for Pareto members}
+\For{$g = 1$ \textbf{to} $G$}
+    \State $\mathcal{F} \gets \text{FastNonDominatedSort}(P)$  \Comment{Returns fronts $F_1, F_2, \ldots$}
+    \State $\text{ComputeCrowdingDistance}(\mathcal{F})$
+    \State $Q \gets \text{BinaryTournamentSelect}(P)$  \Comment{By rank then crowding dist.}
+    \State $Q \gets \text{SBXCrossover}(Q, \eta_c=20, p_c=0.90)$
+    \State $Q \gets \text{PolynomialMutate}(Q, \eta_m=20, p_m=0.05)$
+    \State $R \gets P \cup Q$  \Comment{Combined parent + offspring}
+    \State $\text{AdaptiveEvaluate}(R \setminus P)$
+    \State $\mathcal{F}' \gets \text{FastNonDominatedSort}(R)$
+    \State $\text{ComputeCrowdingDistance}(\mathcal{F}')$
+    \State $P \gets \text{SelectBestN}(R, N)$  \Comment{By rank, then crowding distance}
+\EndFor
+\State \Return $F_1$ (first Pareto front of final $P$)
+\end{algorithmic}
+\end{algorithm}
+
+\section{Reward Function Summary}
+\label{app:rewards}
+
+Table~\ref{tab:rewards_summary} summarizes the reward functions of all four RL agents. The deck quality reward (Section~3.5.3) is shared by all agents.
+
+\begin{table}[H]
+    \centering
+    \caption{Complete reward function summary for all four RL agents.}
+    \label{tab:rewards_summary}
+    \small
+    \begin{tabular}{p{2.2cm}p{4.5cm}p{4.5cm}}
+        \toprule
+        \textbf{Agent} & \textbf{Step Reward} & \textbf{Terminal Reward} \\
+        \midrule
+        \textbf{Aggressive}
+        & $-0.10$ per turn elapsed (incentivizes fast play); \newline $+0.30 \cdot \text{damage\_dealt} / \text{enemy\_max\_hp}$
+        & $+100$ on win; $-20$ on death \\
+        \midrule
+        \textbf{Defensive}
+        & $+0.15$ per point of block gained (relative to max HP); \newline No per-turn penalty
+        & $+100 \cdot \min(1, \text{hp}/\text{max\_hp})$ on win; $-30$ on death \\
+        \midrule
+        \textbf{Balanced}
+        & $+0.05$ per attack; $+0.05$ per block; \newline $+\text{floor} \cdot 2$ on room completion
+        & $+80 \cdot (1 + \text{hp}/\text{max\_hp})$ on win; $-25$ on death \\
+        \midrule
+        \textbf{Adaptive}
+        & Stationary: $+0.20$ per attack, $+0.15$ per block (no HP-ratio weighting); \newline HP ratio added to obs[0]
+        & $+100$ on win; $-25 - 50 \cdot (1 - \text{hp}/\text{max\_hp})^2$ on death \\
+        \midrule
+        \multicolumn{3}{l}{\textit{Shared across all agents:}} \\
+        \multicolumn{3}{l}{Deck quality: $+8$ (4--5$\star$ card selected), $+3$ (3$\star$ card), $0$ (1--2$\star$ card)} \\
+        \multicolumn{3}{l}{HP brake (all agents): $-3 \times$ reward when HP $< 25\%$ of max HP} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Observation Space Index Table}
+\label{app:obs}
+
+\begin{table}[H]
+    \centering
+    \caption{148-dimensional observation vector layout. All values are normalized to $[0, 1]$.}
+    \label{tab:obs_space}
+    \begin{tabular}{clll}
+        \toprule
+        \textbf{Index} & \textbf{Feature} & \textbf{Normalization} & \textbf{Notes} \\
+        \midrule
+        0     & Hero HP ratio         & $\div$ max HP          & 1.0 = full HP \\
+        1     & Hero block ratio      & $\div$ max HP          & Can exceed 1.0 \\
+        2     & Mana ratio            & $\div$ max mana        & \\
+        3     & Gold ratio            & $\div 200$             & 200 = max expected \\
+        4--10 & Active effect intensities & $\div 10$         & 7 effects \\
+        11--80 & Hand cards (10 slots $\times$ 7 features) & Various & Type, cost, value, flags \\
+        81--130 & Enemy state (5 slots $\times$ 10 features) & Various & HP, block, intent, effects \\
+        131--145 & Relic active flags (15 relics) & Binary & 1 = owned \\
+        146   & Current floor ratio   & $\div 15$              & \\
+        147   & Phase indicator       & $\{0, 1\}$             & 0=combat, 1=navigation \\
+        \bottomrule
+    \end{tabular}
+\end{table}

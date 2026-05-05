@@ -5,11 +5,8 @@ using System.Collections.Generic;
 
 namespace Roguelike.Core
 {
-    /// <summary>
-    /// The master controller for the game.
-    /// It coordinates the GameRun, RoomHandlers, and CombatManager.
-    /// External systems (GA, Unity UI) calls methods on this class to interact with the game.
-    /// </summary>
+
+
     public class GameController
     {
         public GameRun CurrentRun { get; private set; }
@@ -33,18 +30,16 @@ namespace Roguelike.Core
 
             _handlers = new Dictionary<RoomType, IRoomHandler>
             {
-                { RoomType.Monster, new CombatRoomHandler() }, // Difficulty of 1, 2
-                { RoomType.Elite, new CombatRoomHandler() }, // Difficulty of 3, 4
-                { RoomType.Boss, new BossRoomHandler() }, // Difficulty of 5
+                { RoomType.Monster, new CombatRoomHandler() },
+                { RoomType.Elite, new CombatRoomHandler() },
+                { RoomType.Boss, new BossRoomHandler() },
                 { RoomType.Event, new EventRoomHandler() },
                 { RoomType.Shop, new ShopRoomHandler() },
                 { RoomType.Rest, new RestRoomHandler() },
             };
         }
 
-        /// <summary>
-        /// Starts a completely new game run with the specified seed and hero.
-        /// </summary>
+
         public void StartNewRun(int seed, HeroData heroData)
         {
             CurrentRun = new GameRun(seed, heroData, _cardPool, _relicPool, _enemyPool, _effectPool, _eventPool, _roomConfigs);
@@ -52,9 +47,7 @@ namespace Roguelike.Core
 
 #region MAP ACTIONS
 
-        /// <summary>
-        /// Attempts to move the player to a connected room on the map.
-        /// </summary>
+
         public bool ChooseMapNode(int nodeId)
         {
             if (CurrentRun.CurrentState != GameState.OnMap) return false;
@@ -68,7 +61,7 @@ namespace Roguelike.Core
             if (_handlers.TryGetValue(room.Type, out var handler))
             {
                 handler.Execute(CurrentRun, room);
-                
+
                 if (room.Type == RoomType.Rest)
                 {
                 }
@@ -85,9 +78,9 @@ namespace Roguelike.Core
 
             var hero = CurrentRun.TheHero;
             if (handIndex < 0 || handIndex >= hero.Deck.Hand.Count) return false;
-            
+
             var card = hero.Deck.Hand[handIndex];
-            
+
             Enemy target = null;
             if (CurrentRun.CurrentCombat.Enemies.Count > targetEnemyIndex && targetEnemyIndex >= 0)
             {
@@ -155,10 +148,7 @@ namespace Roguelike.Core
 
 #region REWARD ACTIONS
 
-        /// <summary>
-        /// Picks a card reward and proceeds from the Reward screen.
-        /// </summary>
-        /// <param name="cardIndex">Index of the card choice, or -1 to skip card.</param>
+
         public void ConfirmRewards(int cardIndex)
         {
             if (CurrentRun.CurrentState != GameState.AwaitingReward) return;

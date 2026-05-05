@@ -14,7 +14,6 @@ from ...data.enums import (
 
 class HeuristicPlayerAI(IPlayerAgent):
 
-    # ─── MAP PATHING ─────────────────────────────────────────────────────────
 
     def choose_map_node(self, run) -> int:
         possible = run.the_map.get_possible_next_nodes()
@@ -65,7 +64,6 @@ class HeuristicPlayerAI(IPlayerAgent):
 
         return 0.0
 
-    # ─── COMBAT TACTICS ──────────────────────────────────────────────────────
 
     def get_combat_decision(self, run) -> CombatDecision:
         hero = run.the_hero
@@ -86,18 +84,15 @@ class HeuristicPlayerAI(IPlayerAgent):
         total_incoming = self._calculate_incoming_damage(run, enemies)
         needed_block = max(0, total_incoming - hero.block)
 
-        # 1st PRIORITY: SURVIVAL
         if needed_block > 0:
             defensive = self._find_best_defensive_move(run, hero, enemies, needed_block)
             if defensive is not None:
                 return defensive
 
-        # 2nd PRIORITY: LETHAL
         lethal = self._find_lethal_move(run, hero, enemies)
         if lethal is not None:
             return lethal
 
-        # FALLBACK: BEST GENERAL MOVE
         final = self._get_best_general_move(run, hero, enemies)
 
         if final.type == CombatActionType.PlayCard:
@@ -319,7 +314,6 @@ class HeuristicPlayerAI(IPlayerAgent):
     def _calculate_incoming_damage(self, run, enemies: List[Enemy]) -> int:
         return int(sum(math.floor(self._predict_enemy_damage(run, e, run.the_hero)) for e in enemies))
 
-    # ─── SHOPPING ────────────────────────────────────────────────────────────
 
     def get_shop_decision(self, run) -> ShopDecision:
         shop = run.current_shop
@@ -340,7 +334,6 @@ class HeuristicPlayerAI(IPlayerAgent):
 
         return ShopDecision.leave()
 
-    # ─── EVENTS & REWARDS ────────────────────────────────────────────────────
 
     def choose_event_option(self, run) -> int:
         choices = run.current_event.choices

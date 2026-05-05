@@ -13,7 +13,7 @@ namespace Roguelike.Optimization
 {
     public class FitnessBreakdown
     {
-        // Fitness Components
+
         public float WinRateScore { get; set; }
         public float VictoryHpScore { get; set; }
         public float GameLengthScore { get; set; }
@@ -22,7 +22,7 @@ namespace Roguelike.Optimization
         public float ConsistencyScore { get; set; }
         public float TotalFitness { get; set; }
 
-        // Raw Metrics
+
         public float WinRate { get; set; }
         public float AvgVictoryHp { get; set; }
         public float AvgFloorOnDeath { get; set; }
@@ -31,35 +31,35 @@ namespace Roguelike.Optimization
         public float EliteKillRate { get; set; }
         public bool IsCriticalFailure { get; set; }
 
-        // Room Distribution Metrics
+
         public Dictionary<RoomType, float> RoomWeights { get; set; } = new Dictionary<RoomType, float>();
         public float MonsterStarRatio { get; set; }
         public float EliteStarRatio { get; set; }
-        
-        // Derived Room Metrics
+
+
         public float TotalWeight { get; set; }
-        public float CombatRoomPercentage { get; set; }  // (Monster + Elite) / Total
-        public float RecoveryRoomPercentage { get; set; } // (Rest + Shop) / Total
-        public float EventRoomPercentage { get; set; }   // Event / Total
+        public float CombatRoomPercentage { get; set; }
+        public float RecoveryRoomPercentage { get; set; }
+        public float EventRoomPercentage { get; set; }
         public float AvgCombatDifficulty { get; set; }
     }
-    
+
     public class GeneticAlgorithm
     {
-        // GA Parameters
+
         public int PopulationSize = 100;
         public int Generations = 50;
         public int RunsPerGenome = 200;
         public float MutationRate = 0.05f;
         public float ElitismRate = 0.10f;
 
-        // Dependencies
+
         private readonly BalanceSimulationRunner _runner;
         private readonly FitnessEvaluator _evaluator;
         private readonly Random _rng;
         private readonly object _rngLock = new object();
 
-        // Base data pools
+
         private readonly CardPool _baseCards;
         private readonly EnemyPool _baseEnemies;
         private readonly EffectPool _baseEffects;
@@ -78,8 +78,8 @@ namespace Roguelike.Optimization
         {
             Stopwatch totalTime = Stopwatch.StartNew();
             List<BalanceGenome> population = InitializePopulation();
-            
-            // Create logs directory
+
+
             string logDir = Path.Combine(Directory.GetCurrentDirectory(), "GA_Logs");
             Directory.CreateDirectory(logDir);
             string logFile = Path.Combine(logDir, $"GA_Run_{DateTime.Now:yyyyMMdd_HHmmss}.log");
@@ -111,23 +111,23 @@ namespace Roguelike.Optimization
                     int genomesEvaluated = 0;
                     Console.WriteLine($"Evaluating {PopulationSize} genomes ({RunsPerGenome} runs each)...");
 
-                    // Evaluate with breakdowns
+
                     var evaluations = population.AsParallel()
                                               .Select(genome =>
                                               {
                                                   var results = EvaluateGenomeWithResults(genome);
                                                   var breakdown = _evaluator.CalculateFitnessWithBreakdown(results);
-                                                  
+
                                                   Interlocked.Increment(ref genomesEvaluated);
                                                   Console.Write($"\rProgress: {genomesEvaluated}/{PopulationSize} genomes evaluated...");
-                                                  
+
                                                   return new { Genome = genome, Breakdown = breakdown, Results = results };
                                               })
                                               .ToList();
-                    
+
                     Console.WriteLine("\nEvaluation complete");
 
-                    // Sort by fitness
+
                     var rankedPopulation = evaluations
                         .OrderByDescending(x => x.Breakdown.TotalFitness)
                         .ToList();
@@ -136,21 +136,21 @@ namespace Roguelike.Optimization
 
                     genTime.Stop();
 
-                    // Log and display results
+
                     LogGenerationResults(gen, best, log, genTime.Elapsed, rankedPopulation.Cast<dynamic>().ToList());
                     PrintConsoleSummary(gen, best);
 
-                    // Save best genome report
+
                     SaveBestGenomeReport(best.Genome, best.Results, best.Breakdown, gen);
 
-                    // Create next generation
+
                     population = CreateNextGeneration(rankedPopulation.Select(x => x.Genome).ToList());
-                    
-                    log.Flush(); // Ensure log is written after each generation
+
+                    log.Flush();
                 }
 
                 totalTime.Stop();
-                
+
                 log.WriteLine($"\n\n{'=',60}");
                 log.WriteLine("GA RUN COMPLETE");
                 log.WriteLine($"{'=',60}");
@@ -189,25 +189,25 @@ namespace Roguelike.Optimization
             b.RoomWeights = new Dictionary<RoomType, float>(genome.RoomTypeWeights);
             b.MonsterStarRatio = genome.MonsterStarRatio;
             b.EliteStarRatio = genome.EliteStarRatio;
-            
+
             b.TotalWeight = 0f;
             foreach (var weight in genome.RoomTypeWeights.Values)
             {
                 b.TotalWeight += weight;
             }
-            
+
             float monsterWeight = genome.RoomTypeWeights[RoomType.Monster];
             float eliteWeight = genome.RoomTypeWeights[RoomType.Elite];
             float eventWeight = genome.RoomTypeWeights[RoomType.Event];
             float shopWeight = genome.RoomTypeWeights[RoomType.Shop];
             float restWeight = genome.RoomTypeWeights[RoomType.Rest];
-            
+
             b.CombatRoomPercentage = (monsterWeight + eliteWeight) / b.TotalWeight;
             b.RecoveryRoomPercentage = (restWeight + shopWeight) / b.TotalWeight;
             b.EventRoomPercentage = eventWeight / b.TotalWeight;
-            
-            float monsterAvgStar = 1.0f + genome.MonsterStarRatio; // 1.0 to 2.0
-            float eliteAvgStar = 3.0f + genome.EliteStarRatio;     // 3.0 to 4.0
+
+            float monsterAvgStar = 1.0f + genome.MonsterStarRatio;
+            float eliteAvgStar = 3.0f + genome.EliteStarRatio;
             b.AvgCombatDifficulty = (monsterWeight * monsterAvgStar + eliteWeight * eliteAvgStar) / (monsterWeight + eliteWeight);
 
             log.WriteLine($"Time: {elapsed.TotalSeconds:F2}s");
@@ -253,28 +253,28 @@ namespace Roguelike.Optimization
             if (b.IsCriticalFailure)
             {
                 log.WriteLine("⚠ ⚠ ⚠  CRITICAL FAILURE ⚠ ⚠ ⚠ ");
-                if (b.WinRate < _evaluator.MinAcceptableWinRate) 
+                if (b.WinRate < _evaluator.MinAcceptableWinRate)
                     log.WriteLine($"  - Win rate too low ({b.WinRate:P1} < {_evaluator.MinAcceptableWinRate:P1})");
-                if (b.WinRate > _evaluator.MaxAcceptableWinRate) 
+                if (b.WinRate > _evaluator.MaxAcceptableWinRate)
                     log.WriteLine($"  - Win rate too high ({b.WinRate:P1} > {_evaluator.MaxAcceptableWinRate:P1})");
                 log.WriteLine();
             }
             else
             {
                 var issues = new List<string>();
-                
+
                 if (b.WinRate < 0.40f) issues.Add($"Win rate low ({b.WinRate:P1})");
                 if (b.WinRate > 0.50f) issues.Add($"Win rate high ({b.WinRate:P1})");
                 if (b.AvgVictoryHp < 0.25f) issues.Add($"Victory HP low ({b.AvgVictoryHp:P1})");
                 if (b.AvgVictoryHp > 0.40f) issues.Add($"Victory HP high ({b.AvgVictoryHp:P1})");
                 if (b.ViableCards < 12) issues.Add($"Limited diversity ({b.ViableCards} viable)");
                 if (b.TrapCards > 0) issues.Add($"{b.TrapCards} trap card(s)");
-                
+
                 if (b.CombatRoomPercentage < 0.40f) issues.Add($"Low combat density ({b.CombatRoomPercentage:P0})");
                 if (b.CombatRoomPercentage > 0.70f) issues.Add($"High combat density ({b.CombatRoomPercentage:P0})");
                 if (b.RecoveryRoomPercentage < 0.15f) issues.Add($"Limited recovery ({b.RecoveryRoomPercentage:P0})");
                 if (b.RecoveryRoomPercentage > 0.35f) issues.Add($"Excessive recovery ({b.RecoveryRoomPercentage:P0})");
-                
+
                 if (issues.Any())
                 {
                     log.WriteLine("⚠  BALANCE ISSUES:");
@@ -298,7 +298,7 @@ namespace Roguelike.Optimization
                 if (card.IsTrapCard) flag = " [TRAP]";
                 else if (card.IsMustPick) flag = " [MUST]";
                 else if (card.IsBalanced) flag = " [BAL]";
-                
+
                 log.WriteLine($"  {card.CardId,-20} Pick: {card.PickRate,5:P1}  Win: {card.WinRateWhenPicked,5:P1}{flag}");
             }
             log.WriteLine();
@@ -322,14 +322,14 @@ namespace Roguelike.Optimization
             Console.WriteLine($"{"─",60}");
             Console.WriteLine($"Total Fitness: {b.TotalFitness:F2}");
             Console.WriteLine();
-            
+
             PrintMetric("Win Rate", b.WinRate, _evaluator.TargetWinRate, 0.40f, 0.50f);
             PrintMetric("Victory HP", b.AvgVictoryHp, _evaluator.TargetVictoryHpPercent, 0.25f, 0.40f);
             PrintMetric("Floor on Death", b.AvgFloorOnDeath, _evaluator.TargetAvgFloorOnDeath, 8f, 12f);
-            
+
             Console.WriteLine($"Viable Cards:  {b.ViableCards}");
             Console.WriteLine($"Trap Cards:    {b.TrapCards}");
-            
+
             Console.WriteLine();
             Console.WriteLine("Room Distribution:");
             Console.WriteLine($"  Combat:   {b.CombatRoomPercentage:P0}  (Difficulty: {b.AvgCombatDifficulty:F2}★)");
@@ -383,7 +383,7 @@ namespace Roguelike.Optimization
             Console.ForegroundColor = color;
             Console.Write(status);
             Console.ResetColor();
-            
+
             if (name == "Floor on Death")
             {
                 Console.WriteLine($" {name,-15} {actual,6:F1}  (Target: {target:F1})");
@@ -410,7 +410,7 @@ namespace Roguelike.Optimization
         {
             var nextGeneration = new List<BalanceGenome>();
 
-            // Elitism
+
             int eliteCount = (int)(PopulationSize * ElitismRate);
             nextGeneration.AddRange(rankedGenomes.Take(eliteCount).Select(g => g.Clone()));
 
@@ -430,10 +430,10 @@ namespace Roguelike.Optimization
         private BalanceGenome TournamentSelect(List<BalanceGenome> rankedPopulation)
         {
             int tournamentSize = Math.Min(5, rankedPopulation.Count);
-            
+
             var tournament = new List<BalanceGenome>();
             var selectedIndices = new HashSet<int>();
-            
+
             lock (_rngLock)
             {
                 while (tournament.Count < tournamentSize)
@@ -445,14 +445,14 @@ namespace Roguelike.Optimization
                     }
                 }
             }
-            
+
             return tournament.OrderBy(genome => rankedPopulation.IndexOf(genome)).First();
         }
 
         private BalanceGenome Crossover(BalanceGenome parent1, BalanceGenome parent2)
         {
             var child = new BalanceGenome();
-            
+
             lock(_rngLock)
             {
                 child.GoldDropMultiplier = (_rng.NextDouble() < 0.5) ? parent1.GoldDropMultiplier : parent2.GoldDropMultiplier;
@@ -467,8 +467,8 @@ namespace Roguelike.Optimization
 
                 foreach (var roomType in parent1.RoomTypeWeights.Keys)
                 {
-                    child.RoomTypeWeights[roomType] = (_rng.NextDouble() < 0.5) 
-                        ? parent1.RoomTypeWeights[roomType] 
+                    child.RoomTypeWeights[roomType] = (_rng.NextDouble() < 0.5)
+                        ? parent1.RoomTypeWeights[roomType]
                         : parent2.RoomTypeWeights[roomType];
                 }
                 child.MonsterStarRatio = (_rng.NextDouble() < 0.5) ? parent1.MonsterStarRatio : parent2.MonsterStarRatio;
@@ -480,7 +480,7 @@ namespace Roguelike.Optimization
                 {
                     child.CardCostModifiers[key] = (_rng.NextDouble() < 0.5) ? parent1.CardCostModifiers[key] : parent2.CardCostModifiers[key];
                 }
-                
+
                 foreach (var key in parent1.CardActionScalars.Keys)
                 {
                     var p1_actions = parent1.CardActionScalars[key];
@@ -492,12 +492,12 @@ namespace Roguelike.Optimization
                     }
                     child.CardActionScalars[key] = child_actions;
                 }
-                
+
                 foreach (var key in parent1.EnemyHealthScalars.Keys)
                 {
                     child.EnemyHealthScalars[key] = (_rng.NextDouble() < 0.5) ? parent1.EnemyHealthScalars[key] : parent2.EnemyHealthScalars[key];
                 }
-                
+
                 foreach (var key in parent1.EnemyActionWeightScalars.Keys)
                 {
                     var p1_weights = parent1.EnemyActionWeightScalars[key];
@@ -509,7 +509,7 @@ namespace Roguelike.Optimization
                     }
                     child.EnemyActionWeightScalars[key] = child_weights;
                 }
-                
+
                 foreach (var key in parent1.EnemyActionValueScalars.Keys)
                 {
                     var p1_values = parent1.EnemyActionValueScalars[key];
@@ -521,7 +521,7 @@ namespace Roguelike.Optimization
                     }
                     child.EnemyActionValueScalars[key] = child_values;
                 }
-                
+
                 foreach (var key in parent1.EffectValueScalars.Keys)
                 {
                     child.EffectValueScalars[key] = (_rng.NextDouble() < 0.5) ? parent1.EffectValueScalars[key] : parent2.EffectValueScalars[key];
@@ -545,7 +545,7 @@ namespace Roguelike.Optimization
                     genome.ShopPriceScalars[i] = Math.Clamp(genome.ShopPriceScalars[i], 0.5f, 2.0f);
                 }
 
-                // Hero
+
                 if (_rng.NextDouble() < MutationRate)
                     genome.HeroHealthScalar += (float)(_rng.NextDouble() * 0.2 - 0.1);
                 genome.HeroHealthScalar = Math.Clamp(genome.HeroHealthScalar, 0.6f, 1.4f);
@@ -558,12 +558,12 @@ namespace Roguelike.Optimization
                 {
                     if (_rng.NextDouble() < MutationRate)
                     {
-                        genome.RoomTypeWeights[roomType] += (float)(_rng.NextDouble() * 10 - 5); // ±5 weight
-                        genome.RoomTypeWeights[roomType] = Math.Max(5f, genome.RoomTypeWeights[roomType]); // Min 5
+                        genome.RoomTypeWeights[roomType] += (float)(_rng.NextDouble() * 10 - 5);
+                        genome.RoomTypeWeights[roomType] = Math.Max(5f, genome.RoomTypeWeights[roomType]);
                     }
                 }
 
-                // Rest healing
+
                 if (_rng.NextDouble() < MutationRate)
                     genome.RestHealingScalar += (float)(_rng.NextDouble() * 0.3 - 0.15);
                 genome.RestHealingScalar = Math.Clamp(genome.RestHealingScalar, 0.5f, 1.5f);
@@ -572,7 +572,7 @@ namespace Roguelike.Optimization
                     genome.HeroManaOffset += _rng.Next(3) - 1;
                 genome.HeroManaOffset = Math.Clamp(genome.HeroManaOffset, -1, 1);
 
-                // Cards
+
                 foreach (var key in genome.CardCostModifiers.Keys.ToList())
                 {
                     if (_rng.NextDouble() < MutationRate)
@@ -583,7 +583,7 @@ namespace Roguelike.Optimization
                         genome.CardCostModifiers[key] = Math.Clamp(genome.CardCostModifiers[key], minCostMod, 1);
                     }
                 }
-                
+
                 foreach (var key in genome.CardActionScalars.Keys.ToList())
                 {
                     for(int i=0; i<genome.CardActionScalars[key].Count; i++)
@@ -594,14 +594,14 @@ namespace Roguelike.Optimization
                     }
                 }
 
-                // Enemies
+
                 foreach (var key in genome.EnemyHealthScalars.Keys.ToList())
                 {
                     if (_rng.NextDouble() < MutationRate)
                         genome.EnemyHealthScalars[key] += (float)(_rng.NextDouble() * 0.4 - 0.2);
                     genome.EnemyHealthScalars[key] = Math.Clamp(genome.EnemyHealthScalars[key], 0.4f, 1.8f);
                 }
-                
+
                 foreach (var key in genome.EnemyActionWeightScalars.Keys.ToList())
                 {
                     for(int i=0; i<genome.EnemyActionWeightScalars[key].Count; i++)
@@ -611,7 +611,7 @@ namespace Roguelike.Optimization
                         genome.EnemyActionWeightScalars[key][i] = Math.Max(0.1f, genome.EnemyActionWeightScalars[key][i]);
                     }
                 }
-                
+
                 foreach (var key in genome.EnemyActionValueScalars.Keys.ToList())
                 {
                     for(int i=0; i<genome.EnemyActionValueScalars[key].Count; i++)
@@ -621,7 +621,7 @@ namespace Roguelike.Optimization
                         genome.EnemyActionValueScalars[key][i] = Math.Clamp(genome.EnemyActionValueScalars[key][i], 0.5f, 1.8f);
                     }
                 }
-                
+
                 foreach (var key in genome.EffectValueScalars.Keys.ToList())
                 {
                     if (_rng.NextDouble() < MutationRate)
@@ -636,23 +636,23 @@ namespace Roguelike.Optimization
             breakdown.RoomWeights = new Dictionary<RoomType, float>(genome.RoomTypeWeights);
             breakdown.MonsterStarRatio = genome.MonsterStarRatio;
             breakdown.EliteStarRatio = genome.EliteStarRatio;
-            
+
             breakdown.TotalWeight = 0f;
             foreach (var weight in genome.RoomTypeWeights.Values)
             {
                 breakdown.TotalWeight += weight;
             }
-            
+
             float monsterWeight = genome.RoomTypeWeights[RoomType.Monster];
             float eliteWeight = genome.RoomTypeWeights[RoomType.Elite];
             float eventWeight = genome.RoomTypeWeights[RoomType.Event];
             float shopWeight = genome.RoomTypeWeights[RoomType.Shop];
             float restWeight = genome.RoomTypeWeights[RoomType.Rest];
-            
+
             breakdown.CombatRoomPercentage = (monsterWeight + eliteWeight) / breakdown.TotalWeight;
             breakdown.RecoveryRoomPercentage = (restWeight + shopWeight) / breakdown.TotalWeight;
             breakdown.EventRoomPercentage = eventWeight / breakdown.TotalWeight;
-            
+
             float monsterAvgStar = 1.0f + genome.MonsterStarRatio;
             float eliteAvgStar = 3.0f + genome.EliteStarRatio;
             breakdown.AvgCombatDifficulty = (monsterWeight * monsterAvgStar + eliteWeight * eliteAvgStar) / (monsterWeight + eliteWeight);
@@ -669,60 +669,60 @@ namespace Roguelike.Optimization
             }
 
             var report = ReportGenerator.Generate(reportResults, breakdown.TotalFitness);
-            
+
             var output = new
             {
                 Generation = generation,
                 Fitness = breakdown.TotalFitness,
                 FitnessComponents = new
                 {
-                    WinRate = new 
-                    { 
-                        Score = breakdown.WinRateScore * _evaluator.WinRateWeight, 
+                    WinRate = new
+                    {
+                        Score = breakdown.WinRateScore * _evaluator.WinRateWeight,
                         MaxScore = _evaluator.WinRateWeight,
                         Percentage = breakdown.WinRateScore,
                         Actual = breakdown.WinRate,
                         Target = _evaluator.TargetWinRate
                     },
-                    VictoryHP = new 
-                    { 
-                        Score = breakdown.VictoryHpScore * _evaluator.VictoryHpWeight, 
+                    VictoryHP = new
+                    {
+                        Score = breakdown.VictoryHpScore * _evaluator.VictoryHpWeight,
                         MaxScore = _evaluator.VictoryHpWeight,
                         Percentage = breakdown.VictoryHpScore,
                         Actual = breakdown.AvgVictoryHp,
                         Target = _evaluator.TargetVictoryHpPercent
                     },
-                    GameLength = new 
-                    { 
-                        Score = breakdown.GameLengthScore * _evaluator.GameLengthWeight, 
+                    GameLength = new
+                    {
+                        Score = breakdown.GameLengthScore * _evaluator.GameLengthWeight,
                         MaxScore = _evaluator.GameLengthWeight,
                         Percentage = breakdown.GameLengthScore,
                         Actual = breakdown.AvgFloorOnDeath,
                         Target = _evaluator.TargetAvgFloorOnDeath
                     },
-                    CardViability = new 
-                    { 
-                        Score = breakdown.CardViabilityScore * _evaluator.CardViabilityWeight, 
+                    CardViability = new
+                    {
+                        Score = breakdown.CardViabilityScore * _evaluator.CardViabilityWeight,
                         MaxScore = _evaluator.CardViabilityWeight,
                         Percentage = breakdown.CardViabilityScore,
                         ViableCards = breakdown.ViableCards,
                         TrapCards = breakdown.TrapCards
                     },
-                    ElitePerformance = new 
-                    { 
-                        Score = breakdown.EliteScore * _evaluator.ElitePerformanceWeight, 
+                    ElitePerformance = new
+                    {
+                        Score = breakdown.EliteScore * _evaluator.ElitePerformanceWeight,
                         MaxScore = _evaluator.ElitePerformanceWeight,
                         Percentage = breakdown.EliteScore,
                         KillRate = breakdown.EliteKillRate
                     },
-                    Consistency = new 
-                    { 
-                        Score = breakdown.ConsistencyScore * _evaluator.ConsistencyWeight, 
+                    Consistency = new
+                    {
+                        Score = breakdown.ConsistencyScore * _evaluator.ConsistencyWeight,
                         MaxScore = _evaluator.ConsistencyWeight,
                         Percentage = breakdown.ConsistencyScore
                     }
                 },
-                
+
                 RoomDistribution = new
                 {
                     Weights = new
@@ -760,10 +760,10 @@ namespace Roguelike.Optimization
             };
 
             string json = JsonConvert.SerializeObject(output, Formatting.Indented);
-            
+
             string path = Path.Combine(Directory.GetCurrentDirectory(), "GA_Results");
             Directory.CreateDirectory(path);
-            
+
             File.WriteAllText(Path.Combine(path, $"Generation_{generation:D3}_Report.json"), json);
         }
     }

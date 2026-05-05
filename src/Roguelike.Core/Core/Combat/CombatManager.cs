@@ -24,7 +24,7 @@ namespace Roguelike.Core
 
         private readonly Random rng;
         private readonly Func<string, EffectData> getEffectById;
-        
+
         private int cardsPlayedThisTurn;
         private int attacksPlayedThisTurn;
 
@@ -45,10 +45,10 @@ namespace Roguelike.Core
         {
             TheHero.ResetForNewCombat();
             TheHero.Deck.StartCombat();
-            
+
             BeginPlayerTurn();
-            
-            // Apply relics AFTER starting turn, so Block isn't wiped by StartTurn()
+
+
             ApplyRelicEffects(TheHero, ApplyType.StartOfCombat);
         }
 
@@ -58,7 +58,7 @@ namespace Roguelike.Core
 
             if (isFirstAttack)
             {
-                // Logic hook for "first attack of turn" checks (future expansion)
+
             }
 
             int effectiveManaCost = card.ManaCost;
@@ -95,7 +95,7 @@ namespace Roguelike.Core
         public void EndPlayerTurn()
         {
             if (State != CombatState.Ongoing_PlayerTurn) return;
-            
+
             TheHero.Deck.DiscardHand();
             TheHero.TickDownEffects();
 
@@ -106,7 +106,7 @@ namespace Roguelike.Core
         {
             TurnNumber++;
             State = CombatState.Ongoing_PlayerTurn;
-            
+
             if (TurnNumber > 100)
             {
                 State = CombatState.Defeat;
@@ -161,7 +161,7 @@ namespace Roguelike.Core
                 BeginPlayerTurn();
             }
         }
-        
+
         private void CheckCombatStatus()
         {
             if (State == CombatState.Victory || State == CombatState.Defeat) return;
@@ -184,7 +184,7 @@ namespace Roguelike.Core
             {
                 case TargetType.Self:
                     return new[] { source };
-                
+
                 case TargetType.SingleOpponent:
                     if (source is Hero) return chosenTarget != null ? new[] { chosenTarget } : Enumerable.Empty<Combatant>();
                     return new[] { TheHero };
@@ -203,9 +203,7 @@ namespace Roguelike.Core
             return Enumerable.Empty<Combatant>();
         }
 
-        /// <summary>
-        /// Applies relic effects of a specific ApplyType
-        /// </summary>
+
         private void ApplyRelicEffects(Hero hero, ApplyType applyType)
         {
             foreach (var relic in hero.Relics)
@@ -214,9 +212,9 @@ namespace Roguelike.Core
                 {
                     if (effect is StatusEffectData statusEffect)
                     {
-                        // Determine targets based on the effect's Target property
+
                         var targets = GetTargetsForRelicEffect(statusEffect.Target);
-                        
+
                         foreach (var target in targets)
                         {
                             if (statusEffect.EffectType == StatusEffectType.ImmediateBlock)
@@ -242,19 +240,17 @@ namespace Roguelike.Core
             }
         }
 
-        /// <summary>
-        /// Gets the appropriate targets for a relic effect based on its TargetType
-        /// </summary>
+
         private IEnumerable<Combatant> GetTargetsForRelicEffect(TargetType targetType)
         {
             switch (targetType)
             {
                 case TargetType.Self:
                     return new[] { TheHero };
-                
+
                 case TargetType.AllOpponents:
                     return Enemies.Where(e => e.CurrentHealth > 0).Cast<Combatant>();
-                
+
                 case TargetType.RandomOpponent:
                     var livingEnemies = Enemies.Where(e => e.CurrentHealth > 0).ToList();
                     if (livingEnemies.Any())
@@ -262,16 +258,16 @@ namespace Roguelike.Core
                         return new[] { livingEnemies[rng.Next(livingEnemies.Count)] };
                     }
                     return Enumerable.Empty<Combatant>();
-                
+
                 case TargetType.SingleOpponent:
-                    // For relics, we'll default to a random opponent
+
                     var livingEnemies2 = Enemies.Where(e => e.CurrentHealth > 0).ToList();
                     if (livingEnemies2.Any())
                     {
                         return new[] { livingEnemies2[rng.Next(livingEnemies2.Count)] };
                     }
                     return Enumerable.Empty<Combatant>();
-                
+
                 default:
                     return new[] { TheHero };
             }

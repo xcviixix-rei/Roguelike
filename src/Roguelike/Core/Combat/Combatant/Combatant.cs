@@ -5,10 +5,8 @@ using System.Linq;
 
 namespace Roguelike.Core
 {
-    /// <summary>
-    /// An abstract base class for any entity that participates in combat (Heroes and Enemies).
-    /// This class holds the runtime state of a combatant.
-    /// </summary>
+
+
     public abstract class Combatant
     {
         public CombatantData SourceData { get; }
@@ -34,9 +32,7 @@ namespace Roguelike.Core
             }
         }
 
-        /// <summary>
-        /// Applies damage to the combatant, first reducing block and then health.
-        /// </summary>
+
         public void TakeDamage(int amount)
         {
             if (amount <= 0) return;
@@ -55,10 +51,7 @@ namespace Roguelike.Core
             }
         }
 
-        /// <summary>
-        /// Applies damage that bypasses block, directly reducing health.
-        /// </summary>
-        /// <param name="amount"></param>
+
         public void TakePiercingDamage(int amount)
         {
             if (amount <= 0) return;
@@ -70,9 +63,7 @@ namespace Roguelike.Core
             }
         }
 
-        /// <summary>
-        /// Adds block to the combatant.
-        /// </summary>
+
         public void GainBlock(int amount)
         {
             if (amount > 0)
@@ -81,15 +72,13 @@ namespace Roguelike.Core
             }
         }
 
-        /// <summary>
-        /// Applies a new effect or refreshes an existing one.
-        /// </summary>
+
         public void ApplyEffect(EffectData effectData)
         {
             var existingEffect = ActiveEffects.FirstOrDefault(e => e.SourceData.Id == effectData.Id);
             if (existingEffect != null)
             {
-                // Refresh the duration
+
                 if (effectData.Decay == DecayType.AfterXTURNS)
                 {
                     existingEffect.RemainingDuration = effectData.Duration;
@@ -109,9 +98,7 @@ namespace Roguelike.Core
             }
         }
 
-        /// <summary>
-        /// Processes all active effects at the end of a turn, removing expired ones.
-        /// </summary>
+
         public void TickDownEffects()
         {
             var expiredEffects = new List<ActiveEffect>();
@@ -128,10 +115,8 @@ namespace Roguelike.Core
                 ActiveEffects.Remove(expired);
             }
         }
-        
-        /// <summary>
-        /// Resets combat-specific state (like block) and temporary effects.
-        /// </summary>
+
+
         public void ResetForNewCombat()
         {
             Block = 0;

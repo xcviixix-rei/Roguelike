@@ -83,7 +83,6 @@ def load_game_data(json_path: str | None = None):
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    # ── Effect Pool ──────────────────────────────────────────────────────────
     effect_pool = EffectPool()
 
     for se_dict in data.get("StatusEffects", []):
@@ -94,7 +93,6 @@ def load_game_data(json_path: str | None = None):
         de = _parse_deck_effect(de_dict)
         effect_pool.effects_by_id[de.id] = de
 
-    # ── Card Pool ────────────────────────────────────────────────────────────
     card_pool = CardPool()
     cards = []
     for cd in data.get("Cards", []):
@@ -109,7 +107,6 @@ def load_game_data(json_path: str | None = None):
         cards.append(card)
     card_pool.initialize(cards)
 
-    # ── Enemy Pool ───────────────────────────────────────────────────────────
     enemy_pool = EnemyPool()
     enemies = []
     for ed in data.get("Enemies", []):
@@ -129,7 +126,6 @@ def load_game_data(json_path: str | None = None):
         enemies.append(enemy)
     enemy_pool.initialize(enemies)
 
-    # ── Relic Pool ───────────────────────────────────────────────────────────
     relic_pool = RelicPool()
     relics = []
     for rd in data.get("Relics", []):
@@ -147,7 +143,6 @@ def load_game_data(json_path: str | None = None):
         relics.append(relic)
     relic_pool.initialize(relics)
 
-    # ── Event Pool ───────────────────────────────────────────────────────────
     event_pool = EventPool()
     for ev in data.get("Events", []):
         choices = []
@@ -169,7 +164,6 @@ def load_game_data(json_path: str | None = None):
         )
         event_pool.events_by_id[ecs.id] = ecs
 
-    # ── Room Configs ─────────────────────────────────────────────────────────
     room_configs: Dict[RoomType, RoomData] = {}
     for key, rc in data.get("RoomConfigs", {}).items():
         rd = RoomData()
@@ -179,7 +173,6 @@ def load_game_data(json_path: str | None = None):
         rd.star_rating = rc.get("StarRating", 0)
         room_configs[rd.type] = rd
 
-    # ── Hero Data ────────────────────────────────────────────────────────────
     hd = data.get("Hero", {})
     hero_data = HeroData()
     hero_data.id = hd.get("Id", "player")

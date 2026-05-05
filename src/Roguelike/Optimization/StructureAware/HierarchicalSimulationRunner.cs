@@ -9,9 +9,8 @@ using System.Linq;
 
 namespace Roguelike.Optimization
 {
-    /// <summary>
-    /// Updated simulation runner that works with HierarchicalGenome
-    /// </summary>
+
+
     public class HierarchicalSimulationRunner : ISimulationRunner
     {
         private readonly HeroData _baseHero;
@@ -22,15 +21,15 @@ namespace Roguelike.Optimization
         private readonly EventPool _baseEvents;
         private readonly Dictionary<RoomType, RoomData> _baseRoomConfigs;
         private readonly IPlayerAgent _agent;
-        
+
         public HierarchicalSimulationRunner(
-            IPlayerAgent agent, 
-            HeroData baseHero, 
-            CardPool cards, 
-            RelicPool relics, 
-            EnemyPool enemies, 
-            EffectPool effects, 
-            EventPool events, 
+            IPlayerAgent agent,
+            HeroData baseHero,
+            CardPool cards,
+            RelicPool relics,
+            EnemyPool enemies,
+            EffectPool effects,
+            EventPool events,
             Dictionary<RoomType, RoomData> roomConfigs)
         {
             _agent = agent;
@@ -50,19 +49,19 @@ namespace Roguelike.Optimization
             var simRelics = DeepClone(_baseRelics);
             var simEnemies = DeepClone(_baseEnemies);
             var simEffects = DeepClone(_baseEffects);
-            
+
             HierarchicalApplicator.Apply(genome, simCards, simEnemies, simRelics, simHero);
-            
+
             var controller = new GameController(
                 simCards, simRelics, simEnemies, simEffects, _baseEvents, _baseRoomConfigs);
-            
+
             controller.StartNewRun(seed, simHero, genome);
-            
+
             var runState = controller.CurrentRun;
             var stats = new SimulationStats();
-            
+
             Action<CardData> cardPlayedHandler = (card) => {
-                if (!stats.CardPlayCounts.ContainsKey(card.Id)) 
+                if (!stats.CardPlayCounts.ContainsKey(card.Id))
                     stats.CardPlayCounts[card.Id] = 0;
                 stats.CardPlayCounts[card.Id]++;
             };
@@ -78,7 +77,7 @@ namespace Roguelike.Optimization
                         if (controller.ChooseMapNode(nextNodeId))
                         {
                             var newRoom = runState.TheMap.GetCurrentRoom();
-                            if (newRoom.Type == RoomType.Elite) 
+                            if (newRoom.Type == RoomType.Elite)
                                 stats.ElitesEncountered++;
                         }
                         else
@@ -90,7 +89,7 @@ namespace Roguelike.Optimization
                     case GameState.InCombat:
                         RunCombat(controller, runState, stats, cardPlayedHandler);
                         break;
-                        
+
                     case GameState.InEvent:
                         var choice = _agent.ChooseEventOption(runState);
                         controller.ChooseEventOption(choice);
@@ -114,13 +113,13 @@ namespace Roguelike.Optimization
             stats.FinalHPPercent = (float)runState.TheHero.CurrentHealth / runState.TheHero.MaxHealth;
             stats.MasterDeckIds = runState.TheHero.Deck.MasterDeck.Select(c => c.Id).ToList();
             stats.RelicIds = runState.TheHero.Relics.Select(r => r.Id).ToList();
-            
+
             return stats;
         }
 
         private void RunCombat(
-            GameController controller, 
-            GameRun runState, 
+            GameController controller,
+            GameRun runState,
             SimulationStats stats,
             Action<CardData> cardPlayedHandler)
         {
@@ -137,7 +136,7 @@ namespace Roguelike.Optimization
             while (runState.CurrentState == GameState.InCombat)
             {
                 var decision = _agent.GetCombatDecision(runState);
-                
+
                 if (decision.Type == CombatActionType.PlayCard)
                 {
                     bool success = controller.PlayCard(decision.HandIndex, decision.TargetIndex);
@@ -161,7 +160,7 @@ namespace Roguelike.Optimization
             }
 
             activeCombat.OnCardPlayed -= cardPlayedHandler;
-            
+
             if (activeCombat.State == CombatState.Victory && combatRoomType == RoomType.Elite)
             {
                 stats.ElitesDefeated++;
@@ -172,11 +171,11 @@ namespace Roguelike.Optimization
         private void RunShop(GameController controller, GameRun runState, SimulationStats stats)
         {
             int goldBeforeShop = runState.TheHero.CurrentGold;
-            
+
             while (runState.CurrentState == GameState.InShop)
             {
                 var shopDecision = _agent.GetShopDecision(runState);
-                
+
                 if (shopDecision.Type == ShopActionType.Leave)
                 {
                     controller.LeaveShop();
@@ -190,10 +189,9 @@ namespace Roguelike.Optimization
                     controller.BuyShopRelic(shopDecision.ShopIndex);
                 }
             }
-            
+
             stats.GoldSpent += goldBeforeShop - runState.TheHero.CurrentGold;
         }
-
 
 
         private T DeepClone<T>(T obj)

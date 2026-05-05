@@ -20,7 +20,7 @@ namespace Roguelike.Optimization
         private readonly Dictionary<RoomType, RoomData> _baseRoomConfigs;
 
         private readonly IPlayerAgent _agent;
-        
+
         public BalanceSimulationRunner(IPlayerAgent agent, HeroData baseHero, CardPool cards, RelicPool relics, EnemyPool enemies, EffectPool effects, EventPool events, Dictionary<RoomType, RoomData> roomConfigs)
         {
             _agent = agent;
@@ -40,7 +40,7 @@ namespace Roguelike.Optimization
             var simRelics = DeepCloneAndInitRelicPool(_baseRelics);
             var simEnemies = DeepCloneAndInitEnemyPool(_baseEnemies);
             var simEffects = DeepCloneEffectPool(_baseEffects);
-            
+
             GenomeApplicator.Apply(genome, simEnemies, simCards, simRelics, simEffects, simHero);
 
             var controller = new GameController(simCards, simRelics, simEnemies, simEffects, _baseEvents, _baseRoomConfigs);
@@ -48,7 +48,7 @@ namespace Roguelike.Optimization
 
             var runState = controller.CurrentRun;
             var stats = new SimulationStats();
-            
+
             Action<CardData> cardPlayedHandler = (card) => {
                 if (!stats.CardPlayCounts.ContainsKey(card.Id)) stats.CardPlayCounts[card.Id] = 0;
                 stats.CardPlayCounts[card.Id]++;
@@ -93,7 +93,7 @@ namespace Roguelike.Optimization
                                 {
                                     controller.EndTurn();
                                 }
-                                
+
                                 actionCounter++;
                             }
                             else
@@ -110,7 +110,7 @@ namespace Roguelike.Optimization
                         }
 
                         activeCombat.OnCardPlayed -= cardPlayedHandler;
-                        
+
                         if(activeCombat.State == CombatState.Victory && combatRoomType == RoomType.Elite)
                         {
                             stats.ElitesDefeated++;
@@ -118,7 +118,7 @@ namespace Roguelike.Optimization
                         }
 
                         break;
-                        
+
                     case GameState.InEvent:
                         var choice = _agent.ChooseEventOption(runState);
                         controller.ChooseEventOption(choice);
@@ -161,7 +161,7 @@ namespace Roguelike.Optimization
             stats.RelicIds = runState.TheHero.Relics.Select(r => r.Id).ToList();
 
             stats.CardPlayCounts.Remove("subscribed");
-            
+
             return stats;
         }
 

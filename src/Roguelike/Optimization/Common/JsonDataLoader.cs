@@ -8,9 +8,8 @@ using System.IO;
 
 namespace RoguelikeGASimulator
 {
-    /// <summary>
-    /// Root data structure for the entire game database
-    /// </summary>
+
+
     public class GameDataRoot
     {
         public List<StatusEffectDataJson> StatusEffects { get; set; }
@@ -116,12 +115,10 @@ namespace RoguelikeGASimulator
         public int StarRating { get; set; }
     }
 
-    /// <summary>
-    /// Loads game data from JSON files
-    /// </summary>
+
     public static class GameDataLoader
     {
-        public static (HeroData, CardPool, RelicPool, EnemyPool, EffectPool, EventPool, Dictionary<RoomType, RoomData>) 
+        public static (HeroData, CardPool, RelicPool, EnemyPool, EffectPool, EventPool, Dictionary<RoomType, RoomData>)
             LoadFromJson(string jsonFilePath)
         {
             var settings = new JsonSerializerSettings
@@ -132,9 +129,9 @@ namespace RoguelikeGASimulator
             string json = File.ReadAllText(jsonFilePath);
             var root = JsonConvert.DeserializeObject<GameDataRoot>(json, settings);
 
-            // Effect Pool
+
             var effectPool = new EffectPool();
-            
+
             foreach (var seJson in root.StatusEffects)
             {
                 var effect = new StatusEffectData
@@ -171,10 +168,10 @@ namespace RoguelikeGASimulator
                 effectPool.EffectsById[effect.Id] = effect;
             }
 
-            // Card Pool
+
             var cardPool = new CardPool();
             var allCards = new List<CardData>();
-            
+
             foreach (var cardJson in root.Cards)
             {
                 var card = new CardData
@@ -202,10 +199,10 @@ namespace RoguelikeGASimulator
             }
             cardPool.Initialize(allCards);
 
-            // Enemy Pool
+
             var enemyPool = new EnemyPool();
             var allEnemies = new List<EnemyData>();
-            
+
             foreach (var enemyJson in root.Enemies)
             {
                 var enemy = new EnemyData
@@ -234,10 +231,10 @@ namespace RoguelikeGASimulator
             }
             enemyPool.Initialize(allEnemies);
 
-            // Relic Pool
+
             var relicPool = new RelicPool();
             var allRelics = new List<RelicData>();
-            
+
             foreach (var relicJson in root.Relics)
             {
                 var relic = new RelicData
@@ -262,7 +259,7 @@ namespace RoguelikeGASimulator
             }
             relicPool.Initialize(allRelics);
 
-            // Hero
+
             var heroData = new HeroData
             {
                 Id = root.Hero.Id,
@@ -275,20 +272,20 @@ namespace RoguelikeGASimulator
                 StartingRelicId = root.Hero.StartingRelicId
             };
 
-            // Event Pool
+
             var eventPool = new EventPool();
             foreach (var evt in root.Events)
             {
                 eventPool.EventsById[evt.Id] = evt;
             }
 
-            // Room Configs
+
             var roomConfigs = new Dictionary<RoomType, RoomData>();
             foreach (var kvp in root.RoomConfigs)
             {
                 var roomType = Enum.Parse<RoomType>(kvp.Key);
                 var roomJson = kvp.Value;
-                
+
                 roomConfigs[roomType] = new RoomData
                 {
                     Type = roomType,

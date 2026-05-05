@@ -11,7 +11,7 @@ public class CardViabilityInfo
 
 public class EvaluationReport
 {
-    // Basic Metrics
+
     public int TotalRuns { get; set; }
     public float OverallFitness { get; set; }
     public float WinRate { get; set; }
@@ -19,21 +19,21 @@ public class EvaluationReport
     public Dictionary<int, int> FloorOfDeathHistogram { get; set; } = new Dictionary<int, int>();
     public float AvgFloorOnDeath { get; set; }
 
-    // Elite Metrics
+
     public float AvgElitesDefeated { get; set; }
     public float AvgElitesEncountered { get; set; }
     public float EliteKillRate { get; set; }
     public float AvgDamagePerElite { get; set; }
 
-    // Economy Metrics
+
     public float AvgGoldCollected { get; set; }
     public float AvgGoldSpent { get; set; }
     public float AvgGoldEfficiency { get; set; }
 
-    // Card Viability
+
     public List<CardViabilityInfo> CardViability { get; set; } = new List<CardViabilityInfo>();
-    
-    // Diversity Metrics
+
+
     public float ShannonEntropy { get; set; }
     public float GiniCoefficient { get; set; }
     public float EffectiveNumberOfCards { get; set; }
@@ -43,19 +43,19 @@ public class EvaluationReport
     public int UnusedCards { get; set; }
     public float BuildVarietyScore { get; set; }
 
-    // Consistency
+
     public float FloorConsistency { get; set; }
 
-    // Quality Flags
+
     public bool HasCriticalIssues { get; set; }
     public bool HasBalanceIssues { get; set; }
     public float QualityScore { get; set; }
 
-    // Helper Methods
+
     public List<CardViabilityInfo> GetTrapCards(float winRateThreshold = 0.30f, float pickRateThreshold = 0.10f)
     {
-        return CardViability.Where(c => 
-            c.PickRate > pickRateThreshold && 
+        return CardViability.Where(c =>
+            c.PickRate > pickRateThreshold &&
             c.WinRateWhenPicked < winRateThreshold
         ).ToList();
     }
@@ -67,8 +67,8 @@ public class EvaluationReport
 
     public List<CardViabilityInfo> GetMustPickCards(float winRateThreshold = 0.55f, float pickRateThreshold = 0.40f)
     {
-        return CardViability.Where(c => 
-            c.PickRate > pickRateThreshold && 
+        return CardViability.Where(c =>
+            c.PickRate > pickRateThreshold &&
             c.WinRateWhenPicked > winRateThreshold
         ).ToList();
     }

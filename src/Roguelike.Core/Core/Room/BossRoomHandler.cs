@@ -8,7 +8,7 @@ namespace Roguelike.Core.Handlers
     {
         public void Execute(GameRun run, Room room)
         {
-            
+
             var boss = run.EnemyPool.GetRandomEnemyOfStar(5, run.Rng);
             if (boss == null) return;
 

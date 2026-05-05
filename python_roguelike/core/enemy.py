@@ -43,8 +43,7 @@ class Enemy(Combatant):
                 candidate.type == ActionType.ApplyStatusEffect or
                 candidate.type == ActionType.ApplyDeckEffect
             )
-            if is_special and self._turns_since_last_special < self.source_enemy_data.special_ability_cooldown:
-                # Move to back
+            if is_special and self._turns_since_last_special <= self.source_enemy_data.special_ability_cooldown:
                 self.action_bucket.append(self.action_bucket.popleft())
                 checks += 1
             else:
@@ -53,7 +52,6 @@ class Enemy(Combatant):
                     self._turns_since_last_special = 0
                 return action
 
-        # Fallback
         return self.action_bucket.popleft()
 
     def peek_next_action(self) -> CombatActionData:

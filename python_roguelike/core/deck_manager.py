@@ -13,6 +13,7 @@ class DeckManager:
         self.hand: List[CardData] = []
         self.discard_pile: List[CardData] = []
         self.exhaust_pile: List[CardData] = []
+        self.retained_cards: set = set()
 
     def initialize_master_deck(self, card_ids: List[str], pool: CardPool):
         self.master_deck.clear()
@@ -33,6 +34,7 @@ class DeckManager:
         self.hand.clear()
         self.discard_pile.clear()
         self.exhaust_pile.clear()
+        self.retained_cards.clear()
         self.draw_pile.extend(self.master_deck)
         self._shuffle(self.draw_pile)
 
@@ -53,8 +55,11 @@ class DeckManager:
             self.discard_pile.append(card)
 
     def discard_hand(self):
-        self.discard_pile.extend(self.hand)
-        self.hand.clear()
+        kept = [c for c in self.hand if id(c) in self.retained_cards]
+        discarded = [c for c in self.hand if id(c) not in self.retained_cards]
+        self.discard_pile.extend(discarded)
+        self.hand = kept
+        self.retained_cards.clear()
 
     def _reshuffle_discard_into_draw(self):
         self.draw_pile.extend(self.discard_pile)

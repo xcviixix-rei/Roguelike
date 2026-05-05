@@ -1,0 +1,2 @@
+- compare with existing models/approaches
+- remove index of the 5th chapter

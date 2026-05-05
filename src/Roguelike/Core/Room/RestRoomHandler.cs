@@ -13,7 +13,7 @@ namespace Roguelike.Core.Handlers
             {
                 baseHealPercentage *= run.AppliedGenome.RestHealingScalar;
             }
-            
+
             int healAmount = (int)Math.Floor(run.TheHero.MaxHealth * baseHealPercentage);
             run.TheHero.Heal(healAmount);
             run.CurrentState = GameState.OnMap;

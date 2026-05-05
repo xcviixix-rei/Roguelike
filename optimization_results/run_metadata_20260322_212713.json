@@ -1,0 +1,20 @@
+{
+  "timestamp": "20260322_212713",
+  "pop_size": 20,
+  "generations": 15,
+  "runs_per_genome": 10,
+  "seed": 42,
+  "models": [
+    "models/aggressive.zip",
+    "models/defensive.zip",
+    "models/balanced.zip",
+    "models/adaptive.zip"
+  ],
+  "n_pareto_solutions": 4,
+  "best_compromise_index": 0,
+  "best_scores": {
+    "balance": 0.7636269302017018,
+    "engagement": 0.525,
+    "coherence": 1.0
+  }
+}

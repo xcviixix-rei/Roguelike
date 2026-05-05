@@ -23,9 +23,7 @@ namespace Roguelike.Core.Handlers
             run.CurrentState = GameState.InCombat;
         }
 
-        /// <summary>
-        /// A method for generating enemy encounters based on a star rating.
-        /// </summary>
+
         private List<EnemyData> GenerateEncounter(GameRun run, int starRating)
         {
             var encounter = new List<EnemyData>();
@@ -43,20 +41,20 @@ namespace Roguelike.Core.Handlers
 
             switch (starRating)
             {
-                case 1: // Easy monster
-                    minionCount = 0; // No minions for easiest encounter
+                case 1:
+                    minionCount = 0;
                     maxMinionStar = 1;
                     break;
-                case 2: // Harder monster
-                    minionCount = run.Rng.Next(1, 3); // 1 or 2 minions
+                case 2:
+                    minionCount = run.Rng.Next(1, 3);
                     maxMinionStar = 1;
                     break;
-                case 3: // Easy elite
-                    minionCount = run.Rng.Next(1, 2); // 1 minion
+                case 3:
+                    minionCount = run.Rng.Next(1, 2);
                     maxMinionStar = 2;
                     break;
-                case 4: // Harder elite
-                    minionCount = run.Rng.Next(1, 3); // 1 or 2 minions
+                case 4:
+                    minionCount = run.Rng.Next(1, 3);
                     maxMinionStar = 3;
                     break;
             }
@@ -79,22 +77,22 @@ namespace Roguelike.Core.Handlers
             var hero = run.TheHero;
             int n = room.StarRating;
 
-            // Gold Formula: e^(3 + k*n) + 10 with 0 < k < 1
+
             double goldCalc = Math.Exp(3 + (0.5 * n)) + 10;
             int goldReward = (int)Math.Floor(goldCalc);
             hero.CurrentGold += goldReward;
 
             run.CardRewardChoices.Clear();
-            
+
             run.CardRewardChoices.Add(run.CardPool.GetRandomCardOfStar(n, run.Rng));
 
-            int lowerStarLimit = (n == 1) ? 1 : n; 
+            int lowerStarLimit = (n == 1) ? 1 : n;
             for (int i = 0; i < 2; i++)
             {
                 int limit = (n == 1) ? 1 : n - 1;
                 run.CardRewardChoices.Add(run.CardPool.GetRandomCardUpToStar(limit, run.Rng));
             }
-            
+
             run.CardRewardChoices.RemoveAll(c => c == null);
 
             run.RelicRewardChoice = run.RelicPool.GetRandomRelicOfStar(n, run.Rng);

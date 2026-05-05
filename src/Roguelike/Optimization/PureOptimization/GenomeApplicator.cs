@@ -34,7 +34,7 @@ namespace Roguelike.Optimization
             if (hero.StartingHealth < 1) hero.StartingHealth = 1;
 
             hero.StartingGold = (int)(hero.StartingGold * genome.HeroStartGoldScalar);
-            
+
             hero.StartingMana += genome.HeroManaOffset;
             if (hero.StartingMana < 1) hero.StartingMana = 1;
         }
@@ -43,7 +43,7 @@ namespace Roguelike.Optimization
         {
             float baseHealPercentage = 0.30f;
             float adjustedHealPercentage = baseHealPercentage * genome.RestHealingScalar;
-            
+
             int healAmount = (int)Math.Floor(run.TheHero.MaxHealth * adjustedHealPercentage);
             run.TheHero.Heal(healAmount);
         }
@@ -64,14 +64,14 @@ namespace Roguelike.Optimization
         {
             foreach (var card in pool.CardsById.Values)
             {
-                // Cost Modifier
+
                 if (genome.CardCostModifiers.TryGetValue(card.Id, out int costMod))
                 {
                     card.ManaCost += costMod;
                     if (card.ManaCost < 0) card.ManaCost = 0;
                 }
 
-                // Action Values
+
                 if (genome.CardActionScalars.TryGetValue(card.Id, out var scalars))
                 {
                     for (int i = 0; i < card.Actions.Count && i < scalars.Count; i++)
@@ -87,7 +87,7 @@ namespace Roguelike.Optimization
         {
             foreach (var enemy in pool.EnemiesById.Values)
             {
-                //  Health
+
                 if (genome.EnemyHealthScalars.TryGetValue(enemy.Id, out float hpScalar))
                 {
                     enemy.StartingHealth = (int)(enemy.StartingHealth * hpScalar);
@@ -103,13 +103,13 @@ namespace Roguelike.Optimization
                     {
                         var choice = enemy.ActionSet[i];
 
-                        // Apply Weight Scalar
+
                         if (hasWeights && i < weightScalars.Count)
                         {
                             choice.Weight = Math.Max(1, (int)Math.Round(choice.Weight * weightScalars[i]));
                         }
 
-                        // Apply Value Scalar
+
                         if (hasValues && i < valueScalars.Count)
                         {
                             float valScalar = valueScalars[i];

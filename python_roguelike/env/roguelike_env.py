@@ -35,36 +35,36 @@ from ..core.game_run import GameRun
 from ..data.enums import GameState, CombatState, RoomType, ActionType
 
 
-# ── Observation / Action constants ──────────────────────────────────────────
-MAX_HAND        = 10   # max cards in hand we encode
-MAX_DECK        = 40   # max cards in master deck we encode
-MAX_ENEMIES     = 4    # max enemies in a combat
-MAX_RELICS      = 10   # max relics we encode
-N_CARD_FEATURES = 5    # (mana_cost, star, type_id, n_actions, is_affordable)
-N_ENEMY_FEATURES= 5    # (hp_pct, block_pct, star, n_effects, next_action_type)
-N_EFFECTS       = 7    # number of distinct StatusEffectType values
+MAX_HAND        = 10
+N_DECK_STARS    = 5
+MAX_ENEMIES     = 4
+MAX_RELICS      = 10
+N_CARD_FEATURES = 7
+N_ENEMY_FEATURES= 6
+N_EFFECTS       = 7
+MAX_BLOCK_CAP   = 30
 
-# Node pool: map nodes the player can move to (capped)
-MAX_NODES       = 7    # max 7 paths at a time
+MAX_NODES       = 7
 
-# Total observation dimension
 OBS_DIM = (
-    4                                   # hero: hp_pct, block_pct, mana_pct, gold_norm
-    + N_EFFECTS                         # hero active status effects (binary presence)
-    + MAX_HAND  * N_CARD_FEATURES       # hand
-    + MAX_DECK                          # deck star histogram (just star ratings)
-    + MAX_ENEMIES * N_ENEMY_FEATURES    # enemies
-    + MAX_RELICS                        # relic star ratings
-    + 7                                 # game state one-hot (7 states)
-    + MAX_NODES * 2                     # map nodes (type_id, star) for each node
-    + 1                                 # current floor normalised
+    4
+    + N_EFFECTS
+    + MAX_HAND  * N_CARD_FEATURES
+    + N_DECK_STARS
+    + MAX_ENEMIES * N_ENEMY_FEATURES
+    + MAX_RELICS
+    + 7
+    + MAX_NODES * 2
+    + 1
+    + 2
+    + 4
+    + 4
 )
 
-# Action space size
 N_PLAY_ACTIONS  = MAX_HAND * MAX_ENEMIES
 N_MAP_ACTIONS   = MAX_NODES
 N_EVENT_ACTIONS = 3
-N_REWARD_ACTIONS= 5   # pick card 0-3 or skip (-1)
+N_REWARD_ACTIONS= 5
 N_SHOP_CARD     = 5
 N_SHOP_RELIC    = 5
 N_SHOP_LEAVE    = 1
@@ -81,7 +81,6 @@ ACT_DIM = (
     + N_SHOP_LEAVE
 )
 
-# Offsets
 OFF_END_TURN    = 0
 OFF_PLAY        = OFF_END_TURN   + N_END_TURN
 OFF_MAP         = OFF_PLAY       + N_PLAY_ACTIONS
@@ -92,9 +91,11 @@ OFF_SHOP_RELIC  = OFF_SHOP_CARD  + N_SHOP_CARD
 OFF_SHOP_LEAVE  = OFF_SHOP_RELIC + N_SHOP_RELIC
 
 from ..data.enums import StatusEffectType, CardType
+from ..data.status_effect_data import StatusEffectData as _SED
 
 _EFFECT_ORDER = list(StatusEffectType)
 _CARD_TYPE_ORDER = list(CardType)
+_CARD_TYPE_IDS = {ct: i for i, ct in enumerate(CardType)}
 _ACTION_TYPE_ORDER = list(ActionType)
 
 _ROOM_TYPE_IDS = {rt: i for i, rt in enumerate(RoomType)}
@@ -126,6 +127,11 @@ class RoguelikeEnv(gym.Env):
         json_path: str | None = None,
         max_steps: int = 10_000,
         render_mode: str | None = None,
+        domain_randomization: bool = False,
+        dr_noise: float = 0.20,
+        dr_curriculum: bool = True,
+        dr_warmup_episodes: int = 5000,
+        early_win_floor: int | None = None,
     ):
         super().__init__()
         self._base_seed = seed
@@ -150,18 +156,37 @@ class RoguelikeEnv(gym.Env):
         self._controller: GameController | None = None
         self._prev_hp = 0
         self._prev_floor = 0
+        self._prev_enemy_count = 0
+        self._early_win_floor = early_win_floor
+
+        self._domain_randomization = domain_randomization
+        self._dr_noise = dr_noise
+        self._dr_curriculum = dr_curriculum
+        self._dr_warmup_episodes = dr_warmup_episodes
+
+        self._orig_card_values: dict = {
+            cid: (card.mana_cost, [a.value for a in card.actions])
+            for cid, card in self._card_pool.cards_by_id.items()
+        }
+        self._orig_enemy_hp: dict = {
+            eid: enemy.starting_health
+            for eid, enemy in self._enemy_pool.enemies_by_id.items()
+        }
+        self._orig_hero_hp: int = self._hero_data.starting_health
 
         self.observation_space = spaces.Box(
             low=0.0, high=1.0, shape=(OBS_DIM,), dtype=np.float32
         )
         self.action_space = spaces.Discrete(ACT_DIM)
 
-    # ── Public API ─────────────────────────────────────────────────────────
 
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
         if seed is not None:
             self._base_seed = seed
+
+        if self._domain_randomization:
+            self._apply_domain_randomization()
 
         run_seed = self._base_seed + self._episode_count
         self._episode_count += 1
@@ -176,10 +201,55 @@ class RoguelikeEnv(gym.Env):
         run = self._controller.current_run
         self._prev_hp = run.the_hero.current_health
         self._prev_floor = run.current_floor
+        combat = run.current_combat
+        self._prev_enemy_count = sum(1 for e in combat.enemies if e.current_health > 0) if combat else 0
 
         obs = self._get_obs()
         info = self._get_info()
         return obs, info
+
+
+    def _apply_domain_randomization(self) -> None:
+        """Apply curriculum uniform noise to card stats, enemy HP, and hero HP.
+
+        Noise ramps linearly from 0% → dr_noise over the first dr_warmup_episodes
+        episodes (curriculum DR), then stays fixed.  This lets the agent learn
+        the base game before adapting to variance, matching the ±20% range the
+        GA simulation uses for robustness scoring.
+        """
+        rng = self.np_random
+        if self._dr_curriculum:
+            progress = min(self._episode_count / max(self._dr_warmup_episodes, 1), 1.0)
+            noise = self._dr_noise * progress
+        else:
+            noise = self._dr_noise
+        lo  = 1.0 - noise
+        hi  = 1.0 + noise
+
+        for cid, card in self._card_pool.cards_by_id.items():
+            orig_mana, orig_action_vals = self._orig_card_values[cid]
+            card.mana_cost = max(1, round(orig_mana * rng.uniform(lo, hi)))
+            for i, action in enumerate(card.actions):
+                if orig_action_vals[i] > 0:
+                    action.value = max(1, round(orig_action_vals[i] * rng.uniform(lo, hi)))
+
+        for eid, enemy in self._enemy_pool.enemies_by_id.items():
+            orig_hp = self._orig_enemy_hp[eid]
+            enemy.starting_health = max(1, round(orig_hp * rng.uniform(lo, hi)))
+
+        self._hero_data.starting_health = max(
+            1, round(self._orig_hero_hp * rng.uniform(lo, hi))
+        )
+
+
+    def set_dr_noise(self, noise: float) -> None:
+        """Externally set the DR noise level (0.0–1.0).
+
+        Useful for training loops that want to gradually ramp DR
+        instead of using the built-in episode-based curriculum.
+        """
+        self._dr_noise = max(0.0, min(noise, 1.0))
+
 
     def step(self, action: int):
         run = self._controller.current_run
@@ -191,20 +261,34 @@ class RoguelikeEnv(gym.Env):
 
         self._apply_action(action, run)
 
-        run = self._controller.current_run  # re-fetch (same object but re-query)
-        reward = self._compute_reward(run, prev_hp, prev_gold, prev_floor)
+        run = self._controller.current_run
+
+        combat = run.current_combat
+        curr_enemy_count = sum(1 for e in combat.enemies if e.current_health > 0) if combat else 0
+        enemies_killed = max(0, self._prev_enemy_count - curr_enemy_count)
+        self._prev_enemy_count = curr_enemy_count
+
+        reward = self._compute_reward(run, prev_hp, prev_gold, prev_floor,
+                                      enemies_killed)
 
         terminated = run.current_state == GameState.GameOver
         truncated = self._step_count >= self._max_steps
 
+        if (not terminated and self._early_win_floor is not None
+                and run.current_floor >= self._early_win_floor
+                and run.the_hero.current_health > 0):
+            terminated = True
+            run.current_state = GameState.GameOver
+
         if terminated:
-            # Large terminal reward based on floors cleared
             floors_cleared = run.current_floor + 1
             hp_remaining_pct = run.the_hero.current_health / run.the_hero.max_health
             if run.the_hero.current_health > 0:
-                reward += 200.0 + floors_cleared * 10.0 + hp_remaining_pct * 50.0
+                reward += 150.0 + floors_cleared * 15.0 + hp_remaining_pct * 50.0
             else:
-                reward -= 50.0
+                death_penalty = -100.0 * (1.0 - floors_cleared / 17.0)
+                reward += death_penalty
+                reward += floors_cleared * 8.0
 
         obs = self._get_obs()
         info = self._get_info()
@@ -234,7 +318,6 @@ class RoguelikeEnv(gym.Env):
     def close(self):
         pass
 
-    # ── Observation ────────────────────────────────────────────────────────
 
     def _get_obs(self) -> np.ndarray:
         run = self._controller.current_run
@@ -242,66 +325,63 @@ class RoguelikeEnv(gym.Env):
         obs = np.zeros(OBS_DIM, dtype=np.float32)
         idx = 0
 
-        # Hero scalars
-        obs[idx] = hero.current_health / hero.max_health;   idx += 1
-        obs[idx] = hero.block / max(hero.max_health, 1);    idx += 1
-        obs[idx] = hero.current_mana / max(hero.max_mana, 1); idx += 1
-        obs[idx] = min(hero.current_gold / 500.0, 1.0);     idx += 1
+        obs[idx] = hero.current_health / hero.max_health;            idx += 1
+        obs[idx] = min(hero.block / MAX_BLOCK_CAP, 1.0);             idx += 1
+        obs[idx] = hero.current_mana / max(hero.max_mana, 1);        idx += 1
+        obs[idx] = min(hero.current_gold / 500.0, 1.0);              idx += 1
 
-        # Hero active status effects
-        from ..data.status_effect_data import StatusEffectData as SED
+        effect_totals: dict = {}
+        for ae in hero.active_effects:
+            if isinstance(ae.source_data, _SED):
+                eff_type = ae.source_data.effect_type
+                effect_totals[eff_type] = effect_totals.get(eff_type, 0) + ae.source_data.intensity
         for eff_type in _EFFECT_ORDER:
-            present = any(
-                isinstance(ae.source_data, SED) and ae.source_data.effect_type == eff_type
-                for ae in hero.active_effects
-            )
-            obs[idx] = 1.0 if present else 0.0
+            obs[idx] = min(effect_totals.get(eff_type, 0) / 10.0, 1.0)
             idx += 1
 
-        # Hand
         for i in range(MAX_HAND):
             if i < len(hero.deck.hand):
                 c = hero.deck.hand[i]
-                obs[idx]   = c.mana_cost / 5.0
+                obs[idx]   = min(c.mana_cost / 5.0, 1.0)
                 obs[idx+1] = c.star_rating / 5.0
-                ct_idx = _CARD_TYPE_ORDER.index(c.type) if c.type in _CARD_TYPE_ORDER else 0
-                obs[idx+2] = ct_idx / max(len(_CARD_TYPE_ORDER) - 1, 1)
+                obs[idx+2] = _CARD_TYPE_IDS.get(c.type, 0) / max(len(_CARD_TYPE_ORDER) - 1, 1)
                 obs[idx+3] = min(len(c.actions) / 3.0, 1.0)
                 obs[idx+4] = 1.0 if c.mana_cost <= hero.current_mana else 0.0
+                obs[idx+5] = min(sum(a.value for a in c.actions if a.type == ActionType.DealDamage) / 30.0, 1.0)
+                obs[idx+6] = min(sum(a.value for a in c.actions if a.type == ActionType.GainBlock) / 20.0, 1.0)
             idx += N_CARD_FEATURES
 
-        # Deck star histogram (normalised)
-        for i in range(MAX_DECK):
-            if i < len(hero.deck.master_deck):
-                obs[idx] = hero.deck.master_deck[i].star_rating / 5.0
+        star_counts = [0] * N_DECK_STARS
+        for card in hero.deck.master_deck:
+            star_idx = max(0, min(card.star_rating - 1, N_DECK_STARS - 1))
+            star_counts[star_idx] += 1
+        for count in star_counts:
+            obs[idx] = min(count / 20.0, 1.0)
             idx += 1
 
-        # Enemies
         combat = run.current_combat
         for i in range(MAX_ENEMIES):
             if combat and i < len(combat.enemies):
                 e = combat.enemies[i]
                 obs[idx]   = e.current_health / max(e.max_health, 1)
-                obs[idx+1] = e.block / max(e.max_health, 1)
+                obs[idx+1] = min(e.block / MAX_BLOCK_CAP, 1.0)
                 obs[idx+2] = e.source_enemy_data.star_rating / 5.0
                 obs[idx+3] = min(len(e.active_effects) / 5.0, 1.0)
                 intent = combat.current_enemy_intents.get(e)
-                obs[idx+4] = _ACTION_TYPE_ORDER.index(intent.type) / max(len(_ACTION_TYPE_ORDER) - 1, 1) if intent else 0.0
+                obs[idx+4] = _ACTION_TYPE_IDS.get(intent.type, 0) / max(len(_ACTION_TYPE_IDS) - 1, 1) if intent else 0.0
+                obs[idx+5] = min(intent.value / 50.0, 1.0) if intent else 0.0
             idx += N_ENEMY_FEATURES
 
-        # Relics
         for i in range(MAX_RELICS):
             if i < len(hero.relics):
                 obs[idx] = hero.relics[i].star_rating / 5.0
             idx += 1
 
-        # Game state one-hot
         state_order = list(GameState)
         s_idx = state_order.index(run.current_state)
         obs[idx + s_idx] = 1.0
         idx += len(state_order)
 
-        # Possible map nodes
         nodes = run.the_map.get_possible_next_nodes()
         for i in range(MAX_NODES):
             if i < len(nodes):
@@ -310,14 +390,62 @@ class RoguelikeEnv(gym.Env):
                 obs[idx+1] = n.star_rating / 5.0
             idx += 2
 
-        # Floor
-        obs[idx] = max(run.current_floor, 0) / 15.0
+        obs[idx] = max(run.current_floor, 0) / 16.0
+        idx += 1
+
+        obs[idx] = min(combat.turn_number / 20.0, 1.0) if combat else 0.0
+        idx += 1
+        obs[idx] = min(len(hero.deck.draw_pile) / 30.0, 1.0)
+        idx += 1
+
+        total_intent_dmg = 0.0
+        if combat:
+            for e in combat.enemies:
+                if e.current_health > 0:
+                    intent = combat.current_enemy_intents.get(e)
+                    if intent and intent.type == ActionType.DealDamage:
+                        total_intent_dmg += intent.value
+        obs[idx] = min(total_intent_dmg / 60.0, 1.0)
+        idx += 1
+
+        hand_dmg = 0.0
+        affordable_cards = 0
+        for c in hero.deck.hand[:MAX_HAND]:
+            if c.mana_cost <= hero.current_mana:
+                hand_dmg += sum(a.value for a in c.actions if a.type == ActionType.DealDamage)
+                affordable_cards += 1
+        obs[idx] = min(hand_dmg / 50.0, 1.0) if affordable_cards > 0 else 0.0
+        idx += 1
+
+        obs[idx] = min(combat.turn_number / 10.0, 1.0) if combat else 0.0
+        idx += 1
+
+        n_atk = sum(1 for c in hero.deck.master_deck if c.type == CardType.Attack)
+        n_def = sum(1 for c in hero.deck.master_deck if c.type == CardType.Skill)
+        total_typed = n_atk + n_def
+        obs[idx] = n_atk / total_typed if total_typed > 0 else 0.5
+        idx += 1
+
+        cards_played = combat._cards_played_this_turn if combat else 0
+        obs[idx] = min(cards_played / 5.0, 1.0)
+        idx += 1
+
+        affordable_block = 0.0
+        for c in hero.deck.hand[:MAX_HAND]:
+            if c.mana_cost <= hero.current_mana:
+                affordable_block += sum(a.value for a in c.actions if a.type == ActionType.GainBlock)
+        obs[idx] = min(affordable_block / 20.0, 1.0)
+        idx += 1
+
+        obs[idx] = min(hero.block / max(total_intent_dmg, 1.0), 1.0) if total_intent_dmg > 0 else (1.0 if hero.block > 0 else 0.0)
+        idx += 1
+
+        obs[idx] = max(run.current_floor, 0) / 16.0
         idx += 1
 
         assert idx == OBS_DIM, f"OBS_DIM mismatch: wrote {idx}, expected {OBS_DIM}"
         return obs
 
-    # ── Action Dispatch ────────────────────────────────────────────────────
 
     def _apply_action(self, action: int, run: GameRun):
         state = run.current_state
@@ -327,7 +455,6 @@ class RoguelikeEnv(gym.Env):
                 self._controller.end_turn()
             return
 
-        # Play card
         if OFF_PLAY <= action < OFF_PLAY + N_PLAY_ACTIONS:
             if state != GameState.InCombat:
                 return
@@ -337,7 +464,6 @@ class RoguelikeEnv(gym.Env):
             self._controller.play_card(hand_idx, target_idx)
             return
 
-        # Map node
         if OFF_MAP <= action < OFF_MAP + N_MAP_ACTIONS:
             if state != GameState.OnMap:
                 return
@@ -347,7 +473,6 @@ class RoguelikeEnv(gym.Env):
                 self._controller.choose_map_node(nodes[node_slot].id)
             return
 
-        # Event
         if OFF_EVENT <= action < OFF_EVENT + N_EVENT_ACTIONS:
             if state != GameState.InEvent:
                 return
@@ -356,36 +481,31 @@ class RoguelikeEnv(gym.Env):
                 self._controller.choose_event_option(choice_idx)
             return
 
-        # Reward
         if OFF_REWARD <= action < OFF_REWARD + N_REWARD_ACTIONS:
             if state != GameState.AwaitingReward:
                 return
             local = action - OFF_REWARD
-            card_idx = local - 1  # slot 0 = skip (-1), slots 1-4 = card index 0-3
+            card_idx = local - 1
             self._controller.confirm_rewards(card_idx)
             return
 
-        # Shop card
         if OFF_SHOP_CARD <= action < OFF_SHOP_CARD + N_SHOP_CARD:
             if state != GameState.InShop:
                 return
             self._controller.buy_shop_card(action - OFF_SHOP_CARD)
             return
 
-        # Shop relic
         if OFF_SHOP_RELIC <= action < OFF_SHOP_RELIC + N_SHOP_RELIC:
             if state != GameState.InShop:
                 return
             self._controller.buy_shop_relic(action - OFF_SHOP_RELIC)
             return
 
-        # Leave shop
         if action == OFF_SHOP_LEAVE:
             if state == GameState.InShop:
                 self._controller.leave_shop()
             return
 
-    # ── Reward Shaping ─────────────────────────────────────────────────────
 
     def _compute_reward(
         self,
@@ -393,30 +513,29 @@ class RoguelikeEnv(gym.Env):
         prev_hp: int,
         prev_gold: int,
         prev_floor: int,
+        enemies_killed: int = 0,
     ) -> float:
         reward = 0.0
         hero = run.the_hero
 
-        # HP change
         hp_delta = hero.current_health - prev_hp
         reward += hp_delta * 0.1
 
-        # Gold gained
         gold_delta = hero.current_gold - prev_gold
         if gold_delta > 0:
             reward += gold_delta * 0.02
 
-        # Floor progress
         floor_delta = run.current_floor - prev_floor
         if floor_delta > 0:
             reward += floor_delta * 5.0
 
-        # Small cost per step to encourage speed
-        reward -= 0.01
+        if enemies_killed > 0:
+            reward += enemies_killed * 3.0
+
+        reward -= 0.05
 
         return reward
 
-    # ── Info ───────────────────────────────────────────────────────────────
 
     def _get_info(self) -> dict:
         run = self._controller.current_run
@@ -432,7 +551,6 @@ class RoguelikeEnv(gym.Env):
             "step":         self._step_count,
         }
 
-    # ── Action mask helper (optional, for masked PPO) ───────────────────────
 
     def action_masks(self) -> np.ndarray:
         """Returns a boolean mask of valid actions given the current state."""
@@ -462,7 +580,7 @@ class RoguelikeEnv(gym.Env):
                     mask[OFF_EVENT + i] = True
 
         elif state == GameState.AwaitingReward:
-            mask[OFF_REWARD] = True   # skip card
+            mask[OFF_REWARD] = True
             for i in range(min(len(run.card_reward_choices), N_REWARD_ACTIONS - 1)):
                 mask[OFF_REWARD + 1 + i] = True
 

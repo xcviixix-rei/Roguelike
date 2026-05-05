@@ -392,11 +392,11 @@ namespace Roguelike.Core.Map
 
         private bool LocationRulesSatisfied(Room r)
         {
-            // Elite and Rest rooms must be on floor 5 or higher
+
             if ((r.Type == RoomType.Elite || r.Type == RoomType.Rest) && r.Y < 5)
                 return false;
 
-            // No two special rooms can be directly connected
+
             foreach (var incId in r.Incoming)
             {
                 var inc = graph.Rooms[incId];
@@ -411,7 +411,7 @@ namespace Roguelike.Core.Map
                     return false;
             }
 
-            // If a room has multiple outgoing paths, they should lead to different room types
+
             if (r.Outgoing.Count >= 2)
             {
                 var types = r.Outgoing.Select(id => graph.Rooms[id].Type)
@@ -422,26 +422,26 @@ namespace Roguelike.Core.Map
                     return false;
             }
 
-            // Elite spacing rule - only check within same floor and adjacent floors
+
             if (r.Type == RoomType.Elite)
             {
                 var elitesOnSameFloor = graph.RoomsOnFloor(r.Y)
                     .Count(other => other.Id != r.Id && other.Type == RoomType.Elite);
-                
+
                 if (elitesOnSameFloor > 0)
                     return false;
-                    
+
                 for (int dy = -1; dy <= 1; dy++)
                 {
                     if (dy == 0) continue;
-                    
+
                     int checkY = r.Y + dy;
                     if (checkY < 0 || checkY >= MapGraph.Height) continue;
-                    
+
                     var nearbyElites = graph.RoomsOnFloor(checkY)
                         .Where(other => other.Type == RoomType.Elite)
                         .ToList();
-                        
+
                     foreach (var elite in nearbyElites)
                     {
                         if (Math.Abs(elite.X - r.X) <= 1)
