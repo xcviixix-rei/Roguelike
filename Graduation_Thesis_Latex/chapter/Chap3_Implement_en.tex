@@ -1,0 +1,261 @@
+\clearpage
+\phantomsection
+\chapter{IMPLEMENTATION}
+
+This chapter details how the system designed in Chapter~2 was implemented. The entire stack - game engine, RL environment, agent training, and evolutionary optimizer - is written in Python. Section~3.1 describes the development environment; Sections~3.2 to 3.4 cover the game engine, heuristic agent, and Gymnasium environment; Section~3.5 presents the three-phase training pipeline; Section~3.6 describes the evolutionary optimization implementation.
+
+\section{Development Environment}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Development environment specifications.}
+    \label{tab:dev_env}
+    \begin{tabular}{ll}
+        \toprule
+        Component & Version / Specification \\
+        \midrule
+        Game Engine Language  & Python 3.12 \\
+        RL Framework          & Stable-Baselines3 2.1.0 \\
+        RL Extension          & sb3-contrib 2.1.0 (MaskablePPO) \\
+        Deep Learning Backend & PyTorch 2.0.0 + CUDA 12.1 \\
+        Multi-Obj.\ Optimizer & pymoo 0.6.0 (NSGA-II) \\
+        RL Environment API    & Gymnasium 0.29.1 \\
+        IDE                   & Visual Studio Code \\
+        Version Control       & Git / GitHub \\
+        Training Platform     & Kaggle Notebooks (GPU T4 $\times$2) \\
+        Local OS              & Windows 11 (development) \\
+        Training OS           & Linux (Kaggle, Ubuntu 22.04) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Python was chosen for the entire stack because it provides native access to all required ML libraries (PyTorch, Stable-Baselines3, pymoo) without any language bridge overhead. The game engine is implemented as a pure Python package (\textit{python\_roguelike}) that is imported directly by both the Gymnasium environment wrapper and the optimization pipeline. Running on Kaggle requires no platform-specific build steps: the package is uploaded as a dataset and \textit{pip install} covers all dependencies from \textit{requirements.txt}.
+
+\section{Core Game Engine Implementation}
+
+\subsection{Project Structure}
+
+The full directory layout of the \textit{python\_roguelike} package is shown in Listing~\ref{lst:package_structure} in the Appendix.
+
+\subsection{Game Controller}
+
+\begin{sloppypar}
+\textit{game\_controller.py} is the top-level orchestrator. It holds references to all data pools (cards, enemies, relics, events), maintains a dictionary of room handlers, and advances the game through the \textit{GameState} state machine (\textit{OnMap}, \textit{InCombat}, \textit{InEvent}, \textit{InShop}, \textit{AwaitingReward}, \textit{GameOver}).
+\end{sloppypar}
+
+The simplified initialization code is shown in Listing~\ref{lst:game_controller} in the Appendix.
+
+\textit{GameRun} is the mutable run-state object. It holds the hero, map, current combat (if any), deck, and relic list. Both the environment wrapper and the simulation runner operate exclusively through \textit{GameController} and \textit{GameRun}.
+
+\subsection{Combat System}
+
+\textit{CombatManager.play\_card()} and \textit{end\_player\_turn()} implement the following per-turn sequence:
+
+\begin{enumerate}
+    \item The hero draws five cards; start-of-turn relic effects apply.
+    \item Each call to \textit{play\_card(card, target)} validates mana, deducts cost, runs \textit{ActionResolver.\allowbreak{}resolve()} for each card action (damage, block, status application), and moves the card to the discard pile.
+    \item \textit{end\_player\_turn()} discards the remaining hand, ticks down status effects, and triggers the enemy phase.
+    \item Each enemy executes its scheduled action (attack / buff / debuff).
+    \item Block is cleared, effects are decremented, and win / loss conditions are checked.
+\end{enumerate}
+
+Status effects (Strength, Weakness, Poison, Burn, Vulnerability, Thorns, Metallicize) are managed by \textit{active\_effect.py}. Each effect stores intensity and duration; they are resolved during damage calculation and decremented at end-of-turn.
+
+\subsection{Map Generation}
+
+\textit{map\_generator.py} builds a directed acyclic graph of 15 floors with 2 - 3 branches per floor:
+
+\begin{enumerate}
+    \item Floor 15 is fixed as a Boss room.
+    \item For each floor 14 down to 1, generate 2 - 3 nodes; assign room types by sampling from the categorical distribution in \textit{HierarchicalGenome.room\_type\_weights}.
+    \item Structural constraints: at least one Rest node per Act; no two consecutive Elites; no Shop on Floor 1.
+    \item Connect nodes to guarantee full reachability from Floor 1 to Floor 15.
+\end{enumerate}
+
+\subsection{Data-Driven Design}
+
+All game entities are defined in \textit{GameData.json} and loaded at startup by \textit{data\_loader.py} using the standard \textit{json} module. The \textit{hierarchical\_applicator.apply()} function takes a genome and mutates in-place cloned copies of the data pools, ensuring the base pools are never modified. Thread safety in the optimization runner is achieved by giving each worker its own deep-copied pool set.
+
+An example card definition is shown in Listing~\ref{lst:card_json} in the Appendix.
+
+\subsection{Heuristic AI Implementation}
+
+\textit{HeuristicPlayerAI} implements \textit{IPlayerAgent} with the decision logic described in Chapter~2. The simplified combat decision logic is shown in Listing~\ref{lst:heuristic_ai} in the Appendix.
+
+\section{Reinforcement Learning Environment}
+
+\subsection{RoguelikeEnv (Gymnasium Wrapper)}
+
+\textit{roguelike\_env.py} subclasses \textit{gymnasium.Env} and wraps \textit{GameController} directly. It requires no inter-process communication or language bridge because both the environment and the game engine are pure Python objects in the same process. The core interface methods (\textit{reset()}, \textit{step()}, \textit{action\_masks()}) are shown in Listing~\ref{lst:gym_env} in the Appendix.
+
+\subsection{Observation Space}
+
+The observation vector $\mathbf{s} \in \mathbb{R}^{152}$ encodes the full game state. Table~\ref{tab:obs_space_impl} describes its components.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Observation space components (total: 152 dimensions).}
+    \label{tab:obs_space_impl}
+    \begin{tabularx}{\linewidth}{lcX}
+        \toprule
+        Component & Dim. & Description \\
+        \midrule
+        Hero state         & 4  & HP ratio, block ratio, mana ratio, gold ratio \\
+        Active effects     & 7  & Strength, Weakness, Poison, Burn, Vulnerability, Thorns, Metallicize \\
+        Hand cards         & 70 & 10 slots $\times$ 7 features (cost, star, type, \#actions, affordable, dmg, block) \\
+        Deck star counts   & 5  & Count of 1- to 5-star cards in master deck \\
+        Enemies            & 24 & 4 slots $\times$ 6 features (HP, block, star, \#effects, intent type, intent value) \\
+        Relics             & 10 & 10 slots: equipped relic star ratings (normalized) \\
+        Game state (one-hot) & 7 & \textit{PreRun, OnMap, InCombat, InEvent, InShop, AwaitingReward, GameOver} \\
+        Next map nodes     & 14 & 7 slots $\times$ 2 features (room type, star rating) \\
+        \midrule
+        Contextual features & & \\
+        Current floor       & 1 & floor / 16 \\
+        Combat turn         & 1 & turn\_number / 20 \\
+        Draw pile size      & 1 & \#cards in draw pile / 30 \\
+        Total incoming dmg  & 1 & Sum of enemy intent damage / 60 \\
+        Affordable hand dmg & 1 & Max damage playable with current mana / 50 \\
+        Turns counter       & 1 & turn\_number / 10 \\
+        Deck attack ratio   & 1 & Fraction of Attack cards in master deck \\
+        Cards played (turn) & 1 & Cards played this turn / 5 \\
+        Affordable block    & 1 & Max block playable with current mana / 20 \\
+        Block vs intent     & 1 & Current block / incoming damage (capped at 1) \\
+        Floor (repeated)    & 1 & floor / 16 (for convenience indexing) \\
+        \midrule
+        Total & 152 & \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+All values are normalized to $[0, 1]$. Empty slots (e.g.\ absent enemies, empty hand positions) are filled with zeros.
+
+\subsection{Action Space}
+
+The action space encoding follows the 67-action specification defined in Section~2.5.2. At each step, \textit{action\_masks()} returns a binary vector of length 67 marking all currently legal actions; \textit{MaskablePPO} sets the logits of illegal actions to $-\infty$ before softmax so they are never sampled.
+
+\subsection{Domain Randomization}
+
+The \textit{\_apply\_domain\_randomization()} method applies uniform multiplicative noise to card values, enemy HP, and hero HP at each \textit{reset()}, using a curriculum ramp. The implementation is shown in Listing~\ref{lst:domain_rand} in the Appendix.
+
+\begin{sloppypar}
+A \textit{DRCurriculumCallback} in \textit{training\_utils.py} can externally set the noise level via \textit{env.set\_dr\_noise()}, enabling a finer-grained curriculum controlled from the training loop rather than the episode counter.
+\end{sloppypar}
+
+\section{Agent Training Pipeline}
+
+\subsection{Three-Phase Training Strategy}
+
+Each agent is trained in three successive phases, each loading the checkpoint from the previous phase:
+
+\begin{enumerate}
+    \item \textbf{Phase 1 - Easy maps (5 million steps):} DR disabled. The environment is configured with \textit{early\_win\_floor = 8}, which terminates an episode early (as a win) if the agent reaches Floor 8. This gives the agent dense win-signal feedback early in training, preventing the policy from collapsing to all-pass behavior. LR follows a cosine decay from $3\times10^{-4}$ to $3\times10^{-5}$.
+    \item \textbf{Phase 2 - Full maps (5 million steps, total 10 million):} The \textit{early\_win\_floor} constraint is lifted; the agent must now reach Floor 15 to win. DR is still disabled. LR cosine-decays from $1\times10^{-4}$ to $1\times10^{-5}$.
+    \item \textbf{Phase 3 - Domain Randomization (4 million steps, total 14 million):} DR is enabled with a curriculum ramp from $\delta=0$ to $\delta=0.08$ over the first 500K steps. This phase forces the agent to generalize across parameter variations, making it a robust evaluator for the optimization search. LR cosine-decays from $3\times10^{-5}$ to $5\times10^{-6}$.
+\end{enumerate}
+
+The three-phase strategy reflects a standard curriculum learning approach: start with a tractable subproblem, increase difficulty, then add distributional shift.
+
+\subsection{MaskablePPO Hyperparameters}
+
+\begin{table}[htbp]
+    \centering
+    \caption{MaskablePPO hyperparameters for all four agents across the three training phases.}
+    \label{tab:ppo_params}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lccc}
+        \toprule
+        Parameter & Phase 1 & Phase 2 & Phase 3 \\
+        \midrule
+        Network architecture    & \multicolumn{3}{c}{MLP [512, 512] (actor and critic)} \\
+        Training steps          & 5M    & 5M   & 4M \\
+        Learning rate schedule  & Cosine $3\times10^{-4} \to 3\times10^{-5}$ & Cosine $1\times10^{-4} \to 1\times10^{-5}$ & Cosine $3\times10^{-5} \to 5\times10^{-6}$ \\
+        n\_steps (rollout)      & \multicolumn{3}{c}{2048} \\
+        Batch size              & \multicolumn{3}{c}{256} \\
+        n\_epochs               & 6     & 5    & 4 \\
+        Clip range ($\epsilon$) & 0.20  & 0.20 & 0.15 \\
+        Entropy coefficient     & 0.05  & 0.05 & 0.08 \\
+        GAE $\lambda$           & \multicolumn{3}{c}{0.95} \\
+        Discount $\gamma$       & \multicolumn{3}{c}{0.99} \\
+        Parallel environments   & \multicolumn{3}{c}{4 (SubprocVecEnv)} \\
+        Early win floor         & 8     & -   & - \\
+        DR noise $\delta$       & 0.00  & 0.00 & $0 \to 0.08$ (ramp) \\
+        \bottomrule
+    \end{tabular}}%
+\end{table}
+
+The reduced epoch count (6 $\to$ 5 $\to$ 4) and tighter clipping range in Phase 3 reduce the magnitude of each policy update, preventing the performance regression that occurs when sudden DR noise shifts the effective reward distribution. The elevated entropy coefficient in Phase 3 (0.05 $\to$ 0.08) maintains exploratory behavior in the high-variance DR environment.
+
+\subsection{Deck Quality Reward}
+
+All four agents share a deck quality reward at card selection events. Without this reward, agents systematically select 1- and 2-star cards early because they are immediately familiar and do not increase episode complexity:
+\begin{equation}
+r_{\text{deck}} = \begin{cases}
++8 & \text{if selected card is 4 or 5 stars} \\
++3 & \text{if selected card is 3 stars} \\
+0  & \text{otherwise (1 or 2 stars)}
+\end{cases}
+\end{equation}
+This reward only fires during card-reward events and does not affect combat behavior.
+
+\subsection{Training Infrastructure}
+
+The complete three-phase training loop is shown in Listing~\ref{lst:training_loop} in the Appendix.
+
+Training was run on Kaggle's free GPU tier (NVIDIA Tesla T4, 16 GB VRAM) with 4 parallel environments. Each agent's 14-million-step run required approximately 18 - 24 hours total across the three phases. Models were checkpointed at each phase end and also at every best win-rate evaluated by \textit{MaskableEvalCB}.
+
+\section{Evolutionary Optimization Implementation}
+
+\subsection{Genome Representation}
+
+The \textit{HierarchicalGenome} class defines 38 continuous parameters stored as a flat NumPy vector for use with pymoo:
+
+\begin{table}[htbp]
+    \centering
+    \caption{HierarchicalGenome parameter groups (38 continuous dimensions).}
+    \label{tab:genome_params}
+    \begin{tabular}{lcc}
+        \toprule
+        Group & \# Parameters & Examples \\
+        \midrule
+        Global multipliers       & 5  & damage, health, block, mana cost, gold \\
+        Progression scaling      & 9  & early/mid/late $\times$ damage/health/block \\
+        Card type scalars        & 3  & Attack, Skill, Power \\
+        Card star scalars        & 5  & 1-star through 5-star \\
+        Enemy star scalars       & 5  & 1-star through 5-star \\
+        Room type weights        & 5  & Monster, Elite, Event, Shop, Rest \\
+        Encounter ratios         & 2  & monster\_star\_ratio, elite\_star\_ratio \\
+        Economy \& healing       & 3  & rest\_healing\_scalar, hero\_health, hero\_gold \\
+        Difficulty rate          & 1  & difficulty\_progression\_rate \\
+        \midrule
+        Total & 38 & \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The 38-dimensional continuous space represents a substantial compression relative to the approximately 500 raw numerical values in \textit{GameData.json}. The \textit{to\_vector()} / \textit{from\_vector()} methods convert between the structured genome object and the flat array consumed by pymoo's operators. \textit{hierarchical\_applicator.apply()} translates a genome vector back to concrete game data by applying multiplicative scalars in order: global multipliers first, then progression scalars (floor-dependent), then per-type and per-star-rating adjustments.
+
+\subsection{Simulation Runner}
+
+\textit{simulation\_runner.py} coordinates batch evaluation; the \textit{run\_batch()} method is shown in Listing~\ref{lst:sim_runner} in the Appendix.
+
+Each \textit{\_run\_single()} call instantiates a fresh \textit{GameController} with the modified pools, runs the game to completion (or until the step limit), and returns a \textit{SimulationStats} object recording win/loss, final HP, floor reached, and card pick / outcome data.
+
+\subsection{Fitness Evaluator}
+
+\textit{fitness.py} implements \textit{MultiObjectiveEvaluator.evaluate()} over a list of \textit{SimulationStats}:
+
+\begin{itemize}
+    \item \textbf{Balance score:} Gaussian penalty around targets. Win rate target $w^* = 0.45$; victory HP target 30\%; average floor on death target 10.
+    \item \textbf{Engagement score:} Fraction of non-starting cards that are ``viable'' (positive correlation between card pick rate and win rate), normalized by total available cards.
+    \item \textbf{Coherence score:} Penalty for trap cards (high pick rate but below-average win rate) and for parameter values outside interpretable ranges.
+\end{itemize}
+
+\subsection{NSGA-II via pymoo}
+
+The NSGA-II optimization uses pymoo~\cite{blank2020pymoo} built-in \textit{NSGA2} algorithm, wrapped by a custom \textit{Problem} subclass. The problem definition and optimization launch are shown in Listing~\ref{lst:nsga2_problem} in the Appendix.
+
+The \textit{RoguelikeBalanceProblem} declares three minimization objectives (negated Balance, Engagement, Coherence) and three inequality constraints (win rate within $[0.25, 0.65]$; viable cards $\geq 2$; trap cards $\leq 2$). pymoo's NSGA-II handles non-dominated sorting and crowding-distance diversity automatically, consistent with the theoretical description in Chapter~1.
+
+\begin{sloppypar}
+The best-compromise solution from the returned Pareto front is selected using the minimum-distance-to-ideal-point criterion: find the solution in the front closest to the utopia point $\mathbf{F}^* = (1.0, 1.0, 1.0)$ in normalized objective space.
+\end{sloppypar}

@@ -1,0 +1,103 @@
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Introduction}
+\chapter*{INTRODUCTION}
+
+This chapter provides an overview of the thesis: it motivates the research problem, introduces the game prototype with a concrete balance example, formally defines the optimization objectives, states each research objective mapped to its corresponding chapter, and summarizes the main contributions.
+
+\section*{1. Motivation}
+
+The video game industry has grown into one of the largest entertainment sectors in the world, generating over \$180 billion in annual revenue. Within this landscape, the Roguelike Deckbuilder sub-genre has seen remarkable popularity, with titles such as Slay the Spire, Monster Train, and Inscryption achieving both critical acclaim and millions of copies sold \cite{slaythespire}. These games combine procedurally generated maps, permadeath mechanics, and an evolving card collection that the player builds across each run.
+
+Despite their commercial success, Roguelike Deckbuilders are notoriously difficult to balance. A well-balanced game must satisfy several competing requirements: it should be challenging enough to remain engaging but not so punishing that players quit in frustration; the card pool should support multiple viable strategies so that no single best deck dominates; and the difficulty should increase smoothly across fifteen or more floors so that no single floor becomes an impassable wall. Satisfying all of these properties across the combinatorial space of possible card combinations, enemy encounters, relic synergies, and random deck draws is a task that defies purely manual tuning \cite{schell2019art}.
+
+Traditional balancing relies on playtesting: human players attempt the game, report problems, and designers manually adjust parameters. This process is slow, expensive, and bounded by the design team's available time. It is also inherently subjective: what feels fair to an expert player may seem impossible to a beginner. Automated simulation provides a data-driven alternative, but raises a key question: what AI agent should simulate the player?
+
+This thesis addresses both problems together. We design and train a suite of Reinforcement Learning (RL) AI agents that learn to play the game, and then use these agents as evaluators inside an evolutionary optimization loop that searches for well-balanced game configurations.
+
+\section*{2. The Game and the Concept of Balance}
+
+\subsection*{2.1 The Game Prototype}
+
+The experimental platform for this thesis is a custom Roguelike Deckbuilder game prototype implemented in Python. The game proceeds as a series of \textit{runs}. Each run places the player character on a 15-floor map divided into three Acts (floors 1 to 5, 6 to 10, and 11 to 15). The player begins with a small starter deck and a fixed amount of HP. At each floor, the player selects one room from the available nodes on the map. Rooms come in five types: Monster (mandatory combat), Elite (a harder combat with better rewards), Rest Site (heal or permanently remove a card from the deck), Shop (buy or remove cards with gold), and Event (a text-based choice with random outcomes).
+
+Combat is turn-based. Each turn, the player draws five cards and has three mana points to spend. Playing a card consumes mana according to its cost and triggers its effect - dealing damage to enemies, gaining block (temporary damage reduction), or applying a status effect such as Poison or Burn. After the player ends their turn, each enemy executes its scheduled action: attacking, buffing itself, or debuffing the player. Block is cleared at the end of each turn. Combat ends when all enemies are defeated (the player wins the room) or the player's HP reaches zero (the run ends in defeat).
+
+After each Monster or Elite room, the player chooses one of three randomly offered cards to add to their deck. Rest Sites allow healing or card removal. After defeating all fifteen floors and the final boss, the run ends in victory. The game contains over 30 distinct cards organized into three types (Attack, Skill, Power) with star ratings 1 to 5, over 20 passive relics, and a range of enemy types that increase in difficulty across Acts.
+
+\subsection*{2.2 What is Game Balance? A Concrete Example}
+
+Game balance means the game is neither too easy nor too hard, and that many different deck-building strategies can lead to victory. To make this concrete, consider a single parameter: the damage value of the card \textit{Flame Strike}, a 2-mana Attack card.
+
+\textbf{Unbalanced (too easy):} If Flame Strike deals 40 damage while most early enemies have only 15 HP, the player clears every combat in the first turn with two cards. Win rates approach 90\%. The game becomes trivial and unengaging - players never need to manage block, plan turn order, or explore card synergies.
+
+\textbf{Unbalanced (too hard):} If Flame Strike deals 3 damage while enemies deal 10 damage per attack and have 50 HP, the player can never kill enemies fast enough to prevent fatal damage accumulation. Win rates drop below 5\%. The game becomes unwinnable and frustrating.
+
+\textbf{Balanced:} With Flame Strike at 8 damage, enemies at roughly 20 to 30 HP, and enemies dealing 6 to 9 damage per attack, the player must combine multiple cards and manage block carefully to survive. Win rates settle around 30 to 40\% for a well-trained AI agent - victory is achievable but demands good decisions. Multiple strategies can succeed: a burn-focused deck, a block-heavy defensive build, or a mixed approach all remain viable, keeping the game engaging.
+
+Balancing the full game means finding the right values for \textit{all} parameters simultaneously - every card's damage, every enemy's HP and attack power, mana costs, room frequencies, healing rates, and more. Approximately 500 individual values must be tuned together. This is the core problem this thesis addresses.
+
+\section*{3. Problem Statement}
+
+Let $\theta \in \mathbb{R}^n$ be a vector of game parameters. In our game, $\theta$ includes values such as the base damage of Flame Strike (nominally 8), the HP of Goblin enemies (nominally 25), each card's mana cost, room type distribution weights, and rest site healing rates - approximately 500 individual parameters in total. Given a game simulator $G(\theta)$ and a set of AI agents $\mathcal{A} = \{a_1, a_2, \ldots, a_k\}$, we wish to find $\theta^*$ such that the resulting game satisfies:
+\begin{enumerate}
+    \item \textbf{Balance:} The win rate $w(\theta, a)$ for a representative AI agent $a$ lies within a target range $[w_{\min}, w_{\max}]$, and the game neither trivializes nor becomes unwinnable. In our experiment, the target is $w \in [35\%, 55\%]$, directly grounded in the Flame Strike example above.
+    \item \textbf{Engagement:} A large fraction of available cards are viable - choosing them correlates positively with winning - supporting diverse build strategies. A game where only three cards are worth picking fails this criterion.
+    \item \textbf{Coherence:} No card is a dominant trap - one that appears powerful but consistently leads to defeat - and all parameter values remain within an interpretable and realistic range.
+\end{enumerate}
+Because these three objectives can conflict (making the game harder may improve balance but reduce engagement by limiting viable strategies), we frame the search as a multi-objective optimization problem over the Pareto front of $(\text{Balance}, \text{Engagement}, \text{Coherence})$.
+
+This overarching problem naturally decomposes into three technically distinct sub-prob\-lems, each requiring a dedicated system component:
+
+\begin{enumerate}
+    \item \textbf{Sub-Problem 1 - Core Game Engine}: Implement a complete, data-driven game simulation that faithfully replicates the Roguelike Deckbuilder rules and exposes all balance parameters through a modifiable interface. This is the prerequisite for both automated evaluation and optimization - without a fast, parametrically tunable simulator, neither the agents nor the optimizer can function. The game-design foundations are covered in Chapter~1, Section~1.1; the engine design and implementation appear in Chapters~2 and~3.
+    \item \textbf{Sub-Problem 2 - AI Agent for Game Evaluation}: Design and train AI agents that can play the game and provide a meaningful, diverse quality signal. A single deterministic agent captures only one play style and may miss balance problems visible only under a different strategy. We address this by combining a fast Deterministic Heuristic Agent (DHA) for optimization throughput with four MaskablePPO RL personas (Aggressive, Defensive, Balanced, Adaptive) for behavioral diversity and final validation. The RL theoretical background is in Chapter~1, Section~1.4; agent design and training are in Chapters~2 and~3.
+    \item \textbf{Sub-Problem 3 - Multi-Objective}\newline\textbf{Game Balance Optimization}: Search the $\sim$500-dimensional parameter space $\theta$ to find configurations that simultaneously satisfy all three objectives. Because the objectives conflict, a multi-objective algorithm returning a \emph{Pareto front} of trade-off solutions is more informative than a fixed-weight scalar fitness function - it preserves designer agency by revealing the actual trade-off space rather than committing to a single weighting prior to the search. The GA and NSGA-II algorithmic background is in Chapter~1, Sections~1.2 and~1.3; the optimizer design and evaluation appear in Chapters~2, 3, and~4.
+\end{enumerate}
+
+These sub-problems are interdependent: Sub-Problem~3 cannot begin until Sub-Problems~1 and~2 are solved, and the quality of the optimization result is bounded by the fidelity of both the simulation and the evaluation agents. The three sub-problems also map directly onto the four-layer system architecture presented in Chapter~2.
+
+\section*{4. Research Objectives}
+
+The concrete objectives of this thesis, each mapped to the chapter where it is primarily addressed, are:
+\begin{enumerate}
+    \item \textbf{Build a complete game prototype} (Chapters 2 and 3): Implement a fully playable Roguelike Deckbuilder in Python with turn-based combat, a procedurally generated map, a card and relic system, and a data-driven parameter system loadable from JSON.
+    \item \textbf{Establish a playability baseline} (Chapters 2 and 3): Design and implement a rule-based Deterministic Heuristic AI Agent (DHA) that confirms the game is playable and provides a fast initial balancing signal.
+    \item \textbf{Train four RL AI agent personas} (Chapters 2, 3, and 4): Replace the deterministic agent with four learned MaskablePPO AI agents representing distinct play styles (Aggressive, Defensive, Balanced, Adaptive), each trained with persona-specific reward shaping and Domain Randomization to generalize across varied game configurations.
+    \item \textbf{Implement and compare two evolutionary optimizers} (Chapters 2, 3, and 4): Deploy a Single-Objective Genetic Algorithm (GA) and the NSGA-II multi-objective algorithm; compare their effectiveness at discovering balanced game configurations.
+    \item \textbf{Analyze and visualize results} (Chapter 4): Produce Pareto front analysis, card viability charts, and training convergence curves to demonstrate that the research objectives have been met.
+\end{enumerate}
+
+\section*{5. Scope and Methodology}
+
+The research covers the full software stack from game engine to optimization layer. The game prototype is designed as a research vehicle rather than a commercial product; its parameter space is representative of the real design challenge without requiring a production codebase.
+
+The work proceeds through four phases:
+\begin{enumerate}
+    \item \textbf{Foundation (Chapter 1):} Literature review on Roguelike games, evolutionary algorithms, reinforcement learning, and related automated balancing research.
+    \item \textbf{System design (Chapter 2):} Define requirements, system architecture, AI agent designs, and optimization formulations.
+    \item \textbf{Implementation (Chapter 3):} Implement the Python game engine, the Gymnasium RL environment, and the optimization modules.
+    \item \textbf{Evaluation (Chapter 4):} Train AI agents, run GA and NSGA-II experiments, and analyze results.
+\end{enumerate}
+
+\section*{6. Main Contributions}
+
+The primary contributions of this thesis, each directly addressing one or more of the stated objectives, are:
+\begin{itemize}
+    \item A complete, open-source Roguelike Deckbuilder prototype with a data-driven architecture that separates game logic from balance parameters, enabling fully automated parameter search (addresses Objective 1).
+    \item Four trained RL AI agent personas exhibiting measurably distinct behaviors - win rates from 24\% to 34\% with statistically significant behavioral differences - covering the diversity of strategies needed for meaningful balance testing (addresses Objective 3).
+    \item A hierarchical genome encoding that compresses approximately 500 raw game parameters into 38 semantically coherent continuous dimensions, enabling faster and more coherent optimization convergence (addresses Objectives 1 and 4).
+    \item An empirical comparison of GA versus NSGA-II for game balancing under identical simulation budgets, demonstrating that the hierarchical NSGA-II converges 33\% faster while achieving superior scores on all three objectives (addresses Objective 4).
+    \item A reusable framework applicable to other card-based or turn-based games with minor adaptation.
+\end{itemize}
+
+\section*{7. Thesis Structure}
+
+The remainder of this thesis is organized as follows:
+\begin{itemize}
+    \item \textbf{Chapter 1 - Background and Related Work:} Surveys theory organized around the three sub-problems. Section~1.1 covers Sub-Problem~1 foundations: Roguelike Deckbuilder mechanics and automated balancing challenges. Sections~1.2 and~1.3 cover Sub-Problem~3 foundations: a comparative survey of game balancing approaches, followed by the Genetic Algorithm and NSGA-II algorithms with explicit mapping to the game objectives. Section~1.4 covers Sub-Problem~2 foundations: the motivation for intelligent evaluation agents, Reinforcement Learning theory (MDP, PPO, invalid action masking), and Domain Randomization. Section~1.5 reviews related prior work and positions this thesis relative to the literature.
+    \item \textbf{Chapter 2 - System Analysis and Design:} Presents the requirements analysis, the four-layer architecture, the game engine design, the RL environment specification, the four AI agent persona designs, and the optimization layer design including genome representations and fitness functions.
+    \item \textbf{Chapter 3 - Implementation:} Details the Python game engine implementation, the Gymnasium RL environment, the three-phase MaskablePPO training pipeline, and the GA/\allowbreak{}NSGA-II optimizer implementations.
+    \item \textbf{Chapter 4 - Experiments and Evaluation:} Reports results for both the RL training phase and the evolutionary optimization phase, including comparative discussion and interpretation of how results demonstrate achievement of the research objectives.
+    \item \textbf{Conclusion:} Summarizes the achievements relative to the stated objectives, identifies current limitations, and outlines future research directions.
+\end{itemize}

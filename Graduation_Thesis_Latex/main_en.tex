@@ -1,9 +1,8 @@
 \documentclass[a4paper,12pt,oneside]{book}
 
 % Language and encoding
-\usepackage[utf8]{inputenc}
-\usepackage[T1,T5]{fontenc}
-\usepackage{times}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{setspace}
@@ -18,6 +17,10 @@
 \setlength{\parskip}{6pt}
 \usepackage{indentfirst}
 
+% TikZ (for outer cover border)
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+
 % Figures
 \usepackage{graphicx}
 \graphicspath{{figures/}}
@@ -26,6 +29,7 @@
 
 % Tables
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{tabularx}
@@ -100,17 +104,30 @@
 \begin{document}
 
 %==============================================
+% OUTER COVER (Trang bìa Tiếng Anh - Phụ lục 02)
+%==============================================
+\pagestyle{empty}
+\input{cover/Biangoai_en}
+\clearpage
+
+%==============================================
+% OUTER COVER (Trang bìa Tiếng Việt - Phụ lục 01)
+%==============================================
+\input{cover/Biangoai}
+\clearpage
+
+%==============================================
 % FRONT MATTER
 %==============================================
 \frontmatter
 \pagenumbering{roman}
 
-% Required order per VNU-UET regulation:
-% Phụ lục 02 (Vietnamese title) → Phụ lục 05 (English title) →
-% Phụ lục 03 (Vietnamese abstract) → Phụ lục 06 (English abstract) →
+% Required order per VNU-UET §1.4:
+% Phụ lục 03 (Vietnamese inner cover) → Phụ lục 04 (English inner cover) →
+% Phụ lục 05 (Vietnamese abstract)   → Phụ lục 06 (English abstract)   →
 % Declaration → Acknowledgements
-\include{cover/Biatrong_vi}
 \include{cover/Biatrong_en}
+\include{cover/Biatrong_vi}
 \include{cover/tomtat_vi}
 \include{cover/tomtat_en}
 \include{cover/loicamdoan_en}
@@ -144,13 +161,23 @@
 %==============================================
 \mainmatter
 \pagenumbering{arabic}
+\pagestyle{fancy}
 
 \include{chapter/Chap0_Introduction_en}
 \include{chapter/Chap1_Background_en}
 \include{chapter/Chap2_Design_en}
 \include{chapter/Chap3_Implement_en}
 \include{chapter/Chap4_Results_en}
+
+%==============================================
+% CONCLUSION (non-numbered, like Appendix)
+%==============================================
 \include{chapter/Chap5_Conclusion_en}
+
+%==============================================
+% APPENDIX
+%==============================================
+\include{chapter/Appendix_en}
 
 %==============================================
 % BIBLIOGRAPHY
@@ -159,10 +186,5 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{References}
 \bibliography{references_en}
-
-%==============================================
-% APPENDIX
-%==============================================
-\include{chapter/Appendix_en}
 
 \end{document}

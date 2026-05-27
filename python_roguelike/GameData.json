@@ -340,6 +340,198 @@
       "Decay": "AfterXTURNS",
       "EffectType": "Strength",
       "Target": "Self"
+    },
+    {
+      "Id": "card_blood_ritual_strength",
+      "Name": "Ritual Power",
+      "Description": "Gain 3 Strength.",
+      "Intensity": 3,
+      "IntensityType": "Flat",
+      "Duration": 999,
+      "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_coppervial_block",
+      "Name": "Copper Defense",
+      "Description": "Gain 3 Block at start of combat.",
+      "Intensity": 3,
+      "IntensityType": "Flat",
+      "Duration": 1,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "ImmediateBlock",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_snakebite_vial_weakened",
+      "Name": "Venom Debuff",
+      "Description": "Apply 1 Weakened to all enemies at start of combat.",
+      "Intensity": 25,
+      "IntensityType": "Percentage",
+      "Duration": 2,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Weakened",
+      "Target": "AllOpponents"
+    },
+    {
+      "Id": "relic_molten_ore_strength",
+      "Name": "Volcanic Power",
+      "Description": "Gain 2 Strength at start of each combat.",
+      "Intensity": 2,
+      "IntensityType": "Flat",
+      "Duration": 999,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_iron_crown_block",
+      "Name": "Ironclad Defense",
+      "Description": "Gain 10 Block at start of each combat.",
+      "Intensity": 10,
+      "IntensityType": "Flat",
+      "Duration": 1,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "ImmediateBlock",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_steel_ring_vulnerable",
+      "Name": "Ring Strike Vulnerable",
+      "Description": "Apply 1 Vulnerable to all enemies at start of combat.",
+      "Intensity": 50,
+      "IntensityType": "Percentage",
+      "Duration": 2,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Vulnerable",
+      "Target": "AllOpponents"
+    },
+    {
+      "Id": "relic_steel_ring_weakened",
+      "Name": "Ring Strike Weakened",
+      "Description": "Apply 1 Weakened to all enemies at start of combat.",
+      "Intensity": 25,
+      "IntensityType": "Percentage",
+      "Duration": 2,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Weakened",
+      "Target": "AllOpponents"
+    },
+    {
+      "Id": "relic_ancient_gauntlet_block",
+      "Name": "Ancient Fortification",
+      "Description": "Gain 15 Block at start of each combat.",
+      "Intensity": 15,
+      "IntensityType": "Flat",
+      "Duration": 1,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "ImmediateBlock",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_battle_standard_strength",
+      "Name": "Battle Strength",
+      "Description": "Gain 3 Strength at start of each combat.",
+      "Intensity": 3,
+      "IntensityType": "Flat",
+      "Duration": 999,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_shadow_cloak_weakened",
+      "Name": "Shadow Debuff",
+      "Description": "Apply 1 Weakened to all enemies at start of combat.",
+      "Intensity": 25,
+      "IntensityType": "Percentage",
+      "Duration": 3,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Weakened",
+      "Target": "AllOpponents"
+    },
+    {
+      "Id": "relic_commanders_insignia_vulnerable",
+      "Name": "Commander Strike",
+      "Description": "Apply 1 Vulnerable to all enemies at start of combat.",
+      "Intensity": 50,
+      "IntensityType": "Percentage",
+      "Duration": 3,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Vulnerable",
+      "Target": "AllOpponents"
+    },
+    {
+      "Id": "relic_commanders_insignia_strength",
+      "Name": "Commander Power",
+      "Description": "Gain 1 Strength at start of each combat.",
+      "Intensity": 1,
+      "IntensityType": "Flat",
+      "Duration": 999,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_dragon_heart_block",
+      "Name": "Dragon Defense",
+      "Description": "Gain 20 Block at start of each combat.",
+      "Intensity": 20,
+      "IntensityType": "Flat",
+      "Duration": 1,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "ImmediateBlock",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_dragon_heart_strength",
+      "Name": "Dragon Power",
+      "Description": "Gain 3 Strength at start of each combat.",
+      "Intensity": 3,
+      "IntensityType": "Flat",
+      "Duration": 999,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Strength",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_void_crystal_vulnerable",
+      "Name": "Void Vulnerable",
+      "Description": "Apply 1 Vulnerable to all enemies at start of combat.",
+      "Intensity": 50,
+      "IntensityType": "Percentage",
+      "Duration": 3,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Vulnerable",
+      "Target": "AllOpponents"
+    },
+    {
+      "Id": "relic_void_crystal_weakened",
+      "Name": "Void Weakened",
+      "Description": "Apply 1 Weakened to all enemies at start of combat.",
+      "Intensity": 25,
+      "IntensityType": "Percentage",
+      "Duration": 3,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "Weakened",
+      "Target": "AllOpponents"
     }
   ],
   "DeckEffects": [
@@ -387,6 +579,42 @@
       "IntensityType": "Flat",
       "Duration": 1,
       "ApplyType": "RightAway",
+      "Decay": "AfterXTURNS",
+      "EffectType": "DrawCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_sturdy_bracelet_draw",
+      "Name": "Bracelet Draw",
+      "Description": "Draw 1 card at start of combat.",
+      "Intensity": 1,
+      "IntensityType": "Flat",
+      "Duration": 1,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "DrawCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_warriors_tome_draw",
+      "Name": "Tome Draw",
+      "Description": "Draw 2 cards at start of each combat.",
+      "Intensity": 2,
+      "IntensityType": "Flat",
+      "Duration": 1,
+      "ApplyType": "StartOfCombat",
+      "Decay": "AfterXTURNS",
+      "EffectType": "DrawCard",
+      "Target": "Self"
+    },
+    {
+      "Id": "relic_champions_belt_draw",
+      "Name": "Belt Draw",
+      "Description": "Draw 3 cards at start of each combat.",
+      "Intensity": 3,
+      "IntensityType": "Flat",
+      "Duration": 1,
+      "ApplyType": "StartOfCombat",
       "Decay": "AfterXTURNS",
       "EffectType": "DrawCard",
       "Target": "Self"
@@ -766,6 +994,124 @@
           "Type": "GainHealth",
           "Value": 15,
           "Target": "Self"
+        }
+      ]
+    },
+    {
+      "Id": "iron_will",
+      "Name": "Iron Will",
+      "Description": "Gain 8 Block.",
+      "ManaCost": 1,
+      "StarRating": 1,
+      "Type": "Skill",
+      "Actions": [
+        {
+          "Type": "GainBlock",
+          "Value": 8,
+          "Target": "Self"
+        }
+      ]
+    },
+    {
+      "Id": "reckless_swing",
+      "Name": "Reckless Swing",
+      "Description": "Deal 18 damage.",
+      "ManaCost": 2,
+      "StarRating": 2,
+      "Type": "Attack",
+      "Actions": [
+        {
+          "Type": "DealDamage",
+          "Value": 18,
+          "Target": "SingleOpponent"
+        }
+      ]
+    },
+    {
+      "Id": "chain_strike",
+      "Name": "Chain Strike",
+      "Description": "Deal 8 damage twice.",
+      "ManaCost": 2,
+      "StarRating": 3,
+      "Type": "Attack",
+      "Actions": [
+        {
+          "Type": "DealDamage",
+          "Value": 8,
+          "Target": "SingleOpponent"
+        },
+        {
+          "Type": "DealDamage",
+          "Value": 8,
+          "Target": "SingleOpponent"
+        }
+      ]
+    },
+    {
+      "Id": "fortify",
+      "Name": "Fortify",
+      "Description": "Gain 15 Block. Apply 1 Vulnerable to an enemy.",
+      "ManaCost": 2,
+      "StarRating": 3,
+      "Type": "Skill",
+      "Actions": [
+        {
+          "Type": "GainBlock",
+          "Value": 15,
+          "Target": "Self"
+        },
+        {
+          "Type": "ApplyStatusEffect",
+          "Value": 1,
+          "Target": "SingleOpponent",
+          "EffectId": "card_expose_weakness_vulnerable"
+        }
+      ]
+    },
+    {
+      "Id": "blood_ritual",
+      "Name": "Blood Ritual",
+      "Description": "Gain 3 Strength.",
+      "ManaCost": 2,
+      "StarRating": 4,
+      "Type": "Power",
+      "Actions": [
+        {
+          "Type": "ApplyStatusEffect",
+          "Value": 3,
+          "Target": "Self",
+          "EffectId": "card_blood_ritual_strength"
+        }
+      ]
+    },
+    {
+      "Id": "catastrophe",
+      "Name": "Catastrophe",
+      "Description": "Deal 30 damage to all enemies.",
+      "ManaCost": 3,
+      "StarRating": 5,
+      "Type": "Attack",
+      "Actions": [
+        {
+          "Type": "DealDamage",
+          "Value": 30,
+          "Target": "AllOpponents"
+        }
+      ]
+    },
+    {
+      "Id": "temporal_flux",
+      "Name": "Temporal Flux",
+      "Description": "Draw 3 cards.",
+      "ManaCost": 0,
+      "StarRating": 5,
+      "Type": "Skill",
+      "Actions": [
+        {
+          "Type": "ApplyDeckEffect",
+          "Value": 3,
+          "Target": "Self",
+          "EffectId": "card_battle_trance_draw"
         }
       ]
     }
@@ -1458,6 +1804,150 @@
       "EffectIds": [
         "relic_tactical_advantage_vulnerable",
         "relic_tactical_advantage_strength"
+      ]
+    },
+    {
+      "Id": "coppervial",
+      "Name": "Copper Vial",
+      "Description": "Gain 3 Block at the start of each combat.",
+      "IsBossRelic": false,
+      "StarRating": 1,
+      "EffectIds": [
+        "relic_coppervial_block"
+      ]
+    },
+    {
+      "Id": "sturdy_bracelet",
+      "Name": "Sturdy Bracelet",
+      "Description": "Draw 1 extra card at the start of each combat.",
+      "IsBossRelic": false,
+      "StarRating": 1,
+      "EffectIds": [
+        "relic_sturdy_bracelet_draw"
+      ]
+    },
+    {
+      "Id": "snakebite_vial",
+      "Name": "Snakebite Vial",
+      "Description": "Apply 1 Weakened to all enemies at the start of combat.",
+      "IsBossRelic": false,
+      "StarRating": 2,
+      "EffectIds": [
+        "relic_snakebite_vial_weakened"
+      ]
+    },
+    {
+      "Id": "molten_ore",
+      "Name": "Molten Ore",
+      "Description": "Gain 2 Strength at the start of each combat.",
+      "IsBossRelic": false,
+      "StarRating": 2,
+      "EffectIds": [
+        "relic_molten_ore_strength"
+      ]
+    },
+    {
+      "Id": "iron_crown",
+      "Name": "Iron Crown",
+      "Description": "Gain 10 Block at the start of each combat.",
+      "IsBossRelic": false,
+      "StarRating": 3,
+      "EffectIds": [
+        "relic_iron_crown_block"
+      ]
+    },
+    {
+      "Id": "warriors_tome",
+      "Name": "Warrior's Tome",
+      "Description": "Draw 2 extra cards at the start of each combat.",
+      "IsBossRelic": false,
+      "StarRating": 3,
+      "EffectIds": [
+        "relic_warriors_tome_draw"
+      ]
+    },
+    {
+      "Id": "steel_ring",
+      "Name": "Steel Ring",
+      "Description": "Apply 1 Vulnerable and 1 Weakened to all enemies at the start of combat.",
+      "IsBossRelic": false,
+      "StarRating": 3,
+      "EffectIds": [
+        "relic_steel_ring_vulnerable",
+        "relic_steel_ring_weakened"
+      ]
+    },
+    {
+      "Id": "ancient_gauntlet",
+      "Name": "Ancient Gauntlet",
+      "Description": "Gain 15 Block at the start of each combat.",
+      "IsBossRelic": false,
+      "StarRating": 4,
+      "EffectIds": [
+        "relic_ancient_gauntlet_block"
+      ]
+    },
+    {
+      "Id": "battle_standard",
+      "Name": "Battle Standard",
+      "Description": "Gain 3 Strength at the start of each combat.",
+      "IsBossRelic": false,
+      "StarRating": 4,
+      "EffectIds": [
+        "relic_battle_standard_strength"
+      ]
+    },
+    {
+      "Id": "shadow_cloak",
+      "Name": "Shadow Cloak",
+      "Description": "Apply 1 Weakened to all enemies at the start of each combat.",
+      "IsBossRelic": false,
+      "StarRating": 4,
+      "EffectIds": [
+        "relic_shadow_cloak_weakened"
+      ]
+    },
+    {
+      "Id": "commanders_insignia",
+      "Name": "Commander's Insignia",
+      "Description": "Apply 1 Vulnerable to all enemies and gain 1 Strength at the start of combat.",
+      "IsBossRelic": false,
+      "StarRating": 4,
+      "EffectIds": [
+        "relic_commanders_insignia_vulnerable",
+        "relic_commanders_insignia_strength"
+      ]
+    },
+    {
+      "Id": "dragon_heart",
+      "Name": "Dragon Heart",
+      "Description": "Gain 20 Block and 3 Strength at the start of each combat.",
+      "IsBossRelic": true,
+      "StarRating": 5,
+      "EffectIds": [
+        "relic_dragon_heart_block",
+        "relic_dragon_heart_strength"
+      ]
+    },
+    {
+      "Id": "void_crystal",
+      "Name": "Void Crystal",
+      "Description": "Apply 1 Vulnerable and 1 Weakened to all enemies at the start of combat.",
+      "IsBossRelic": true,
+      "StarRating": 5,
+      "EffectIds": [
+        "relic_void_crystal_vulnerable",
+        "relic_void_crystal_weakened"
+      ]
+    },
+    {
+      "Id": "champions_belt",
+      "Name": "Champion's Belt",
+      "Description": "Draw 3 extra cards at the start of each combat.",
+      "IsBossRelic": true,
+      "StarRating": 5,
+      "EffectIds": [
+        "relic_champions_belt_draw"
       ]
     }
   ],

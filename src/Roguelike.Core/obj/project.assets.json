@@ -70,19 +70,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADMIN\\.nuget\\packages\\": {}
+    "C:\\Users\\Rei Haruki\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Unity_Projects\\Roguelike\\src\\Roguelike.Core\\Roguelike.Core.csproj",
+      "projectUniqueName": "C:\\Projects\\Unity\\Roguelike\\src\\Roguelike.Core\\Roguelike.Core.csproj",
       "projectName": "Roguelike.Core",
-      "projectPath": "E:\\Unity_Projects\\Roguelike\\src\\Roguelike.Core\\Roguelike.Core.csproj",
-      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "E:\\Unity_Projects\\Roguelike\\src\\Roguelike.Core\\obj\\",
+      "projectPath": "C:\\Projects\\Unity\\Roguelike\\src\\Roguelike.Core\\Roguelike.Core.csproj",
+      "packagesPath": "C:\\Users\\Rei Haruki\\.nuget\\packages\\",
+      "outputPath": "C:\\Projects\\Unity\\Roguelike\\src\\Roguelike.Core\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Rei Haruki\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -106,7 +106,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -128,12 +128,26 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[9.0.15, 9.0.15]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[9.0.15, 9.0.15]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[9.0.15, 9.0.15]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {

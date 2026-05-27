@@ -1,0 +1,301 @@
+\clearpage
+\phantomsection
+\chapter{SYSTEM ANALYSIS AND DESIGN}
+
+This chapter describes how the system is designed to meet the research objectives stated in the Introduction. It proceeds top-down: Section 2.1 defines the functional and non-functional requirements derived from the game mechanics introduced in the Introduction; Section 2.2 presents the four-layer architecture that organizes the system and connects each layer to those requirements; Sections 2.3 to 2.7 then detail the design of each major component - the game engine, the heuristic AI agent, the RL environment, the four AI agent personas, and the optimization layer.
+
+\section{Requirements Analysis}
+
+The three sub-problems identified in the Introduction translate directly into system requirements. Sub-Problem~1 (Core Game Engine) drives requirements for the simulation, data representation, and heuristic baseline (FR1-FR2). Sub-Problem~2 (AI Agent for Evaluation) drives requirements for the RL environment and agent training pipeline (FR3-FR4). Sub-Problem~3 (Multi-Objective Optimization) drives requirements for the evolutionary optimizer and output visualization (FR5-FR6). Each requirement below is grounded in the theory established in Chapter~1 and cross-referenced to the research objective it fulfills.
+
+\subsection{Functional Requirements}
+
+The functional requirements are derived directly from the game mechanics described in the Introduction and the research objectives stated there. Each requirement corresponds to a concrete capability the system must provide.
+
+\begin{enumerate}
+    \item FR1 - Game Engine: Implement a complete, self-contained Roguelike Deckbuilder game engine in Python supporting: turn-based combat with a card-based attack system (as described in Introduction Section 2.1), a procedurally generated 15-floor room map, deck acquisition and management, relic collection, the five room types (Monster, Elite, Event, Shop, Rest), and a data-driven parameter system stored in JSON. This directly supports Objective 1.
+    \item FR2 - Deterministic Baseline AI Agent: Provide a rule-based AI agent that can play the game to completion, serving as a playability validator and initial balancing oracle. This directly supports Objective 2.
+    \item FR3 - RL Environment: Expose the game engine as an OpenAI Gymnasium-compatible environment with a well-defined observation space, action space, and action masking mechanism, enabling AI agent training. This supports Objective 3.
+    \item FR4 - RL AI Agent Training: Train four MaskablePPO AI agents with distinct reward functions and produce checkpoints that can be loaded for evaluation. This directly supports Objective 3.
+    \item FR5 - Game Parameter Optimization: Implement both a single-objective GA and a multi-objective NSGA-II that use AI agent evaluation to search for balanced parameter configurations. This directly supports Objective 4.
+    \item FR6 - Results Visualization: Generate evolution charts, Pareto front visualizations, and card viability analyses. This supports Objective 5.
+\end{enumerate}
+
+\subsection{Non-Functional Requirements}
+
+\begin{enumerate}
+    \item NFR1 - Cross-platform Compatibility: The game engine must run on Linux to be usable inside Kaggle kernels for GPU training. A pure Python implementation satisfies this requirement natively without any platform-specific build steps or language bridges.
+    \item NFR2 - Simulation Speed: The game engine must support sufficient throughput to evaluate each optimizer generation (population size 50, 20 runs per genome = 1,000 simulations) within a practical wall-clock budget on Kaggle hardware.
+    \item NFR3 - Reproducibility: Experiments must be reproducible via fixed random seeds.
+    \item NFR4 - Extensibility: New cards, relics, and enemy types must be addable by modifying only the JSON data files without changing source code.
+\end{enumerate}
+
+\section{System Architecture}
+
+The architecture is designed so that each layer directly addresses one or more sub-problems from the Introduction and is grounded in the theory developed in Chapter~1. The Core Game Layer satisfies Sub-Problem~1 using the game design principles from Section~1.1. The Simulation/Training Layer satisfies Sub-Problem~2, implementing the MaskablePPO environment and training pipeline whose theoretical basis is Section~1.4. The Optimization Layer satisfies Sub-Problem~3, deploying the GA (Section~1.2) and NSGA-II (Section~1.3) over the hierarchical genome. The Data Layer ties all layers together through the shared \textit{GameData.json} parameter interface that makes the optimization target fully separable from game logic.
+
+The system is organized into four principal layers, as illustrated in Figure~\ref{fig:architecture}. Each layer maps directly to one or more functional requirements.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{SystemArchitectureOverview.png}
+    \caption{High-level system architecture showing data flow between the Optimization Layer, Simulation/Training Layer, Data Layer, and Core Game Layer.}
+    \label{fig:architecture}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Core Game Layer} (fulfills FR1, FR2): Contains the five components shown in the diagram - \textit{GameController} (run orchestration), \textit{CombatManager} (turn resolution), \textit{DeckManager} (card draw and discard), \textit{MapGenerator} (room layout), and \textit{AI Interface} (the common interface all AI agents implement). This layer is deterministic given a fixed random seed and a fixed parameter set $\theta$, which is essential for reproducible fitness evaluation.
+    \item \textbf{Data Layer} (fulfills FR1, FR5, FR6): Three data stores sit between the game and the upper layers. \textit{GameData.json} defines all game entities - cards, enemies, relics, and status effects. \textit{Optimization Results} stores the output of each optimizer run (\textit{pareto\_front.json}, \textit{best\_result.json}). \textit{Agent Checkpoints} stores the trained PPO model files (one \textit{.zip} per persona). Separating data from logic means the optimization layer can modify parameters without recompiling any code.
+    \item \textbf{Simulation/Training Layer} (fulfills FR3, FR4): Three components operate here. The \textit{Simulation Runner} executes mass game runs to compute fitness metrics for the optimization layer. The \textit{Fitness Evaluator} aggregates raw simulation statistics into the three objective scores (Balance, Engagement, Coherence). The \textit{RL Training Environment} wraps the game engine as a Gymnasium environment with MaskablePPO support for AI agent training.
+    \item \textbf{Optimization Layer} (fulfills FR5): Two optimizers operate at the top level. A lightweight inline NSGA-II (used in Kaggle notebooks) evaluates populations of 30 genomes over 15 generations. The primary \textit{Multi-Objective NSGA-II} via pymoo uses the \textit{HierarchicalGenome} representation (38 continuous dimensions) with a population of 50 over 30 generations. Both send candidate genomes down to the Simulation Runner and receive fitness scores back.
+\end{itemize}
+
+\section{Core Game Engine Design}
+
+\subsection{Game Structure Overview}
+
+A single game run consists of 15 floors organized into three Acts of five floors each. The player navigates a branching map of rooms, engaging in combat, collecting cards and relics, and managing resources (HP, gold, mana). The game ends in victory if the player defeats the final boss on Floor 15, or in defeat if HP drops to zero.
+
+Map generation uses a constrained random algorithm that guarantees at least one viable path from the entrance to the exit floor while distributing room types according to configurable weights. A typical 15-floor map contains: 8 - 10 Monster rooms, 2 - 3 Elite rooms, 1 - 2 Shop rooms, 2 - 3 Rest Sites, and 2 - 3 Event rooms.
+
+Card system: The game contains over 30 distinct cards organized by type (Attack, Skill, Power) and star rating (1 - 5). Cards have a mana cost, and each round the player draws five cards, spending mana to play them. Cards are acquired as rewards after combat and can be removed or upgraded at rest sites or via events.
+
+Relic system: Relics are passive items collected from Elite rooms, events, and shops. Over 20 relics are defined, each with a trigger condition (e.g., \textit{OnEnemyAttack}, \textit{OnTurnStart}) and an effect (e.g., add thorns, reduce mana cost, draw extra cards).
+
+\subsection{Combat System Design}
+
+The combat system follows a turn-based structure with alternating player and enemy phases:
+
+\begin{enumerate}
+    \item Player turn: The player draws 5 cards, then plays any combination of affordable cards using available mana (default: 3 mana per turn). Actions include dealing damage to a target enemy, gaining block (temporary defense), applying status effects, and drawing additional cards.
+    \item Enemy turn: Each enemy executes its scheduled action (attack, buff, or debuff) according to a pre-defined pattern. Status effects (Strength, Weakness, Poison, Burn, Vulnerability) are resolved.
+    \item End-of-turn: Block is cleared, effects are ticked down, and the player draws a new hand.
+\end{enumerate}
+
+Combat resolves when all enemies are defeated (player wins the room) or the player's HP reaches zero (run ends). The class diagram in Figure~\ref{fig:class_diagram} shows the relationship between the key combat classes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{CoreGameAndOptimizationLayer.png}
+    \caption{Class diagram of the core game module showing the relationships between \textit{GameController}, \textit{CombatManager}, \textit{DeckManager}, the AI interface, and the optimization layer.}
+    \label{fig:class_diagram}
+\end{figure}
+
+Figure~\ref{fig:combat_seq} illustrates the sequence of interactions during a single combat turn.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{OneCombatTurn.png}
+    \caption{Sequence diagram of one combat turn: the Combat Manager draws cards from the Deck Manager, queries the AI Agent for a decision, resolves the card action, executes the enemy turn, and checks win/loss conditions.}
+    \label{fig:combat_seq}
+\end{figure}
+
+\section{Deterministic Heuristic Agent Design}
+
+\subsection{Purpose and Role}
+
+The Deterministic Heuristic Agent (DHA), implemented as \textit{HeuristicPlayerAI}, serves two specific roles in the project:
+\begin{enumerate}
+    \item Playability validation: Before any optimization or RL training, the DHA confirms that the game is winnable and that no trivially broken configurations exist. A game that a reasonable agent cannot win at all (or can always win trivially) is not ready for balancing.
+    \item Optimization benchmark: In the initial GA/NSGA-II experiments documented in Section~\ref{sec:results_opt}, the DHA provides a consistent, fast, and reproducible evaluation signal. Because the DHA executes in microseconds per decision (no neural network inference), it enables the optimization algorithm to run orders of magnitude more simulations than would be possible with RL agents.
+\end{enumerate}
+
+\subsection{Decision Logic}
+
+The DHA implements a three-level priority hierarchy for in-combat decisions:
+
+\begin{enumerate}
+    \item Survival first: Calculate total incoming damage from all enemies in the current turn. If incoming damage exceeds current HP, preferentially play defensive cards (Block, Shielding skills) to survive.
+    \item Lethal second: If any single target can be killed this turn with available cards and mana, prioritize those cards to reduce enemy damage output.
+    \item Efficient offense third: Otherwise, play the card with the highest damage-per-mana ratio, preferring multi-target attacks when multiple enemies are present.
+\end{enumerate}
+
+For map navigation, the DHA scores each available next-room type based on current HP percentage: it seeks Elite rooms when HP $\geq$ 60\% (rewarded with rare cards and relics), Rest sites when HP $\leq$ 40\%, and Monster rooms otherwise. Card rewards are chosen by star rating, preferring higher rarities and maintaining a balanced ratio of attack to skill cards.
+
+The DHA's deterministic nature makes it an ideal baseline: given the same game seed and parameters, it always makes the same choices, ensuring that measured fitness differences between parameter sets are attributable to the parameters rather than agent stochasticity.
+
+\section{Reinforcement Learning Environment Design}
+
+\subsection{Observation Space}
+
+The observation vector $\mathbf{s} \in \mathbb{R}^{152}$ encodes the full game state at the moment the agent must make a decision. Table~\ref{tab:obs_space} describes its components.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Observation space components (total: 152 dimensions).}
+    \label{tab:obs_space}
+    \begin{tabularx}{\linewidth}{lcX}
+        \toprule
+        Component & Dim. & Description \\
+        \midrule
+        Hero state         & 4  & HP ratio, block ratio, mana ratio, gold ratio \\
+        Active effects     & 7  & Strength, Weakness, Poison, Burn, Vulnerability, Thorns, Metallicize \\
+        Hand cards         & 70 & 10 slots $\times$ 7 features (cost, star, type, \#actions, affordable, dmg, block) \\
+        Deck star counts   & 5  & Count of 1-star through 5-star cards in master deck \\
+        Enemies            & 24 & 4 slots $\times$ 6 features (HP, block, star, \#effects, intent type, intent value) \\
+        Relics             & 10 & 10 slots: equipped relic star ratings (normalized) \\
+        Game state (one-hot) & 7 & \textit{PreRun, OnMap, InCombat, InEvent, InShop, AwaitingReward, GameOver} \\
+        Next map nodes     & 14 & 7 slots $\times$ 2 features (room type, star rating) \\
+        \midrule
+        Contextual features & & \\
+        Current floor       & 1 & floor / 16 \\
+        Combat turn         & 1 & turn\_number / 20 \\
+        Draw pile size      & 1 & \#cards in draw pile / 30 \\
+        Total incoming dmg  & 1 & Sum of enemy intent damage / 60 \\
+        Affordable hand dmg & 1 & Max damage playable with current mana / 50 \\
+        Turns counter       & 1 & turn\_number / 10 \\
+        Deck attack ratio   & 1 & Fraction of Attack cards in master deck \\
+        Cards played (turn) & 1 & Cards played this turn / 5 \\
+        Affordable block    & 1 & Max block playable with current mana / 20 \\
+        Block vs intent     & 1 & Current block / incoming damage (capped at 1) \\
+        Floor (repeated)    & 1 & floor / 16 (for convenience indexing) \\
+        \midrule
+        Total & 152 & \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+All values are normalized to $[0, 1]$ to stabilize neural network training. Unknown or empty slots are filled with zeros (e.g., empty hand slots, absent enemies).
+
+\subsection{Action Space}
+
+The action space is discrete with 67 actions, organized by game phase:
+\begin{itemize}
+    \item Action 0: End player turn.
+    \item Actions 1 - 40: Play hand-card slot $h$ targeting enemy slot $e$, encoded as $h \times 4 + e + 1$ for $h \in [0,9]$, $e \in [0,3]$.
+    \item Actions 41 - 47: Navigate to map node index 0 - 6.
+    \item Actions 48 - 50: Choose event option 0 - 2.
+    \item Actions 51 - 55: Pick card reward slot 0 - 3, or skip (slot 4).
+    \item Actions 56 - 60: Buy shop card slot 0 - 4.
+    \item Actions 61 - 65: Buy shop relic slot 0 - 4.
+    \item Action 66: Leave shop.
+\end{itemize}
+
+At each step, the environment returns an action mask - a binary vector $\mathbf{m} \in \{0,1\}^{67}$ - indicating which actions are currently legal. Illegal actions (e.g., playing a card with insufficient mana, navigating to an unavailable node) always have mask value 0.
+
+\subsection{Episode Structure}
+
+One episode corresponds to one complete game run from Floor 1 to either Floor 15 victory or death. The environment \textit{reset()} starts a new run (optionally applying Domain Randomization), and \textit{step(action)} advances the game state by one decision, returning $(s', r, \text{done}, \text{info})$.
+
+\section{RL Agent Persona Design}
+\label{sec:agent_design}
+
+\subsection{Design Rationale}
+
+Using a single agent persona for game evaluation has a significant limitation: it may only reveal balance problems that matter to one specific play style. A defensive specialist might expose different vulnerabilities than an aggressive burn-damage specialist. By training four distinct personas, we obtain a richer evaluation signal that better approximates the diversity of real players.
+
+Each persona shares the same observation space (152-dim) and action space (67 actions), but is shaped by a distinct reward function that incentivizes a specific behavioral style. The neural network architecture for all agents is a two-hidden-layer MLP with layers of size $[512, 512]$ for both the actor and critic.
+
+\subsection{Aggressive Agent}
+
+Behavioral goal: Minimize the number of turns to defeat enemies. Accept HP loss in exchange for faster kills. Prefer high-damage cards over defensive ones.
+
+Reward function:
+\begin{align}
+r_t^{\text{agg}} &= r_{\text{base}} - 0.10 \cdot \mathbb{1}[\text{step taken}] - 0.10 \cdot |\Delta\text{HP}_{\text{lost}}| \cdot m(\text{HP}\%) \nonumber \\
+&\quad + 5.0 \cdot \mathbb{1}[\text{enemy killed}] + 500.0 \cdot \mathbb{1}[\text{victory}] \nonumber \\
+&\quad + 15.0 \cdot \left(1 - \tfrac{t}{t_{\max}}\right) \cdot \mathbb{1}[\text{victory}] - 200.0 \cdot \mathbb{1}[\text{death}]
+\end{align}
+where $m(\text{HP}\%) = 3$ if HP\% $< 0.25$, $2$ if HP\% $< 0.40$, $1$ otherwise.
+The step penalty $-0.10$ drives the agent to end combats quickly. The HP loss penalty scales with danger: $3\times$ below 25\% HP and $2\times$ below 40\% HP (a ``non-linear brake''), to prevent suicidal behavior while still permitting calculated risk-taking at full HP. The speed bonus on victory rewards efficient play.
+
+\subsection{Defensive Agent}
+
+Behavioral goal: Survive as long as possible, prioritizing healing and block generation. Sacrifice offensive tempo to preserve HP.
+
+Reward function:
+\begin{align}
+r_t^{\text{def}} &= r_{\text{base}} - 0.005 \cdot \mathbb{1}[\text{step taken}] + 0.30 \cdot \Delta\text{HP}_{\text{healed}} - 0.15 \cdot \min(\Delta\text{HP}_{\text{lost}}, 20) \nonumber \\
+&\quad + 0.30 \cdot \Delta\text{Block} + 2.0 \cdot \mathbb{1}[\text{combat survived}] \nonumber \\
+&\quad + 500.0 \cdot \mathbb{1}[\text{victory}] + 80.0 \cdot \tfrac{\text{HP}_{\text{final}}}{\text{HP}_{\max}} \cdot \mathbb{1}[\text{victory}] - 200.0 \cdot \mathbb{1}[\text{death}]
+\end{align}
+The asymmetric HP weights ($+0.30$ for healing vs.\ $-0.15$ for damage) create a strong preference for rest sites and block cards. The HP-loss cap at 20 per step prevents gradient instability when the agent receives a large boss hit. The very small step penalty ($-0.005$) means the agent is not penalized for taking many turns to kill enemies. The terminal win bonus is proportional to remaining HP, further incentivizing conservative play.
+
+\subsection{Balanced Agent}
+
+Behavioral goal: Represent a standard player who weighs offense and defense equally, manages gold efficiently, and aims for a moderate win rate.
+
+Reward function:
+\begin{align}
+r_t^{\text{bal}} &= r_{\text{base}} + 0.20 \cdot \Delta\text{HP}_{\text{healed}} - 0.20 \cdot \Delta\text{HP}_{\text{lost}} \nonumber \\
+&\quad + 0.02 \cdot \Delta\text{gold} + 500.0 \cdot \mathbb{1}[\text{victory}] + 30 \cdot \left(\frac{\text{HP}_{\text{final}}}{\text{HP}_{\text{max}}}\right)^2 \cdot \mathbb{1}[\text{victory}] - 200.0 \cdot \mathbb{1}[\text{death}]
+\end{align}
+The symmetric HP weights model a player who is neither reckless nor overly cautious. The flat win bonus of $+500$ provides a strong terminal signal, while the quadratic HP bonus further incentivizes the agent to win with as much HP remaining as possible, serving the balancing objective of ``victory HP.''
+
+\subsection{Adaptive Agent}
+
+Behavioral goal: Dynamically switch between aggressive and defensive behaviors based on current HP, without being explicitly programmed to do so.
+
+Design challenge: An earlier version of this agent used a reward function that explicitly changed its formula based on HP ratio at runtime (high HP $\to$ aggressive formula; low HP $\to$ defensive formula), which is non-stationary and caused the value function to diverge. The final design (v7) resolves this by ensuring that every reward signal is a function of observable state features that are also present in the 152-dimensional observation vector, preserving the Markov property.
+
+Final implementation (v7): The Adaptive Agent uses an HP-state-aware reward function:
+\begin{align}
+r_t^{\text{ada}} &= r_{\text{base}} - 0.01 \cdot \mathbb{1}[\text{step taken}] - (0.1 + 0.3 \cdot (1 - \text{HP}\%)) \cdot |\Delta\text{HP}_{\text{lost}}| \nonumber \\
+&\quad + 2.0 \cdot \mathbb{1}[\text{enemy killed}] + 25.0 \cdot \mathbb{1}[\text{floor advanced}] \nonumber \\
+&\quad + 500.0 \cdot \mathbb{1}[\text{victory}] - 200.0 \cdot \mathbb{1}[\text{death}]
+\end{align}
+The HP loss penalty scale $(0.1 + 0.3 \cdot (1 - \text{HP}\%))$ increases continuously as HP decreases, reaching $0.4$ at 0\% HP. This creates a smooth, gradient-friendly incentive for the agent to treat HP differently depending on its current value - a behavior that is fully MDP-consistent since HP\% $= s[0]$ is the first element of the observation vector. The floor advance bonus ($+25.0$ per floor cleared) drives progression even under non-combat HP pressure, while the idle stagnation penalty ($-0.05$ per step after 400 steps on the same floor) prevents the agent from grinding indefinitely.
+
+\section{Optimization Layer Design}
+
+\subsection{Data Flow}
+
+Figure~\ref{fig:dataflow} shows how data flows from the optimization layer through simulation to fitness evaluation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{OptimizationDataFlow.png}
+    \caption{Data flow in the optimization loop. A genome is created by the optimization layer, applied to a scaled \textit{GameData} copy, passed to the simulation runner which uses the AI agent to play games, and resulting statistics are evaluated into fitness scores that feed back to the optimizer.}
+    \label{fig:dataflow}
+\end{figure}
+
+\subsection{Genome Representations}
+
+\subsubsection{BalanceGenome (Single-Objective GA)}
+
+The \textit{BalanceGenome} directly encodes one scalar multiplier per game parameter, resulting in a chromosome of approximately 500 dimensions. The genome consists of four dictionaries:
+\begin{itemize}
+    \item \textit{CardActionScalars}: One float per card action value (damage or block amount per card).
+    \item \textit{CardCostModifiers}: Integer adjustments to each card's mana cost.
+    \item \textit{EnemyHealthScalars}: One float per enemy type scaling base HP.
+    \item \textit{EnemyActionValueScalars}: One float per enemy action scaling attack damage.
+\end{itemize}
+This flat representation allows fine-grained per-entity adjustment but suffers from the curse of dimensionality and tends to produce incoherent solutions where logically related parameters (e.g., all 1-star cards) receive unrelated scalars.
+
+\subsubsection{HierarchicalGenome (NSGA-II)}
+
+The \textit{HierarchicalGenome} reduces the search space to 38 continuous dimensions by grouping parameters into semantically meaningful categories:
+\begin{itemize}
+    \item Global multipliers (5 params): Overall scaling for damage, health, block, mana cost, gold rewards.
+    \item Progression scaling (9 params): Separate damage, health, and block multipliers for Early (floors 1 - 5), Mid (floors 6 - 10), and Late (floors 11 - 15) game phases.
+    \item Card type and star scalars (8 params): Per-type scaling for Attack/Skill/Power cards; per-star-rating scaling for cards.
+    \item Enemy star scalars (5 params): Per-star-rating scaling for enemies.
+    \item Room distribution (5 params): Relative weights for Monster, Elite, Event, Shop, and Rest room types.
+    \item Miscellaneous (6 params): Hero health scalar, rest-site healing rate, start gold, encounter star ratios, difficulty progression rate.
+\end{itemize}
+The hierarchical structure ensures that NSGA-II can efficiently navigate the search space by modifying high-level properties (``make late-game enemies 20\% tougher'') rather than individually tuning hundreds of entity-level values.
+
+\subsection{Fitness Functions}
+
+The same three sub-objectives are computed for both GA (aggregated) and NSGA-II (separately):
+
+Balance Score uses Gaussian scoring to evaluate how close the simulation metrics are to the target values:
+\begin{equation}
+f_{\text{balance}} = \frac{1}{3}\left(e^{-\alpha_{wr} \cdot \Delta_{wr}^2} + e^{-\alpha_{hp} \cdot \Delta_{hp}^2} + e^{-\alpha_{fd} \cdot \Delta_{fd}^2}\right)
+\label{eq:balance_score}
+\end{equation}
+where $\Delta_{wr} = |\text{WinRate} - 0.45|$, $\Delta_{hp} = |\text{VictoryHP} - 0.30|$, $\Delta_{fd} = |\text{FloorOnDeath} - 10|$, and $\alpha_{wr}=10.0$, $\alpha_{hp}=8.0$, $\alpha_{fd}=0.05$.
+
+Engagement Score rewards card pool diversity:
+\begin{equation}
+f_{\text{engagement}} = \alpha \cdot \frac{|\text{ViableCards}|}{|\text{TotalCards}|} + \beta \cdot \text{BuildDiversity}
+\label{eq:engagement_score}
+\end{equation}
+A card is ``viable'' if its pick rate exceeds a threshold $\tau$ and its conditional win rate is above a second threshold $\tau_w$. \textit{BuildDiversity} measures the entropy of the card-selection distribution.
+
+Coherence Score penalizes trap cards and extreme parameter values:
+\begin{equation}
+f_{\text{coherence}} = 1 - \text{TrapCardPenalty} - \lambda \sum_{j}\left(\text{scalar}_j - 1\right)^2
+\label{eq:coherence_score}
+\end{equation}
+A trap card is a frequently picked card whose conditional win rate is significantly below the population average. The regularization term $\lambda \sum_j (\text{scalar}_j - 1)^2$ penalizes solutions that deviate far from the baseline, preventing extreme parameter configurations.

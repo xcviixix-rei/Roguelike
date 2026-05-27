@@ -1,0 +1,526 @@
+\clearpage
+\phantomsection
+\chapter*{APPENDIX}
+\addcontentsline{toc}{chapter}{APPENDIX}
+\setcounter{table}{0}
+\renewcommand{\thetable}{A.\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{A.\arabic{figure}}
+\setcounter{lstlisting}{0}
+\renewcommand{\thelstlisting}{A.\arabic{lstlisting}}
+
+\section*{Game Data JSON Structure}
+\label{app:json}
+
+This appendix presents the JSON schema used to define all game entities in \textit{GameData.\allowbreak{}json}. The schema is loaded at startup by \textit{data\_loader.py} using Python's built-in \textit{json} module.
+
+\subsection*{Card Data}
+
+\begin{lstlisting}[language=C, caption={CardData JSON schema and example entries}]
+{
+  "Cards": [
+    {
+      "Id": "flame_strike",
+      "Name": "Flame Strike",
+      "Type": "Attack",          // Attack | Skill | Power | Curse
+      "StarRating": 3,           // 1-5 scale
+      "ManaCost": 2,
+      "Exhaust": false,          // true = removed from deck after play
+      "Actions": [
+        { "Type": "DealDamage",   "TargetType": "AllEnemies", "Value": 8 },
+        { "Type": "ApplyEffect",  "EffectId": "burn",          "Value": 3 }
+      ]
+    },
+    {
+      "Id": "iron_shield",
+      "Name": "Iron Shield",
+      "Type": "Skill",
+      "StarRating": 2,
+      "ManaCost": 1,
+      "Exhaust": false,
+      "Actions": [
+        { "Type": "GainBlock", "TargetType": "Self", "Value": 10 }
+      ]
+    },
+    {
+      "Id": "battle_hymn",
+      "Name": "Battle Hymn",
+      "Type": "Power",
+      "StarRating": 4,
+      "ManaCost": 2,
+      "Exhaust": false,
+      "Actions": [
+        { "Type": "ApplyPermanentEffect",
+          "EffectId": "start_of_turn_strength",
+          "Value": 2 }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsection*{Enemy Data}
+
+\begin{lstlisting}[language=C, caption={EnemyData JSON schema and example entries}]
+{
+  "Enemies": [
+    {
+      "Id": "goblin_scout",
+      "Name": "Goblin Scout",
+      "Tier": "Normal",          // Normal | Elite | Boss
+      "MinFloor": 1,
+      "MaxFloor": 5,
+      "BaseMaxHealth": 28,
+      "ActionPattern": "Alternating",  // Fixed | Alternating | Random
+      "Actions": [
+        { "Type": "DealDamage",  "Value": 6, "Phase": "Odd"  },
+        { "Type": "GainBlock",   "Value": 5, "Phase": "Even" }
+      ]
+    },
+    {
+      "Id": "stone_golem",
+      "Name": "Stone Golem",
+      "Tier": "Elite",
+      "MinFloor": 6,
+      "MaxFloor": 10,
+      "BaseMaxHealth": 90,
+      "ActionPattern": "Fixed",
+      "Actions": [
+        { "Type": "DealDamage",  "Value": 14, "Phase": "All" },
+        { "Type": "ApplyEffect", "EffectId": "vulnerability",
+          "Value": 2, "Phase": "Every3" }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsection*{Relic Data}
+
+\begin{lstlisting}[language=C, caption={RelicData JSON schema and example entry}]
+{
+  "Relics": [
+    {
+      "Id": "burning_ember",
+      "Name": "Burning Ember",
+      "Tier": "Rare",             // Common | Uncommon | Rare | Boss
+      "TriggerType": "StartOfCombat",
+      "Actions": [
+        { "Type": "ApplyEffect", "TargetType": "AllEnemies",
+          "EffectId": "burn", "Value": 3 }
+      ]
+    },
+    {
+      "Id": "iron_will",
+      "Name": "Iron Will",
+      "Tier": "Common",
+      "TriggerType": "OnReceiveDamage",
+      "Condition": "HeroHpBelow30Pct",
+      "Actions": [
+        { "Type": "GainBlock", "TargetType": "Self", "Value": 6 }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\section*{Algorithm Pseudocode}
+\label{app:pseudocode}
+
+\subsection*{Single-Objective Genetic Algorithm}
+
+\begin{algorithm}[H]
+\caption{Single-Objective Genetic Algorithm for Game Balancing}
+\label{alg:ga}
+\begin{algorithmic}[1]
+\Require Population size $N=100$, generations $G=30$, simulations per genome $S=200$
+\State $P \gets \text{InitPopulation}(N)$  \Comment{Each genome $\sim$ $\mathcal{U}(0.7, 1.3)^{500}$}
+\For{$g = 1$ \textbf{to} $G$}
+    \State $\text{EvaluateParallel}(P, S)$  \Comment{8-core parallel eval.}
+    \State $P_{\text{elite}} \gets \text{TopK}(P, 0.1N)$  \Comment{Elitism: keep top 10\%}
+    \State $P_{\text{offspring}} \gets \emptyset$
+    \While{$|P_{\text{offspring}}| < N - |P_{\text{elite}}|$}
+        \State $p_1 \gets \text{TournamentSelect}(P, k=3)$
+        \State $p_2 \gets \text{TournamentSelect}(P, k=3)$
+        \State $c \gets \text{UniformCrossover}(p_1, p_2, p_c=0.80)$
+        \State $c \gets \text{GaussianMutate}(c, p_m=0.02, \sigma=0.10)$
+        \State $P_{\text{offspring}} \gets P_{\text{offspring}} \cup \{c\}$
+    \EndWhile
+    \State $P \gets P_{\text{elite}} \cup P_{\text{offspring}}$
+\EndFor
+\State \Return $\text{BestFitness}(P)$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection*{NSGA-II Multi-Objective Optimizer}
+
+\begin{algorithm}[H]
+\caption{NSGA-II for Multi-Objective Game Balancing}
+\label{alg:nsga2}
+\begin{algorithmic}[1]
+\Require Population size $N=50$, generations $G=30$
+\State $P \gets \text{InitPopulation}(N)$
+\State $\text{Evaluate}(P, S=80)$  \Comment{20 simulations $\times$ 4 agents per genome}
+\For{$g = 1$ \textbf{to} $G$}
+    \State $\mathcal{F} \gets \text{FastNonDominatedSort}(P)$  \Comment{Returns fronts $F_1, F_2, \ldots$}
+    \State $\text{ComputeCrowdingDistance}(\mathcal{F})$
+    \State $Q \gets \text{BinaryTournamentSelect}(P)$  \Comment{By rank then crowding dist.}
+    \State $Q \gets \text{SBXCrossover}(Q, \eta_c=20, p_c=0.90)$
+    \State $Q \gets \text{PolynomialMutate}(Q, \eta_m=20, p_m=0.05)$
+    \State $R \gets P \cup Q$  \Comment{Combined parent + offspring}
+    \State $\text{Evaluate}(R \setminus P, S=80)$  \Comment{Evaluate new offspring, 20 sims $\times$ 4 agents}
+    \State $\mathcal{F}' \gets \text{FastNonDominatedSort}(R)$
+    \State $\text{ComputeCrowdingDistance}(\mathcal{F}')$
+    \State $P \gets \text{SelectBestN}(R, N)$  \Comment{By rank, then crowding distance}
+\EndFor
+\State \Return $F_1$ (first Pareto front of final $P$)
+\end{algorithmic}
+\end{algorithm}
+
+\section*{Observation Space Index Table}
+\label{app:obs}
+
+{\small
+\begin{longtable}{p{1.8cm}p{4.5cm}p{2.5cm}p{3.5cm}}
+    \caption{152-dimensional observation vector layout. All values are normalized to $[0, 1]$ unless noted.}
+    \label{tab:obs_space_appendix}\\
+    \toprule
+    Index & Feature & Normalization & Notes \\
+    \midrule
+    \endfirsthead
+    \toprule
+    Index & Feature & Normalization & Notes \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{4}{r}{\textit{Continued on next page}}\\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    0     & Hero HP ratio             & $\div$ max HP           & 1.0 = full HP \\
+    1     & Hero block ratio          & $\div$ 40               & Can exceed 1.0 \\
+    2     & Mana ratio                & $\div$ max mana         & \\
+    3     & Gold ratio                & $\div$ 500              & \\
+    4-10  & Hero status effect intensities (7 effects) & $\div 10$ & Clipped at 1.0 \\
+    11-80 & Hand cards (10 slots $\times$ 7 features) & Various & Cost, star, type, \#actions, playable, dmg, block \\
+    81-85 & Deck star-count histogram (stars 1-5) & $\div 20$ & Count per star tier \\
+    86-109 & Enemy state (4 slots $\times$ 6 features) & Various & HP, block, star, \#effects, intent type, intent value \\
+    110-119 & Equipped relic star ratings (10 slots) & $\div 5$ & 0 = empty slot \\
+    120-126 & Game state one-hot (7 states) & Binary & \texttt{PreRun, OnMap, InCombat,} \ldots \\
+    127-140 & Map next nodes (7 slots $\times$ 2 features) & Various & Room type ratio, star rating \\
+    141   & Current floor ratio       & $\div 16$               & \\
+    142   & Combat turn ratio         & $\div 20$               & \\
+    143   & Draw pile size ratio      & $\div 30$               & \\
+    144   & Total incoming damage ratio & $\div 60$             & Sum of enemy attack intents \\
+    145   & Affordable hand damage ratio & $\div 50$            & Playable cards only \\
+    146   & Combat turn ratio (alt)   & $\div 10$               & Duplicate for agent convenience \\
+    147   & Attack/Skill ratio in deck & -                    & $n_{\text{atk}} / (n_{\text{atk}} + n_{\text{def}})$ \\
+    148   & Cards played this turn    & $\div 5$                & \\
+    149   & Affordable block ratio    & $\div 20$               & Playable block cards only \\
+    150   & Block coverage ratio      & -                    & block $\div$ incoming dmg \\
+    151   & Current floor ratio (2nd) & $\div 16$               & Redundant; retained for compatibility \\
+\end{longtable}}
+
+\section*{Reward Function Summary}
+\label{app:rewards}
+
+Table~\ref{tab:rewards_summary} summarizes the reward functions of all four RL agents. The deck quality reward (Section~3.5.3) is shared by all agents.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Complete reward function summary for all four RL agents.}
+    \label{tab:rewards_summary}
+    \small
+    \begin{tabular}{p{2.2cm}p{4.5cm}p{4.5cm}}
+        \toprule
+        Agent & Step Reward & Terminal Reward \\
+        \midrule
+        Aggressive
+        & $-0.10$ per step; HP-loss penalty $-0.10 \cdot |\Delta\text{HP}| \cdot m(\text{HP\%})$ where $m\!=\!3$ at HP$<\!25\%$, $m\!=\!2$ at HP$<\!40\%$, $m\!=\!1$ otherwise; $+5.0$ per enemy killed
+        & $+500 + 15 \cdot (1 - t/t_{\max})$ on win (speed bonus); $-200$ on death \\
+        \midrule
+        Defensive
+        & $-0.005$ per step; $+0.30 \cdot \Delta\text{HP}_{\text{healed}}$; $-0.15 \cdot \min(|\Delta\text{HP}_{\text{lost}}|, 20)$; $+0.30 \cdot \Delta\text{Block}$; $+2.0$ per combat survived
+        & $+500 + 80 \cdot (\text{HP}/\text{HP}_{\max})$ on win; $-200$ on death \\
+        \midrule
+        Balanced
+        & $-0.01$ per step; $+0.20 \cdot \Delta\text{HP}_{\text{healed}}$; $-0.20 \cdot |\Delta\text{HP}_{\text{lost}}|$; $+0.02 \cdot \Delta\text{gold}$
+        & $+500 + 30 \cdot (\text{HP}/\text{HP}_{\max})^2$ on win; $-200$ on death \\
+        \midrule
+        Adaptive
+        & $-0.01$ per step; HP-scaled loss penalty $-(0.1 + 0.3(1\!-\!\text{HP\%})) \cdot |\Delta\text{HP}|$; $+0.2$ per block when HP$<\!40\%$; $+25.0$ per floor; $-0.05$ idle stagnation; $+2.0$ per kill
+        & $+500$ on win; $-200$ on death \\
+        \midrule
+        \multicolumn{3}{l}{Shared across all agents:} \\
+        \multicolumn{3}{l}{Deck quality: $+8$ (4-5$\star$ card selected), $+3$ (3$\star$ card), $0$ (1-2$\star$ card)} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section*{Code Listings}
+\label{app:listings}
+
+\subsection*{Python Package Structure}
+\begin{lstlisting}[language=bash, caption={Python package structure}, label=lst:package_structure]
+python_roguelike/
+| - core/
+|   | - ai/
+|   |   | - heuristic_player_ai.py   # Deterministic heuristic agent
+|   |   | - i_player_agent.py        # Interface for all agents
+|   | - combat_manager.py            # Turn-by-turn combat logic
+|   | - deck_manager.py              # Draw/discard pile management
+|   | - active_effect.py             # Status effect runtime
+|   | - game_controller.py           # Top-level game run orchestrator
+|   | - game_run.py                  # Mutable run state object
+|   | - map/
+|   |   | - map_generator.py         # Procedural map generation
+|   |   | - map_graph.py             # DAG of room nodes
+|   | - rooms/                       # One handler per room type
+| - data/                            # Data classes and enums
+|   | - enums.py                     # GameState, RoomType, CardType, ...
+|   | - card_data.py, enemy_data.py, relic_data.py, ...
+|   | - pools/                       # CardPool, EnemyPool, RelicPool, ...
+| - env/
+|   | - roguelike_env.py             # Gymnasium wrapper (RoguelikeEnv)
+| - optimization/
+|   | - hierarchical_genome.py       # 38-dimensional genome
+|   | - hierarchical_applicator.py   # Applies genome to game data
+|   | - simulation_runner.py         # Batch simulation with PPO agents
+|   | - fitness.py                   # MultiObjectiveEvaluator
+|   | - nsga2_problem.py             # pymoo Problem definition
+|   | - run_optimization.py          # CLI entry point
+| - training/
+|   | - training_utils.py            # Phase constants and callbacks
+| - data_loader.py                   # Parses GameData.json
+| - GameData.json                    # All game entities
+\end{lstlisting}
+
+\subsection*{Game Controller Initialization}
+\begin{lstlisting}[language=Python, caption={GameController initialization (simplified)}, label=lst:game_controller]
+class GameController:
+    def __init__(self, card_pool, relic_pool, enemy_pool,
+                 effect_pool, event_pool, room_configs):
+        self._handlers = {
+            RoomType.Monster: CombatRoomHandler(),
+            RoomType.Elite:   CombatRoomHandler(),
+            RoomType.Boss:    BossRoomHandler(),
+            RoomType.Event:   EventRoomHandler(),
+            RoomType.Shop:    ShopRoomHandler(),
+            RoomType.Rest:    RestRoomHandler(),
+        }
+        self.current_run: Optional[GameRun] = None
+
+    def start_new_run(self, seed: int, hero_data: HeroData):
+        self.current_run = GameRun(seed, hero_data, ...)
+
+    def choose_map_node(self, node_id: int) -> bool:
+        room = self.current_run.the_map.get_current_room()
+        handler = self._handlers.get(room.type)
+        if handler:
+            handler.execute(self.current_run, room)
+        return True
+\end{lstlisting}
+
+\subsection*{Example Card Definition}
+\begin{lstlisting}[language=Python, caption={Example card definition in GameData.json}, label=lst:card_json]
+{
+  "Id": "flame_strike",
+  "Name": "Flame Strike",
+  "Type": "Attack",
+  "ManaCost": 2,
+  "StarRating": 3,
+  "Actions": [
+    { "Type": "DealDamage", "Target": "AllEnemies", "Value": 8 },
+    { "Type": "ApplyStatusEffect", "Target": "AllEnemies",
+      "EffectId": "burn", "Value": 3 }
+  ]
+}
+\end{lstlisting}
+
+\subsection*{Heuristic AI Decision Logic}
+\begin{lstlisting}[language=Python, caption={Combat decision logic of HeuristicPlayerAI (simplified)}, label=lst:heuristic_ai]
+class HeuristicPlayerAI(IPlayerAgent):
+
+    def get_combat_decision(self, run) -> CombatDecision:
+        hero    = run.the_hero
+        enemies = [e for e in run.current_combat.enemies
+                   if e.current_health > 0]
+        incoming = self._calc_incoming_damage(run, enemies)
+        needed_block = max(0, incoming - hero.block)
+
+        # Priority 1: Survival
+        if needed_block > 0:
+            move = self._find_best_defensive_move(hero, needed_block)
+            if move: return move
+
+        # Priority 2: Lethal
+        move = self._find_lethal_move(hero, enemies)
+        if move: return move
+
+        # Priority 3: Best general offensive move
+        return self._get_best_general_move(hero, enemies)
+
+    def choose_map_node(self, run) -> int:
+        hp_pct = run.the_hero.current_health / run.the_hero.max_health
+        return max(run.the_map.get_possible_next_nodes(),
+                   key=lambda n: self._evaluate_room(run, n, hp_pct)).id
+\end{lstlisting}
+
+\subsection*{Core Gymnasium Environment Methods}
+\begin{lstlisting}[language=Python, caption={Core Gymnasium environment methods (simplified)}, label=lst:gym_env]
+OBS_DIM = 152   # see Table 3.2
+ACT_DIM = 67    # see Section 3.3.2
+
+class RoguelikeEnv(gym.Env):
+    def reset(self, *, seed=None, options=None):
+        if self._domain_randomization:
+            self._apply_domain_randomization()
+        self._controller = GameController(
+            self._card_pool, self._relic_pool, ...)
+        self._controller.start_new_run(seed, self._hero_data)
+        return self._get_obs(), {}
+
+    def step(self, action: int):
+        run  = self._controller.current_run
+        self._apply_action(action, run)
+        obs    = self._get_obs()
+        reward = self._compute_reward(run)
+        done   = (run.current_state == GameState.GameOver)
+        info   = {"win": run.is_victory, "floor": run.current_floor}
+        return obs, reward, done, False, info
+
+    def action_masks(self) -> np.ndarray:
+        mask = np.zeros(ACT_DIM, dtype=bool)
+        for a in self._get_valid_actions():
+            mask[a] = True
+        return mask
+\end{lstlisting}
+
+\subsection*{Curriculum Domain Randomization}
+\begin{lstlisting}[language=Python, caption={Curriculum Domain Randomization in reset()}, label=lst:domain_rand]
+def _apply_domain_randomization(self) -> None:
+    rng = self.np_random
+    if self._dr_curriculum:
+        # Ramp noise linearly from 0 to dr_noise over dr_warmup_episodes
+        progress = min(self._episode_count /
+                       max(self._dr_warmup_episodes, 1), 1.0)
+        noise = self._dr_noise * progress
+    else:
+        noise = self._dr_noise
+    lo, hi = 1.0 - noise, 1.0 + noise
+
+    for cid, card in self._card_pool.cards_by_id.items():
+        orig_mana, orig_vals = self._orig_card_values[cid]
+        card.mana_cost = max(1, round(orig_mana * rng.uniform(lo, hi)))
+        for i, action in enumerate(card.actions):
+            if orig_vals[i] > 0:
+                action.value = max(1, round(orig_vals[i] *
+                                            rng.uniform(lo, hi)))
+
+    for eid, enemy in self._enemy_pool.enemies_by_id.items():
+        enemy.starting_health = max(
+            1, round(self._orig_enemy_hp[eid] * rng.uniform(lo, hi)))
+
+    self._hero_data.starting_health = max(
+        1, round(self._orig_hero_hp * rng.uniform(lo, hi)))
+\end{lstlisting}
+
+\subsection*{Three-Phase Training Loop}
+\begin{lstlisting}[language=Python, caption={Three-phase training loop (simplified)}, label=lst:training_loop]
+from sb3_contrib import MaskablePPO
+from python_roguelike.training.training_utils import (
+    DRCurriculumCallback, MaskableEvalCB, cosine_lr_fn,
+    PHASE1_STEPS, PHASE2_STEPS, PHASE3_STEPS,
+    P1_LR_START, P1_LR_END, P1_N_EPOCHS, P1_ENT_COEF, P1_CLIP_RANGE,
+    P2_LR_START, P2_LR_END, P2_N_EPOCHS, P2_ENT_COEF, P2_CLIP_RANGE,
+    P3_LR_START, P3_LR_END, P3_N_EPOCHS, P3_ENT_COEF, P3_CLIP_RANGE,
+    P3_DR_TARGET, P3_DR_RAMP_STEPS
+)
+
+# Phase 1 - easy maps (early_win_floor=8, no DR)
+env_p1 = make_vec_env(lambda: RoguelikeEnv(early_win_floor=8), n_envs=4)
+model = MaskablePPO(
+    "MlpPolicy", env_p1,
+    learning_rate=cosine_lr_fn(P1_LR_START, P1_LR_END),
+    n_steps=2048, batch_size=256, n_epochs=P1_N_EPOCHS,
+    ent_coef=P1_ENT_COEF, clip_range=P1_CLIP_RANGE,
+    policy_kwargs=dict(net_arch=[512, 512])
+)
+model.learn(PHASE1_STEPS, callback=MaskableEvalCB(eval_env, 20))
+model.save("phase1_ckpt")
+
+# Phase 2 - full maps, no DR
+env_p2 = make_vec_env(lambda: RoguelikeEnv(), n_envs=4)
+model = MaskablePPO.load("phase1_ckpt", env=env_p2)
+model.learning_rate = cosine_lr_fn(P2_LR_START, P2_LR_END)
+model.n_epochs = P2_N_EPOCHS
+model.learn(PHASE2_STEPS, callback=MaskableEvalCB(eval_env, 20))
+model.save("phase2_ckpt")
+
+# Phase 3 - DR enabled with curriculum ramp
+env_p3 = make_vec_env(
+    lambda: RoguelikeEnv(domain_randomization=True,
+                         dr_noise=P3_DR_TARGET,
+                         dr_warmup_episodes=P3_DR_RAMP_STEPS // 4),
+    n_envs=4)
+model = MaskablePPO.load("phase2_ckpt", env=env_p3)
+model.learning_rate = cosine_lr_fn(P3_LR_START, P3_LR_END)
+model.n_epochs      = P3_N_EPOCHS
+model.ent_coef      = P3_ENT_COEF
+model.clip_range    = P3_CLIP_RANGE
+model.learn(PHASE3_STEPS, callback=[DRCurriculumCallback(env_p3),
+                                     MaskableEvalCB(eval_env, 20)])
+model.save("final_ckpt")
+\end{lstlisting}
+
+\subsection*{Batch Genome Evaluation}
+\begin{lstlisting}[language=Python, caption={Batch genome evaluation with PPO agents}, label=lst:sim_runner]
+class SimulationRunner:
+    def run_batch(self, genome: HierarchicalGenome,
+                  n_runs: int = 30,
+                  base_seed: int = 42) -> List[SimulationStats]:
+        # Clone base data pools and apply genome
+        card_pool  = copy.deepcopy(self._base_card_pool)
+        enemy_pool = copy.deepcopy(self._base_enemy_pool)
+        hero       = copy.deepcopy(self._base_hero)
+        hierarchical_applicator.apply(genome, card_pool, enemy_pool, hero)
+
+        results = []
+        for i in range(n_runs):
+            agent = self.agents[i % len(self.agents)]  # round-robin
+            stats = self._run_single(agent, card_pool, enemy_pool,
+                                     hero, seed=base_seed + i)
+            results.append(stats)
+        return results
+\end{lstlisting}
+
+\subsection*{pymoo Problem Definition}
+\begin{lstlisting}[language=Python, caption={pymoo Problem definition and optimization launch}, label=lst:nsga2_problem]
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.operators.crossover.sbx  import SBX
+from pymoo.operators.mutation.pm    import PM
+from pymoo.optimize import minimize
+
+problem = RoguelikeBalanceProblem(
+    runner=runner,
+    evaluator=MultiObjectiveEvaluator(),
+    runs_per_genome=20,
+)
+
+algorithm = NSGA2(
+    pop_size=50,
+    crossover=SBX(eta=20, prob=0.9),
+    mutation=PM(eta=20),
+    eliminate_duplicates=True,
+)
+
+result = minimize(
+    problem,
+    algorithm,
+    termination=get_termination("n_gen", 30),
+    seed=42,
+    verbose=True,
+)
+# result.X: Pareto-front parameter vectors
+# result.F: corresponding (negated) objective values
+\end{lstlisting}
